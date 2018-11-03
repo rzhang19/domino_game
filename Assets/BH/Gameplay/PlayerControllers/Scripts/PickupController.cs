@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BH
 {
-    public class BuildModeController : TakesInput
+    public class PickupController : TakesInput
     {
         // Input state
         bool _clickDown = false;
@@ -17,6 +17,7 @@ namespace BH
         public Vector3 _pickUpOffset = Vector3.up;
         bool _waitingForRelease = false;
         Vector3 _offset;
+        ISelectable _selected = null;
         Rigidbody _pickedUp = null;
         ClosestColliderBelow _closestColliderBelow = null;
         public AnimationCurve _velocityCurve;
@@ -91,7 +92,7 @@ namespace BH
 
             if (Physics.Raycast(ray, out hitInfo, _distance, _interactableMask))
             {
-                Interactable i = hitInfo.collider.gameObject.GetComponentInChildren<Interactable>();
+                Interactable i = hitInfo.collider.GetComponentInChildren<Interactable>();
                 if (_clickDown && !_waitingForRelease && i && i._canBePickedUp)
                 {
                     _waitingForRelease = true;
