@@ -5,4 +5,5 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     public bool _canBePickedUp = false;
+    public bool _canBePushed = false;
 }

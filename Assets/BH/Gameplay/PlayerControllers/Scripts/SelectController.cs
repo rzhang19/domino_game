@@ -27,7 +27,15 @@ namespace BH
             _scrollWheel = 0f;
 
             if (_locks.Count > 0)
+            {
+                // Unselect everything upon input lock.
+                foreach (Selectable selectable in _selected)
+                    selectable.Deselect();
+                _selected.RemoveAll(selected => true);
+                _selectedTransforms.RemoveAll(selected => true);
+
                 return;
+            }
 
             _clickDown = InputManager.GetKeyDown("Attack1");
             _clickUp = InputManager.GetKeyUp("Attack1");

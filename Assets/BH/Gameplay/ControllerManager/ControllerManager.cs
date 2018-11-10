@@ -12,15 +12,18 @@ namespace BH
         [SerializeField] TakesInput[] _freeFloatInputs;
         [SerializeField] TakesInput[] _pickupInputs;
         [SerializeField] TakesInput[] _selectInputs;
+        [SerializeField] TakesInput[] _spectatorModeInputs;
         [SerializeField] Canvas _freeFloatCanvas;
         [SerializeField] Canvas _pickupCanvas;
         [SerializeField] Canvas _selectCanvas;
+        [SerializeField] Canvas _spectatorModeCanvas;
 
         enum Controller
         {
             FreeFloat,
             Pickup,
             Select,
+            SpectatorMode
         }
         Controller _controller;
 
@@ -42,6 +45,9 @@ namespace BH
                         Select();
                         break;
                     case Controller.Select:
+                        SpectatorMode();
+                        break;
+                    case Controller.SpectatorMode:
                         FreeFloat();
                         break;
                     default:
@@ -60,6 +66,7 @@ namespace BH
             _freeFloatCanvas.enabled = true;
             _pickupCanvas.enabled = false;
             _selectCanvas.enabled = false;
+            _spectatorModeCanvas.enabled = false;
         }
 
         void Pickup()
@@ -68,10 +75,12 @@ namespace BH
             TakesInput.DisableInputs(_freeFloatInputs, this);
             TakesInput.EnableInputs(_pickupInputs, this);
             TakesInput.DisableInputs(_selectInputs, this);
+            TakesInput.DisableInputs(_spectatorModeInputs, this);
             ToggleCursor.ShowCursor();
             _freeFloatCanvas.enabled = false;
             _pickupCanvas.enabled = true;
             _selectCanvas.enabled = false;
+            _spectatorModeCanvas.enabled = false;
         }
 
         void Select()
@@ -80,10 +89,26 @@ namespace BH
             TakesInput.DisableInputs(_freeFloatInputs, this);
             TakesInput.DisableInputs(_pickupInputs, this);
             TakesInput.EnableInputs(_selectInputs, this);
+            TakesInput.DisableInputs(_spectatorModeInputs, this);
             ToggleCursor.ShowCursor();
             _freeFloatCanvas.enabled = false;
             _pickupCanvas.enabled = false;
             _selectCanvas.enabled = true;
+            _spectatorModeCanvas.enabled = false;
+        }
+
+        void SpectatorMode()
+        {
+            _controller = Controller.SpectatorMode;
+            TakesInput.DisableInputs(_freeFloatInputs, this);
+            TakesInput.DisableInputs(_pickupInputs, this);
+            TakesInput.DisableInputs(_selectInputs, this);
+            TakesInput.EnableInputs(_spectatorModeInputs, this);
+            ToggleCursor.ShowCursor();
+            _freeFloatCanvas.enabled = false;
+            _pickupCanvas.enabled = false;
+            _selectCanvas.enabled = false;
+            _spectatorModeCanvas.enabled = true;
         }
     }
 }

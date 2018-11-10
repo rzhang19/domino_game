@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canBePickedUp: 1
+  _canBePushed: 1
 --- !u!114 &114354235152358436
 MonoBehaviour:
   m_ObjectHideFlags: 1

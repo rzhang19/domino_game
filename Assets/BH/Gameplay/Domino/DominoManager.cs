@@ -38,7 +38,20 @@ namespace BH
         {
             _activeDominos.Remove(domino);
             domino.Delete();
-            domino.enabled = false;
+        }
+
+        public void DespawnAllDominos()
+        {
+            // If SelectController calls this function in any way, it must clear
+            // its own "selected objects" array as well.
+            // Or we could invoke an event to tell SelectController to clear its
+            // selected-objects array.
+            foreach (Selectable activeDomino in _activeDominos)
+            {
+                activeDomino.Delete();
+            }
+
+            _activeDominos.RemoveAll(activeDomino => true);
         }
 
         public void SaveData()
@@ -51,15 +64,19 @@ namespace BH
 
             SerializableTransforms serializedActiveTransforms = new SerializableTransforms(activeTransforms.ToArray());
             myData = JsonUtility.ToJson(serializedActiveTransforms);
+
+            // Write the JSON to a file
         }
 
         public void LoadData()
         {
-
+            // Load JSON from a file
         }
-
-        public void SpawnLoadedData()
+        
+        public void ResetDominos()
         {
+            DespawnAllDominos();
+
             SerializableTransforms serializedActiveTransforms = JsonUtility.FromJson<SerializableTransforms>(myData);
             foreach (SerializableTransform st in serializedActiveTransforms._serializableTransforms)
             {
