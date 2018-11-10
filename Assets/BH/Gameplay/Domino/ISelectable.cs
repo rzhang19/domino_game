@@ -11,5 +11,6 @@ namespace BH
         void Deselect();
         void Toggle();
         void Delete();
+        void Rotate(Vector3 point, Vector3 axis, float deg);
     }
 }

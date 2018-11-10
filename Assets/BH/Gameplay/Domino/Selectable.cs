@@ -5,7 +5,7 @@ using BH.DesignPatterns;
 
 namespace BH
 {
-    public class Domino : PooledMonobehaviour, ISelectable
+    public class Selectable : PooledMonobehaviour, ISelectable
     {
         bool _isSelected = false;
 
@@ -72,6 +72,11 @@ namespace BH
         {
             Debug.Log("Deleted " + name);
             gameObject.SetActive(false);
+        }
+
+        public void Rotate(Vector3 point, Vector3 axis, float deg)
+        {
+            transform.RotateAround(point, axis, deg);
         }
     }
 }

@@ -18,7 +18,9 @@ namespace BH
             {"Sink",            new KeyCode[] {KeyCode.LeftShift, KeyCode.None}},
 
             {"Attack1",         new KeyCode[] {KeyCode.Mouse0, KeyCode.None}},
-            {"Attack2",         new KeyCode[] {KeyCode.Mouse1, KeyCode.None}}
+            {"Attack2",         new KeyCode[] {KeyCode.Mouse1, KeyCode.None}},
+
+            {"Rotate",          new KeyCode[] {KeyCode.R, KeyCode.None}}
         };
 
         public static bool GetKey(string key)
