@@ -9,46 +9,64 @@ namespace BH
 {
     public class ControllerManager : Singleton<ControllerManager>
     {
-        [SerializeField] TakesInput[] _freeFloatInputs;
-        [SerializeField] TakesInput[] _pickupInputs;
-        [SerializeField] TakesInput[] _selectInputs;
+        [SerializeField] TakesInput[] _freeFlyInputs;
+        [SerializeField] TakesInput[] _buildModeInputs;
         [SerializeField] TakesInput[] _spectatorModeInputs;
-        [SerializeField] Canvas _freeFloatCanvas;
-        [SerializeField] Canvas _pickupCanvas;
-        [SerializeField] Canvas _selectCanvas;
+        [SerializeField] Canvas _freeFlyCanvas;
+        [SerializeField] Canvas _buildModeCanvas;
         [SerializeField] Canvas _spectatorModeCanvas;
-
+        
         enum Controller
         {
-            FreeFloat,
-            Pickup,
-            Select,
-            SpectatorMode
+            BuildMode,
+            BuildModeFreeFly,
+            SpectatorMode,
+            SpectatorModeFreeFly
         }
         Controller _controller;
 
         void Start()
         {
-            Select();
+            BuildMode();
         }
 
         void Update()
         {
-            if (InputManager.GetPauseKeyDown())
+            if (InputManager.GetKeyDown("Toggle Free-fly"))
             {
                 switch (_controller)
                 {
-                    case Controller.FreeFloat:
-                        Pickup();
+                    case Controller.BuildMode:
+                        BuildModeFreeFly();
                         break;
-                    case Controller.Pickup:
-                        Select();
+                    case Controller.BuildModeFreeFly:
+                        BuildMode();
                         break;
-                    case Controller.Select:
+                    case Controller.SpectatorMode:
+                        SpectatorModeFreeFly();
+                        break;
+                    case Controller.SpectatorModeFreeFly:
+                        SpectatorMode();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (InputManager.GetKeyDown("Toggle Build/Spectate"))
+            {
+                switch (_controller)
+                {
+                    case Controller.BuildMode:
+                        SpectatorMode();
+                        break;
+                    case Controller.BuildModeFreeFly:
                         SpectatorMode();
                         break;
                     case Controller.SpectatorMode:
-                        FreeFloat();
+                        BuildMode();
+                        break;
+                    case Controller.SpectatorModeFreeFly:
+                        BuildMode();
                         break;
                     default:
                         break;
@@ -56,59 +74,60 @@ namespace BH
             }
         }
 
-        void FreeFloat()
+        void BuildModeFreeFly()
         {
-            _controller = Controller.FreeFloat;
-            TakesInput.EnableInputs(_freeFloatInputs, this);
-            TakesInput.DisableInputs(_pickupInputs, this);
-            TakesInput.DisableInputs(_selectInputs, this);
+            _controller = Controller.BuildModeFreeFly;
+            TakesInput.EnableInputs(_freeFlyInputs, this);
+            TakesInput.DisableInputs(_buildModeInputs, this);
+            TakesInput.DisableInputs(_spectatorModeInputs, this);
             ToggleCursor.HideCursor();
-            _freeFloatCanvas.enabled = true;
-            _pickupCanvas.enabled = false;
-            _selectCanvas.enabled = false;
+            _freeFlyCanvas.enabled = true;
+            _buildModeCanvas.enabled = false;
             _spectatorModeCanvas.enabled = false;
+            
+            DominoManager.Instance.FreezeRotation();
         }
 
-        void Pickup()
+        void SpectatorModeFreeFly()
         {
-            _controller = Controller.Pickup;
-            TakesInput.DisableInputs(_freeFloatInputs, this);
-            TakesInput.EnableInputs(_pickupInputs, this);
-            TakesInput.DisableInputs(_selectInputs, this);
+            _controller = Controller.SpectatorModeFreeFly;
+            TakesInput.EnableInputs(_freeFlyInputs, this);
+            TakesInput.DisableInputs(_buildModeInputs, this);
             TakesInput.DisableInputs(_spectatorModeInputs, this);
-            ToggleCursor.ShowCursor();
-            _freeFloatCanvas.enabled = false;
-            _pickupCanvas.enabled = true;
-            _selectCanvas.enabled = false;
+            ToggleCursor.HideCursor();
+            _freeFlyCanvas.enabled = true;
+            _buildModeCanvas.enabled = false;
             _spectatorModeCanvas.enabled = false;
+            
+            DominoManager.Instance.FreezeRotation();
         }
 
-        void Select()
+        void BuildMode()
         {
-            _controller = Controller.Select;
-            TakesInput.DisableInputs(_freeFloatInputs, this);
-            TakesInput.DisableInputs(_pickupInputs, this);
-            TakesInput.EnableInputs(_selectInputs, this);
+            _controller = Controller.BuildMode;
+            TakesInput.DisableInputs(_freeFlyInputs, this);
+            TakesInput.EnableInputs(_buildModeInputs, this);
             TakesInput.DisableInputs(_spectatorModeInputs, this);
             ToggleCursor.ShowCursor();
-            _freeFloatCanvas.enabled = false;
-            _pickupCanvas.enabled = false;
-            _selectCanvas.enabled = true;
+            _freeFlyCanvas.enabled = false;
+            _buildModeCanvas.enabled = true;
             _spectatorModeCanvas.enabled = false;
+            
+            DominoManager.Instance.FreezeRotation();
         }
 
         void SpectatorMode()
         {
             _controller = Controller.SpectatorMode;
-            TakesInput.DisableInputs(_freeFloatInputs, this);
-            TakesInput.DisableInputs(_pickupInputs, this);
-            TakesInput.DisableInputs(_selectInputs, this);
+            TakesInput.DisableInputs(_freeFlyInputs, this);
+            TakesInput.DisableInputs(_buildModeInputs, this);
             TakesInput.EnableInputs(_spectatorModeInputs, this);
             ToggleCursor.ShowCursor();
-            _freeFloatCanvas.enabled = false;
-            _pickupCanvas.enabled = false;
-            _selectCanvas.enabled = false;
+            _freeFlyCanvas.enabled = false;
+            _buildModeCanvas.enabled = false;
             _spectatorModeCanvas.enabled = true;
+            
+            DominoManager.Instance.UnfreezeRotation();
         }
     }
 }

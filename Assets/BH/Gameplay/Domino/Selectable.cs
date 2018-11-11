@@ -5,7 +5,8 @@ using BH.DesignPatterns;
 
 namespace BH
 {
-    public class Selectable : PooledMonobehaviour, ISelectable
+    [RequireComponent(typeof(Rigidbody))]
+    public class Selectable : PooledMonobehaviour//, ISelectable
     {
         bool _isSelected = false;
 
@@ -13,6 +14,8 @@ namespace BH
         [SerializeField] Material _selectedMaterial;
 
         MeshRenderer _renderer;
+
+        Rigidbody _rigidBody;
 
         void Awake()
         {
@@ -24,6 +27,8 @@ namespace BH
 
             _renderer = GetComponentInChildren<MeshRenderer>();
             _renderer.material = _defaultMaterial;
+
+            _rigidBody = GetComponent<Rigidbody>();
         }
         
         void OnEnable()
@@ -77,6 +82,26 @@ namespace BH
         public void Rotate(Vector3 point, Vector3 axis, float deg)
         {
             transform.RotateAround(point, axis, deg);
+        }
+
+        public void FreezeRotation()
+        {
+            _rigidBody.freezeRotation = true;
+        }
+
+        public void UnfreezeRotation()
+        {
+            _rigidBody.freezeRotation = false;
+        }
+
+        public void SetVelocity(Vector3 vel)
+        {
+            _rigidBody.velocity = vel;
+        }
+
+        public void SetAngularVelocity(Vector3 vel)
+        {
+            _rigidBody.angularVelocity = vel;
         }
     }
 }

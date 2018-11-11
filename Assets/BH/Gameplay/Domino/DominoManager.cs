@@ -12,7 +12,9 @@ namespace BH
 
         List<Selectable> _activeDominos = new List<Selectable>();
         [SerializeField] Selectable _dominoPrefab;
-        string myData = "";
+        string _currentSave = "";
+
+        bool _freezeRotation = false;
 
         void Awake()
         {
@@ -24,13 +26,19 @@ namespace BH
         
         public void SpawnDomino()
         {
-            SpawnDomino(Vector3.zero + Vector3.up, Quaternion.identity);
+            SpawnDomino(Vector3.zero + Vector3.up * 2, Quaternion.identity);
         }
 
         public void SpawnDomino(Vector3 pos, Quaternion rot)
         {
             Selectable domino = _dominoPrefab.Get<Selectable>(null, pos, rot);
             domino.transform.position = pos;
+            domino.SetVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
+            domino.SetAngularVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
+            if (_freezeRotation)
+                domino.FreezeRotation();
+            else
+                domino.UnfreezeRotation();
             _activeDominos.Add(domino);
         }
 
@@ -63,7 +71,7 @@ namespace BH
             }
 
             SerializableTransforms serializedActiveTransforms = new SerializableTransforms(activeTransforms.ToArray());
-            myData = JsonUtility.ToJson(serializedActiveTransforms);
+            _currentSave = JsonUtility.ToJson(serializedActiveTransforms);
 
             // Write the JSON to a file
         }
@@ -77,10 +85,36 @@ namespace BH
         {
             DespawnAllDominos();
 
-            SerializableTransforms serializedActiveTransforms = JsonUtility.FromJson<SerializableTransforms>(myData);
+            SerializableTransforms serializedActiveTransforms = JsonUtility.FromJson<SerializableTransforms>(_currentSave);
             foreach (SerializableTransform st in serializedActiveTransforms._serializableTransforms)
             {
                 SpawnDomino(st._position, st._rotation);
+            }
+        }
+
+        public void FreezeRotation()
+        {
+            if (_freezeRotation)
+                return;
+
+            _freezeRotation = true;
+
+            foreach (Selectable activeDomino in _activeDominos)
+            {
+                activeDomino.FreezeRotation();
+            }
+        }
+
+        public void UnfreezeRotation()
+        {
+            if (!_freezeRotation)
+                return;
+
+            _freezeRotation = false;
+
+            foreach (Selectable activeDomino in _activeDominos)
+            {
+                activeDomino.UnfreezeRotation();
             }
         }
     }

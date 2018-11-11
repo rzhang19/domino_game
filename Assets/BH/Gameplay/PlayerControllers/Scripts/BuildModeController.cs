@@ -4,16 +4,24 @@ using UnityEngine;
 
 namespace BH
 {
-    public class PickupController : TakesInput
+    public class BuildModeController : TakesInput
     {
         // Input state
-        bool _clickDown = false;
-        bool _clickUp = false;
+        bool _selectDown = false;
+        bool _selectUp = false;
+        bool _pickupDown = false;
+        bool _pickupUp = false;
+        float _scrollWheel = 0f;
 
         Camera _cam;
         float _distance = float.MaxValue;
         public LayerMask _interactableMask;
+        
+        // For selection functionality
+        List<Selectable> _selected = new List<Selectable>();
+        List<Transform> _selectedTransforms = new List<Transform>();
 
+        // For pickup functionality
         public Vector3 _pickUpOffset = Vector3.up;
         bool _waitingForRelease = false;
         Vector3 _offset;
@@ -23,19 +31,33 @@ namespace BH
         public float _maxVelocityDistance = 10f;
         public float _maxVelocity = 50f;
         public float _bufferDistance = 2f;
-
+        
         public LayerMask _interactSurfaceMask;
 
         void GetInput()
         {
-            _clickDown = false;
-            _clickUp = true;
-
             if (_locks.Count > 0)
-                return;
+            {
+                _selectDown = false;
+                _selectUp = true;
+                _pickupDown = false;
+                _pickupUp = true;
+                _scrollWheel = 0f;
 
-            _clickDown = InputManager.GetKeyDown("Attack1");
-            _clickUp = InputManager.GetKeyUp("Attack1");
+                // Unselect everything upon input lock.
+                foreach (Selectable selectable in _selected)
+                    selectable.Deselect();
+                _selected.RemoveAll(selected => true);
+                _selectedTransforms.RemoveAll(selected => true);
+
+                return;
+            }
+
+            _selectDown = InputManager.GetKeyDown("Attack2");
+            _selectUp = InputManager.GetKeyUp("Attack2");
+            _pickupDown = InputManager.GetKeyDown("Attack1");
+            _pickupUp = InputManager.GetKeyUp("Attack1");
+            _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
         }
 
         void Awake()
@@ -51,8 +73,9 @@ namespace BH
         void Update()
         {
             GetInput();
-            
-            if (_waitingForRelease && _clickUp)
+
+            // Pickup release
+            if (_waitingForRelease && _pickupUp)
             {
                 _waitingForRelease = false;
                 if (_pickedUp.velocity.y > 0)
@@ -91,8 +114,9 @@ namespace BH
 
             if (Physics.Raycast(ray, out hitInfo, _distance, _interactableMask))
             {
+                // Pickup
                 Interactable i = hitInfo.collider.GetComponentInChildren<Interactable>();
-                if (_clickDown && !_waitingForRelease && i && i._canBePickedUp)
+                if (_pickupDown && !_waitingForRelease && i && i._canBePickedUp)
                 {
                     _waitingForRelease = true;
                     _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
@@ -111,7 +135,79 @@ namespace BH
 
                     Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
                 }
+
+                // Select
+                if (_selectDown)
+                {
+                    Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
+                    if (_selected != null)
+                    {
+                        if (selectable.IsSelected())
+                        {
+                            _selected.Remove(selectable);
+                            _selectedTransforms.Remove(selectable.transform);
+                            selectable.Deselect();
+                        }
+                        else
+                        {
+                            _selected.Add(selectable);
+                            _selectedTransforms.Add(selectable.transform);
+                            selectable.Select();
+                        }
+                    }
+                }
             }
+
+            if (_scrollWheel != 0f)
+                RotateSelected(_scrollWheel * 10f);
+        }
+        
+        public void DeleteSelected()
+        {
+            foreach (Selectable selectable in _selected)
+            {
+                DominoManager.Instance.DespawnDomino(selectable);
+            }
+
+            _selected.RemoveAll(selected => true);
+            _selectedTransforms.RemoveAll(selected => true);
+        }
+
+        public void RotateSelected()
+        {
+            Vector3 center = FindCenter(_selectedTransforms.ToArray());
+
+            foreach (Selectable selectable in _selected)
+            {
+                selectable.Rotate(center, Vector3.up, 30f * Time.deltaTime);
+            }
+        }
+
+        public void RotateSelected(float deg)
+        {
+            Vector3 center = FindCenter(_selectedTransforms.ToArray());
+
+            foreach (Selectable selectable in _selected)
+            {
+                selectable.Rotate(center, Vector3.up, deg);
+            }
+        }
+
+        Vector3 FindCenter(Transform[] tfs)
+        {
+            if (tfs.Length <= 0)
+                return Vector3.zero;
+
+            if (tfs.Length == 1)
+                return tfs[0].position;
+
+            Bounds bounds = new Bounds();
+            foreach (Transform tf in tfs)
+            {
+                bounds.Encapsulate(tf.position);
+            }
+
+            return bounds.center;
         }
     }
 }
