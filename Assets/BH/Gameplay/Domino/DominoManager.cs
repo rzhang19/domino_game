@@ -10,7 +10,7 @@ namespace BH
     {
         protected DominoManager() { }
 
-        List<Selectable> _activeDominos = new List<Selectable>();
+        List<Selectable> _activeDominoes = new List<Selectable>();
         [SerializeField] Selectable _dominoPrefab;
         string _currentSave = "";
 
@@ -39,33 +39,33 @@ namespace BH
                 domino.FreezeRotation();
             else
                 domino.UnfreezeRotation();
-            _activeDominos.Add(domino);
+            _activeDominoes.Add(domino);
         }
 
         public void DespawnDomino(Selectable domino)
         {
-            _activeDominos.Remove(domino);
+            _activeDominoes.Remove(domino);
             domino.Delete();
         }
 
-        public void DespawnAllDominos()
+        public void DespawnAllDominoes()
         {
             // If SelectController calls this function in any way, it must clear
             // its own "selected objects" array as well.
             // Or we could invoke an event to tell SelectController to clear its
             // selected-objects array.
-            foreach (Selectable activeDomino in _activeDominos)
+            foreach (Selectable activeDomino in _activeDominoes)
             {
                 activeDomino.Delete();
             }
 
-            _activeDominos.RemoveAll(activeDomino => true);
+            _activeDominoes.RemoveAll(activeDomino => true);
         }
 
         public void SaveData()
         {
             List<Transform> activeTransforms = new List<Transform>();
-            foreach (Selectable activeDomino in _activeDominos)
+            foreach (Selectable activeDomino in _activeDominoes)
             {
                 activeTransforms.Add(activeDomino.transform);
             }
@@ -81,9 +81,9 @@ namespace BH
             // Load JSON from a file
         }
         
-        public void ResetDominos()
+        public void ResetDominoes()
         {
-            DespawnAllDominos();
+            DespawnAllDominoes();
 
             SerializableTransforms serializedActiveTransforms = JsonUtility.FromJson<SerializableTransforms>(_currentSave);
             foreach (SerializableTransform st in serializedActiveTransforms._serializableTransforms)
@@ -99,7 +99,7 @@ namespace BH
 
             _freezeRotation = true;
 
-            foreach (Selectable activeDomino in _activeDominos)
+            foreach (Selectable activeDomino in _activeDominoes)
             {
                 activeDomino.FreezeRotation();
             }
@@ -112,7 +112,7 @@ namespace BH
 
             _freezeRotation = false;
 
-            foreach (Selectable activeDomino in _activeDominos)
+            foreach (Selectable activeDomino in _activeDominoes)
             {
                 activeDomino.UnfreezeRotation();
             }
