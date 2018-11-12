@@ -2,6 +2,11 @@
 
 namespace BH
 {
+    /// <summary>
+    /// NOT CURRENTLY IN USE.
+    /// This class is an alternative implementation for the free-fly controller.
+    /// </summary>
+    /// <seealso cref="BH.TakesInput" />
     [RequireComponent(typeof(CharacterController))]
     public class FreeFlyController : TakesInput
     {

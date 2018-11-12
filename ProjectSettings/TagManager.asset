@@ -14,8 +14,8 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - Interactable
-  - InteractSurface
+  - Selectable
+  - SeletableSurface
   - 
   - 
   - 

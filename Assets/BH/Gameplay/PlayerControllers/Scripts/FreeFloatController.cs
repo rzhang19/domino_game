@@ -2,6 +2,12 @@
 
 namespace BH
 {
+    /// <summary>
+    /// The current free-fly controller.
+    /// This class reads and responds to player inputs.
+    /// Most notably, this class reads WASD inputs and moves the player appropriately.
+    /// </summary>
+    /// <seealso cref="BH.TakesInput" />
     [RequireComponent(typeof(CharacterController))]
     public class FreeFloatController : TakesInput
     {

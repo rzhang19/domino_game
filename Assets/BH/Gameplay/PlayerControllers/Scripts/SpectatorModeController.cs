@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// Manages the controls in spectator mode.
+    /// This class reads and responds to player inputs.
+    /// Most notably, this class provides the logic for pushing game objects through click-and-drag.
+    /// </summary>
+    /// <seealso cref="BH.TakesInput" />
     [RequireComponent(typeof(LineRenderer))]
     public class SpectatorModeController : TakesInput
     {
@@ -13,7 +19,7 @@ namespace BH
 
         Camera _cam;
         float _distance = float.MaxValue;
-        public LayerMask _interactableMask;
+        public LayerMask _selectableMask;
         
         bool _waitingForRelease = false;
         Rigidbody _holding = null;
@@ -87,10 +93,10 @@ namespace BH
                 }
             }
 
-            if (Physics.Raycast(ray, out hitInfo, _distance, _interactableMask))
+            if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
-                Interactable i = hitInfo.collider.GetComponentInChildren<Interactable>();
-                if (_clickDown && !_waitingForRelease && i && i._canBePushed)
+                Selectable sel = hitInfo.collider.GetComponentInChildren<Selectable>();
+                if (_clickDown && !_waitingForRelease && sel && sel._canBePushed)
                 {
                     _waitingForRelease = true;
                     _holding = hitInfo.collider.GetComponent<Rigidbody>();

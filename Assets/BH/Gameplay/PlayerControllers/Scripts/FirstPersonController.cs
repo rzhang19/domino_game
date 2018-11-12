@@ -2,6 +2,10 @@
 
 namespace BH
 {
+    /// <summary>
+    /// NOT CURRENTLY IN USE.
+    /// </summary>
+    /// <seealso cref="BH.TakesInput" />
     [RequireComponent(typeof(CharacterController))]
     public class FirstPersonController : TakesInput
     {

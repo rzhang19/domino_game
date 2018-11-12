@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// DEPRECATED. Use "BuildModeController" instead.
+    /// </summary>
+    /// <seealso cref="BH.TakesInput" />
     public class PickupController : TakesInput
     {
         // Input state
@@ -91,7 +95,7 @@ namespace BH
 
             if (Physics.Raycast(ray, out hitInfo, _distance, _interactableMask))
             {
-                Interactable i = hitInfo.collider.GetComponentInChildren<Interactable>();
+                Selectable i = hitInfo.collider.GetComponentInChildren<Selectable>();
                 if (_clickDown && !_waitingForRelease && i && i._canBePickedUp)
                 {
                     _waitingForRelease = true;

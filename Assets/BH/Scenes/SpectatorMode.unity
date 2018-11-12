@@ -277,7 +277,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 866881760}
-        m_MethodName: SaveData
+        m_MethodName: SaveLayout
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -854,7 +854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c8b8d8848630d47bccd5d4162e3bbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactableMask:
+  _selectableMask:
     serializedVersion: 2
     m_Bits: 512
   _velocityCurve:
@@ -1051,7 +1051,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1632067963}
-        m_MethodName: DeleteSelected
+        m_MethodName: DespawnSelected
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1445,7 +1445,7 @@ GameObject:
   - component: {fileID: 866881761}
   - component: {fileID: 866881760}
   m_Layer: 0
-  m_Name: DominoManager
+  m_Name: SelectableManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1462,7 +1462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b018d2a45c02b4aae31bf3914b431e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dominoPrefab: {fileID: 114852131950177650, guid: d5c42c944e01ed949b15ccee09fc7aec,
+  _selectablePrefab: {fileID: 114852131950177650, guid: d5c42c944e01ed949b15ccee09fc7aec,
     type: 2}
 --- !u!4 &866881761
 Transform:
@@ -1847,7 +1847,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 866881760}
-        m_MethodName: SpawnDomino
+        m_MethodName: SpawnSelectable
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2219,7 +2219,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 866881760}
-        m_MethodName: ResetDominoes
+        m_MethodName: ResetLayout
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3082,7 +3082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 533df55b90e9ab248935d32c981cef93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactableMask:
+  _selectableMask:
     serializedVersion: 2
     m_Bits: 512
   _pickUpOffset: {x: 0, y: 2.5, z: 0}
@@ -3113,7 +3113,7 @@ MonoBehaviour:
   _maxVelocityDistance: 10
   _maxVelocity: 100
   _bufferDistance: 3
-  _interactSurfaceMask:
+  _selectableSurfaceMask:
     serializedVersion: 2
     m_Bits: 1024
 --- !u!1 &1647836697

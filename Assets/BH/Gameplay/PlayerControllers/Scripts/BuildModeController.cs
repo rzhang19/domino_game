@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// Manages the controls in build mode.
+    /// This class reads and responds to player inputs.
+    /// Most notably, this class provides the logic for game object selection and pickup.
+    /// </summary>
+    /// <seealso cref="BH.TakesInput" />
     public class BuildModeController : TakesInput
     {
         // Input state
@@ -15,24 +21,24 @@ namespace BH
 
         Camera _cam;
         float _distance = float.MaxValue;
-        public LayerMask _interactableMask;
+        [SerializeField] LayerMask _selectableMask;
         
         // For selection functionality
         List<Selectable> _selected = new List<Selectable>();
         List<Transform> _selectedTransforms = new List<Transform>();
 
         // For pickup functionality
-        public Vector3 _pickUpOffset = Vector3.up;
+        [SerializeField] Vector3 _pickUpOffset = Vector3.up;
         bool _waitingForRelease = false;
         Vector3 _offset;
         Rigidbody _pickedUp = null;
         ClosestColliderBelow _closestColliderBelow = null;
-        public AnimationCurve _velocityCurve;
-        public float _maxVelocityDistance = 10f;
-        public float _maxVelocity = 50f;
-        public float _bufferDistance = 2f;
-        
-        public LayerMask _interactSurfaceMask;
+        [SerializeField] AnimationCurve _velocityCurve;
+        [SerializeField] float _maxVelocityDistance = 10f;
+        [SerializeField] float _maxVelocity = 50f;
+        [SerializeField] float _bufferDistance = 2f;
+
+        [SerializeField] LayerMask _selectableSurfaceMask;
 
         void GetInput()
         {
@@ -81,7 +87,6 @@ namespace BH
                 if (_pickedUp.velocity.y > 0)
                     _pickedUp.velocity = new Vector3(_pickedUp.velocity.x, 0f, _pickedUp.velocity.z);
                 _pickedUp.useGravity = true;
-                //_pickedUp.freezeRotation = false;
                 _pickedUp = null;
                 _offset = Vector3.zero;
 
@@ -96,7 +101,7 @@ namespace BH
             RaycastHit hitInfo;
 
             Vector3 offsetBase = Vector3.zero;
-            if (Physics.Raycast(ray, out hitInfo, _distance, _interactSurfaceMask))
+            if (Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask))
             {
                 offsetBase = hitInfo.point;
                 if (_pickedUp)
@@ -112,36 +117,33 @@ namespace BH
                 }
             }
 
-            if (Physics.Raycast(ray, out hitInfo, _distance, _interactableMask))
+            if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
-                // Pickup
-                Interactable i = hitInfo.collider.GetComponentInChildren<Interactable>();
-                if (_pickupDown && !_waitingForRelease && i && i._canBePickedUp)
+                Selectable sel = hitInfo.collider.GetComponentInChildren<Selectable>();
+                if (sel)
                 {
-                    _waitingForRelease = true;
-                    _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
-                    if (_pickedUp)
+                    // Pickup
+                    if (_pickupDown && !_waitingForRelease && sel._canBePickedUp)
                     {
-                        _pickedUp.useGravity = false;
-                        //_pickedUp.freezeRotation = true;
+                        _waitingForRelease = true;
+                        _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
+                        if (_pickedUp)
+                            _pickedUp.useGravity = false;
+                        else
+                            _waitingForRelease = false;
+                        _offset = _pickedUp.position - offsetBase + _pickUpOffset;
+
+                        _closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
+                        if (_closestColliderBelow)
+                            _closestColliderBelow.enabled = true;
+
+                        //Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
                     }
-                    else
-                        _waitingForRelease = false;
-                    _offset = _pickedUp.position - offsetBase + _pickUpOffset;
 
-                    _closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
-                    if (_closestColliderBelow)
-                        _closestColliderBelow.enabled = true;
-
-                    Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
-                }
-
-                // Select
-                if (_selectDown)
-                {
-                    Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
-                    if (_selected != null)
+                    // Select
+                    if (_selectDown)
                     {
+                        Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
                         if (selectable.IsSelected())
                         {
                             _selected.Remove(selectable);
@@ -161,18 +163,24 @@ namespace BH
             if (_scrollWheel != 0f)
                 RotateSelected(_scrollWheel * 10f);
         }
-        
-        public void DeleteSelected()
+
+        /// <summary>
+        /// Despawns the selected game objects.
+        /// </summary>
+        public void DespawnSelected()
         {
             foreach (Selectable selectable in _selected)
             {
-                DominoManager.Instance.DespawnDomino(selectable);
+                SelectableManager.Instance.DespawnSelectable(selectable);
             }
 
             _selected.RemoveAll(selected => true);
             _selectedTransforms.RemoveAll(selected => true);
         }
-
+        
+        /// <summary>
+        /// Rotates the selected game objects at a constant speed.
+        /// </summary>
         public void RotateSelected()
         {
             Vector3 center = FindCenter(_selectedTransforms.ToArray());
@@ -183,6 +191,10 @@ namespace BH
             }
         }
 
+        /// <summary>
+        /// Rotates the selected game objects a specified amount.
+        /// </summary>
+        /// <param name="deg">The rotation in degrees.</param>
         public void RotateSelected(float deg)
         {
             Vector3 center = FindCenter(_selectedTransforms.ToArray());

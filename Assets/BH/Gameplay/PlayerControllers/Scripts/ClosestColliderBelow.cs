@@ -5,11 +5,18 @@ using System.Linq;
 
 namespace BH
 {
+    /// <summary>
+    /// Detects the closest collider below the game object this script is attached to.
+    /// </summary>
+    /// <seealso cref="UnityEngine.MonoBehaviour" />
     public class ClosestColliderBelow : MonoBehaviour
     {
         MeshFilter _meshFilter;
         MeshCollider _meshCollider;
         float _colliderHeight = 10f;
+        /// <summary>
+        /// The transform of the closest collider below.
+        /// </summary>
         public Transform _closestTransform;
 
         [SerializeField] LayerMask _mask;

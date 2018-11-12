@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// An interface for Unity's input system.
+    /// This class creates a mapping of strings to KeyCodes to aid in the readability of inputs.
+    /// </summary>
     public static class InputManager
     {
         public static KeyCode _pauseKey = (Application.isEditor ? KeyCode.T : KeyCode.Escape);
@@ -24,6 +28,11 @@ namespace BH
             {"Toggle Free-fly",             new KeyCode[] {KeyCode.F, KeyCode.None}}
         };
 
+        /// <summary>
+        /// Gets the keypress status.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public static bool GetKey(string key)
         {
             KeyCode[] keyCodes;
@@ -39,6 +48,11 @@ namespace BH
             return false;
         }
 
+        /// <summary>
+        /// Gets the keypress-down status.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public static bool GetKeyDown(string key)
         {
             KeyCode[] keyCodes;
@@ -54,6 +68,11 @@ namespace BH
             return false;
         }
 
+        /// <summary>
+        /// Gets the keypress-up status.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public static bool GetKeyUp(string key)
         {
             KeyCode[] keyCodes;
@@ -69,6 +88,11 @@ namespace BH
             return false;
         }
 
+        /// <summary>
+        /// Gets the first keycode corresponding to key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public static KeyCode GetFirstKeyCode(string key)
         {
             KeyCode[] keyCodes;
@@ -79,11 +103,21 @@ namespace BH
             return KeyCode.None;
         }
 
+        /// <summary>
+        /// Gets the pause-keypress-down status.
+        /// </summary>
+        /// <returns></returns>
         public static bool GetPauseKeyDown()
         {
             return Input.GetKeyDown(_pauseKey);
         }
 
+        /// <summary>
+        /// Overwrites the keybind for specified key, val, and index.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="val">The value.</param>
+        /// <param name="index">The index.</param>
         public static void OverwriteKeybind(string key, KeyCode val, int index)
         {
             if (!_keyDict.ContainsKey(key) || (index < 0 && index >= 1))

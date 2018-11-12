@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// DEPRECATED. Use "BuildModeController" instead.
+    /// </summary>
+    /// <seealso cref="BH.TakesInput" />
     public class SelectController : TakesInput
     {
         // Input state
@@ -94,7 +98,7 @@ namespace BH
         {
             foreach (Selectable selectable in _selected)
             {
-                DominoManager.Instance.DespawnDomino(selectable);
+                SelectableManager.Instance.DespawnSelectable(selectable);
             }
 
             _selected.RemoveAll(selected => true);

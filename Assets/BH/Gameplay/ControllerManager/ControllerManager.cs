@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using BH.DesignPatterns;
 
-// There are some pretty repetitive lines of code in here. Probably should refactor soon...
-
 namespace BH
 {
+    /// <summary>
+    /// Manages the "mode" of the player during gameplay.
+    /// The player can either be in "build mode" or "spectator mode".
+    /// From either of those modes, the player can also toggle between "free-fly" controls or "fixed-camera" controls.
+    /// <para>
+    /// A client can make calls through ControllerManager to change the mode and controls of the player.
+    /// </para>
+    /// </summary>
+    /// <seealso cref="BH.DesignPatterns.Singleton{BH.ControllerManager}" />
     public class ControllerManager : Singleton<ControllerManager>
     {
         [SerializeField] TakesInput[] _freeFlyInputs;
@@ -34,100 +41,116 @@ namespace BH
         {
             if (InputManager.GetKeyDown("Toggle Free-fly"))
             {
-                switch (_controller)
-                {
-                    case Controller.BuildMode:
-                        BuildModeFreeFly();
-                        break;
-                    case Controller.BuildModeFreeFly:
-                        BuildMode();
-                        break;
-                    case Controller.SpectatorMode:
-                        SpectatorModeFreeFly();
-                        break;
-                    case Controller.SpectatorModeFreeFly:
-                        SpectatorMode();
-                        break;
-                    default:
-                        break;
-                }
+                ToggleFreeFly();
             }
             else if (InputManager.GetKeyDown("Toggle Build/Spectate"))
             {
-                switch (_controller)
-                {
-                    case Controller.BuildMode:
-                        SpectatorMode();
-                        break;
-                    case Controller.BuildModeFreeFly:
-                        SpectatorMode();
-                        break;
-                    case Controller.SpectatorMode:
-                        BuildMode();
-                        break;
-                    case Controller.SpectatorModeFreeFly:
-                        BuildMode();
-                        break;
-                    default:
-                        break;
-                }
+                ToggleMode();
+            }
+        }
+        
+        /// <summary>
+        /// Toggles between build mode and spectator mode.
+        /// </summary>
+        public void ToggleMode()
+        {
+            switch (_controller)
+            {
+                case Controller.BuildMode:
+                    BuildModeFreeFly();
+                    break;
+                case Controller.BuildModeFreeFly:
+                    BuildMode();
+                    break;
+                case Controller.SpectatorMode:
+                    SpectatorModeFreeFly();
+                    break;
+                case Controller.SpectatorModeFreeFly:
+                    SpectatorMode();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Toggles between free-fly controls and fixed-camera controls.
+        /// </summary>
+        public void ToggleFreeFly()
+        {
+            switch (_controller)
+            {
+                case Controller.BuildMode:
+                    SpectatorMode();
+                    break;
+                case Controller.BuildModeFreeFly:
+                    SpectatorMode();
+                    break;
+                case Controller.SpectatorMode:
+                    BuildMode();
+                    break;
+                case Controller.SpectatorModeFreeFly:
+                    BuildMode();
+                    break;
+                default:
+                    break;
             }
         }
 
         void BuildModeFreeFly()
         {
             _controller = Controller.BuildModeFreeFly;
-            TakesInput.EnableInputs(_freeFlyInputs, this);
-            TakesInput.DisableInputs(_buildModeInputs, this);
-            TakesInput.DisableInputs(_spectatorModeInputs, this);
-            ToggleCursor.HideCursor();
+            TakesInput.UnlockInputs(_freeFlyInputs, this);
+            TakesInput.LockInputs(_buildModeInputs, this);
+            TakesInput.LockInputs(_spectatorModeInputs, this);
+            CursorController.HideCursor();
             _freeFlyCanvas.enabled = true;
             _buildModeCanvas.enabled = false;
             _spectatorModeCanvas.enabled = false;
             
-            DominoManager.Instance.FreezeRotation();
+            SelectableManager.Instance.FreezeRotation();
         }
 
         void SpectatorModeFreeFly()
         {
             _controller = Controller.SpectatorModeFreeFly;
-            TakesInput.EnableInputs(_freeFlyInputs, this);
-            TakesInput.DisableInputs(_buildModeInputs, this);
-            TakesInput.DisableInputs(_spectatorModeInputs, this);
-            ToggleCursor.HideCursor();
+            TakesInput.UnlockInputs(_freeFlyInputs, this);
+            TakesInput.LockInputs(_buildModeInputs, this);
+            TakesInput.LockInputs(_spectatorModeInputs, this);
+            CursorController.HideCursor();
             _freeFlyCanvas.enabled = true;
             _buildModeCanvas.enabled = false;
             _spectatorModeCanvas.enabled = false;
             
-            DominoManager.Instance.FreezeRotation();
+            SelectableManager.Instance.FreezeRotation();
         }
 
         void BuildMode()
         {
             _controller = Controller.BuildMode;
-            TakesInput.DisableInputs(_freeFlyInputs, this);
-            TakesInput.EnableInputs(_buildModeInputs, this);
-            TakesInput.DisableInputs(_spectatorModeInputs, this);
-            ToggleCursor.ShowCursor();
+            TakesInput.LockInputs(_freeFlyInputs, this);
+            TakesInput.UnlockInputs(_buildModeInputs, this);
+            TakesInput.LockInputs(_spectatorModeInputs, this);
+            CursorController.ShowCursor();
             _freeFlyCanvas.enabled = false;
             _buildModeCanvas.enabled = true;
             _spectatorModeCanvas.enabled = false;
             
-            DominoManager.Instance.FreezeRotation();
+            SelectableManager.Instance.FreezeRotation();
         }
 
         void SpectatorMode()
         {
             _controller = Controller.SpectatorMode;
-            TakesInput.DisableInputs(_freeFlyInputs, this);
-            TakesInput.DisableInputs(_buildModeInputs, this);
-            TakesInput.EnableInputs(_spectatorModeInputs, this);
-            ToggleCursor.ShowCursor();
+            TakesInput.LockInputs(_freeFlyInputs, this);
+            TakesInput.LockInputs(_buildModeInputs, this);
+            TakesInput.UnlockInputs(_spectatorModeInputs, this);
+            CursorController.ShowCursor();
             _freeFlyCanvas.enabled = false;
             _buildModeCanvas.enabled = false;
             _spectatorModeCanvas.enabled = true;
             
-            DominoManager.Instance.UnfreezeRotation();
+            SelectableManager.Instance.UnfreezeRotation();
         }
     }
 }
