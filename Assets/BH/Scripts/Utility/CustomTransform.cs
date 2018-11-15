@@ -4,19 +4,24 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// A simple imitation of Unity's built-in Transform. Exists because Unity severely restricts Transform instantiations.
+    /// </summary>
     public struct CustomTransform
     {
         public Vector3 position;
         public Quaternion rotation;
+        public Vector3 localScale;
 
-        public CustomTransform(Transform t) //(Vector3 p, Quaternion r)
+        /// <summary>
+        /// Creates a CustomTransform with the same position, rotation, and localScale properties as the input.
+        /// </summary>
+        /// <param name='t'>Transform to copy from.</param>
+        public CustomTransform(Transform t)
         {
-            /*
-            position = p;
-            rotation = r;
-            */
             position = t.position;
             rotation = t.rotation;
+            localScale = t.localScale;
         }
     }
 }

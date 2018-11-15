@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace BH 
-{
+{   
+    /// <summary>
+    /// Represents the action of coloring one or more targets. Used to save and revert to a specific domino coloring.
+    /// </summary>
+    /// <seealso cref="BH.ActionClass" />
     public class ColorActionClass : ActionClass
     {
         public Dictionary<Selectable, Color> oldTargetStates = new Dictionary<Selectable, Color>();
 
+        /// <summary>
+        /// Saves a 1-to-1 mapping between targets and their to-be-saved colors.
+        /// Will be switched to a constructor later. (Had some confusion because many Unity classes can't have constructors.)
+        /// </summary>
+        /// <param name="targets">List of Selectable targets.</param>
+        /// <param name="targets">List of Colors to save.</param>
         public void Init(List<Selectable> targets, List<Color> oldProperties) {
             for (int i = 0; i < targets.Count; i++)
             {
@@ -15,6 +25,9 @@ namespace BH
             }
         }
 
+        /// <summary>
+        /// Restores each target to their mapped color. Cannot reverse once executed.
+        /// </summary>
         public override void Undo() 
         {
             foreach(KeyValuePair<Selectable, Color> state in this.oldTargetStates)
@@ -24,16 +37,5 @@ namespace BH
                 target.ChangeColor(oldColor);
             }
         }
-
-        // Use this for initialization
-        void Start () {
-            
-        }
-        
-        // Update is called once per frame
-        void Update () {
-            
-        }
-        
     }
 }
