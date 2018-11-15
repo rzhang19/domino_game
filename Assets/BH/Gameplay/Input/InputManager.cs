@@ -25,14 +25,10 @@ namespace BH
             {"Attack2",                     new KeyCode[] {KeyCode.Mouse1, KeyCode.None}},
             
             {"Toggle Build/Spectate",       new KeyCode[] {KeyCode.T, KeyCode.None}},
-<<<<<<< HEAD
             {"Toggle Free-fly",             new KeyCode[] {KeyCode.F, KeyCode.None}},
             
             {"Toggle Rotation Axis",        new KeyCode[] {KeyCode.R, KeyCode.None}},
             {"Undo",                        new KeyCode[] {KeyCode.Z, KeyCode.None}}
-=======
-            {"Toggle Free-fly",             new KeyCode[] {KeyCode.F, KeyCode.None}}
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         };
 
         /// <summary>
