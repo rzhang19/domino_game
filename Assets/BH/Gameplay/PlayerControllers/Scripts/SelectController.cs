@@ -14,20 +14,13 @@ namespace BH
         bool _clickDown = false;
         bool _clickUp = false;
         bool _rotate = false;
-<<<<<<< HEAD
         bool _upOrSide = false;
-=======
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         float _scrollWheel = 0f;
 
         Camera _cam;
         float _distance = float.MaxValue;
         public LayerMask _interactableMask;
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         List<Selectable> _selected = new List<Selectable>();
         List<Transform> _selectedTransforms = new List<Transform>();
 
@@ -36,10 +29,7 @@ namespace BH
             _clickDown = false;
             _clickUp = true;
             _rotate = false;
-<<<<<<< HEAD
             _upOrSide = false;
-=======
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             _scrollWheel = 0f;
 
             if (_locks.Count > 0)
@@ -56,10 +46,7 @@ namespace BH
             _clickDown = InputManager.GetKeyDown("Attack1");
             _clickUp = InputManager.GetKeyUp("Attack1");
             _rotate = InputManager.GetKey("Rotate");
-<<<<<<< HEAD
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
-=======
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
         }
 
@@ -76,11 +63,7 @@ namespace BH
         void Update()
         {
             GetInput();
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
 
@@ -113,11 +96,7 @@ namespace BH
             if (_scrollWheel != 0f)
                 Rotate(_scrollWheel * 10f);
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         public void Delete()
         {
             foreach (Selectable selectable in _selected)
@@ -132,7 +111,6 @@ namespace BH
         public void Rotate()
         {
             Vector3 center = FindCenter(_selectedTransforms.ToArray());
-<<<<<<< HEAD
             Vector3 rotAxis;
 
             if (_upOrSide)
@@ -148,12 +126,6 @@ namespace BH
             foreach (Selectable selectable in _selected)
             {
                 selectable.Rotate(center, rotAxis, 30f * Time.deltaTime);
-=======
-
-            foreach (Selectable selectable in _selected)
-            {
-                selectable.Rotate(center, Vector3.up, 30f * Time.deltaTime);
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             }
         }
 
@@ -183,7 +155,6 @@ namespace BH
 
             return bounds.center;
         }
-<<<<<<< HEAD
 
         public void ChangeColor(float r, float g, float b)
         {
@@ -192,7 +163,5 @@ namespace BH
                 selectable.ChangeColor(new Color(r, g, b, 1.0f));
             }
         }
-=======
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
     }
 }

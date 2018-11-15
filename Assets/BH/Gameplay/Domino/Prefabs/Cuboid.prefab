@@ -25,11 +25,8 @@ GameObject:
   - component: {fileID: 54989758797802896}
   - component: {fileID: 114354235152358436}
   - component: {fileID: 114852131950177650}
-<<<<<<< HEAD
   - component: {fileID: 114508383220592716}
   - component: {fileID: 82820444077482014}
-=======
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
   m_Layer: 9
   m_Name: Cuboid
   m_TagString: Untagged
@@ -119,7 +116,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
-<<<<<<< HEAD
 --- !u!82 &82820444077482014
 AudioSource:
   m_ObjectHideFlags: 1
@@ -215,8 +211,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-=======
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
 --- !u!114 &114354235152358436
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -233,7 +227,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _xzScale: 2
-<<<<<<< HEAD
 --- !u!114 &114508383220592716
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,8 +239,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clip: {fileID: 8300000, guid: 141257ce8da2be547b44ee9754ebfcee, type: 3}
-=======
->>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
 --- !u!114 &114852131950177650
 MonoBehaviour:
   m_ObjectHideFlags: 1

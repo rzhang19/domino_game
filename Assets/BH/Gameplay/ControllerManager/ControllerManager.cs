@@ -35,7 +35,6 @@ namespace BH
         // Maintain action history as the user switches modes.
         Stack<ActionClass> actions = new Stack<ActionClass>();
 
-
         void Start()
         {
             BuildMode();
