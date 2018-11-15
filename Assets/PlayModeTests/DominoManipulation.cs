@@ -7,7 +7,7 @@ using System.Collections;
 using System.Linq;
 using BH;
 
-public class AddDomino 
+public class DominoManipulation 
 {
     /// User should click a button to add a domino that's tracked by the SelectableManager class.
     [UnityTest]
