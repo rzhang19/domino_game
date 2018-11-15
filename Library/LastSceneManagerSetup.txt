@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/BH/Scenes/SpectatorMode.unity
-  isLoaded: 1
-  isActive: 1
