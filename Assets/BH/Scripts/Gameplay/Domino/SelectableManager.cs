@@ -41,6 +41,17 @@ namespace BH
         }
 
         /// <summary>
+        /// Getter for the list of currently active selectables.
+        /// </summary>
+        /// <returns>
+        ///   A <c>List&lt;Selectable&gt;</c> of active selectables.
+        /// </returns>
+        public List<Selectable> GetActiveSelectables()
+        {
+            return _activeSelectables;
+        }
+
+        /// <summary>
         /// Spawns an instance of the selectable prefab with default position and rotation.
         /// </summary>
         public void SpawnSelectable()

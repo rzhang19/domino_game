@@ -181,15 +181,24 @@ namespace BH
                         }
                         else
                         {
-                            _selected.Add(selectable);
-                            _selectedTransforms.Add(selectable.transform);
-                            selectable.Select();
+                            Select(selectable);
                         }
                     }
                 }
             }
 
             HandleRotation();
+        }
+
+        /// <summary>
+        /// Selects the target Selectable.
+        /// </summary>
+        /// <param name="target">The Selectable to be selected.</param>
+        public void Select(Selectable target)
+        {
+            _selected.Add(target);
+            _selectedTransforms.Add(target.transform);
+            target.Select();
         }
 
         /// <summary>
