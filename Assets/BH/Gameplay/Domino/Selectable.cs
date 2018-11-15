@@ -20,9 +20,13 @@ namespace BH
 
         MeshRenderer _renderer;
         Rigidbody _rigidBody;
+<<<<<<< HEAD
         Color _color = Color.white;
         Color _originalColor;
 
+=======
+        
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         public bool _canBePickedUp = true;
         public bool _canBePushed = true;
 
@@ -30,7 +34,11 @@ namespace BH
         {
             if (!_defaultMaterial)
                 Debug.LogError("Default material is not initialized.");
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             if (!_selectedMaterial)
                 Debug.LogError("Selected material is not initialized.");
 
@@ -38,6 +46,7 @@ namespace BH
             _renderer.material = _defaultMaterial;
 
             _rigidBody = GetComponent<Rigidbody>();
+<<<<<<< HEAD
 
             _originalColor = _renderer.material.GetColor("_AlbedoColor");
         }
@@ -48,6 +57,13 @@ namespace BH
             ResetColor();
             SetVelocity(Vector3.zero); // Hmm. Is it smart to do this here? Or should the client handle this?
             SetAngularVelocity(Vector3.zero); // Hmm. Is it smart to do this here? Or should the client handle this?
+=======
+        }
+        
+        void OnEnable()
+        {
+            Deselect();
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         }
 
         protected override void OnDisable()
@@ -77,7 +93,10 @@ namespace BH
 
             _isSelected = true;
             _renderer.material = _selectedMaterial;
+<<<<<<< HEAD
             RefreshColor();
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         }
 
         /// <summary>
@@ -87,10 +106,16 @@ namespace BH
         {
             if (!_isSelected)
                 return;
+<<<<<<< HEAD
 
             _isSelected = false;
             _renderer.material = _defaultMaterial;
             RefreshColor();
+=======
+            
+            _isSelected = false;
+            _renderer.material = _defaultMaterial;
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         }
 
         /// <summary>
@@ -115,6 +140,7 @@ namespace BH
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// Setter for transform. Input is our custom SerializableTransform to bypass Unity's Transform restrictions.
         /// <param name="newT">The SerializableTransform to copy from.</param>
         /// </summary>
@@ -126,6 +152,8 @@ namespace BH
         }
 
         /// <summary>
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         /// Rotates the attached transform about axis passing through point in world coordinates by deg degrees.
         /// </summary>
         /// <param name="point">The point.</param>
@@ -167,6 +195,7 @@ namespace BH
         {
             _rigidBody.angularVelocity = vel;
         }
+<<<<<<< HEAD
 
         /// <summary>
         /// Sets the material color.
@@ -206,5 +235,7 @@ namespace BH
         {
             _renderer.material.SetColor("_AlbedoColor", _color);
         }
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
     }
 }
