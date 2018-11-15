@@ -21,9 +21,12 @@ namespace BH
         bool _selectUp = false;
         bool _pickupDown = false;
         bool _pickupUp = false;
+<<<<<<< HEAD
         bool _upOrSide = false;
         bool changeAxis = false;
         bool _undoDown = false;
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         float _scrollWheel = 0f;
 
         Camera _cam;
@@ -47,6 +50,7 @@ namespace BH
 
         [SerializeField] LayerMask _selectableSurfaceMask;
 
+<<<<<<< HEAD
         // Store actions to allow undos
         Stack<ActionClass> actions = new Stack<ActionClass>();
         
@@ -54,7 +58,8 @@ namespace BH
         int _scrollBeginThreshold = 20;
         int _numZeroScrolls = 0;
 
-		
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         void GetInput()
         {
             if (_locks.Count > 0)
@@ -63,10 +68,14 @@ namespace BH
                 _selectUp = true;
                 _pickupDown = false;
                 _pickupUp = true;
+<<<<<<< HEAD
                 _upOrSide = false;
                 _undoDown = false;
                 _scrollWheel = 0f;
+=======
+                _scrollWheel = 0f;
 
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
                 // Unselect everything upon input lock.
                 foreach (Selectable selectable in _selected)
                     selectable.Deselect();
@@ -81,9 +90,11 @@ namespace BH
             _pickupDown = InputManager.GetKeyDown("Attack1");
             _pickupUp = InputManager.GetKeyUp("Attack1");
             _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
+<<<<<<< HEAD
             _undoDown = InputManager.GetKeyDown("Undo");
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
-
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         }
 
         void Awake()
@@ -100,6 +111,7 @@ namespace BH
         {
             GetInput();
 
+<<<<<<< HEAD
             // Undo last action
             if (_undoDown && actions.Count > 0)
             {
@@ -107,6 +119,8 @@ namespace BH
                 lastAction.Undo();
             }
 
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             // Pickup release
             if (_waitingForRelease && _pickupUp)
             {
@@ -123,11 +137,14 @@ namespace BH
                     _closestColliderBelow = null;
                 }
             }
+<<<<<<< HEAD
 
             if(_upOrSide)
             {
                 changeAxis = !changeAxis;
             }
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
@@ -160,10 +177,14 @@ namespace BH
                         _waitingForRelease = true;
                         _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
                         if (_pickedUp)
+<<<<<<< HEAD
                         {                                    
                             SaveOldTransformsActionOf(new List<Component>(new Component[] {_pickedUp}));
                             _pickedUp.useGravity = false;
                         }
+=======
+                            _pickedUp.useGravity = false;
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
                         else
                             _waitingForRelease = false;
                         _offset = _pickedUp.position - offsetBase + _pickUpOffset;
@@ -195,7 +216,12 @@ namespace BH
                 }
             }
 
+<<<<<<< HEAD
             HandleRotation();
+=======
+            if (_scrollWheel != 0f)
+                RotateSelected(_scrollWheel * 10f);
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
         }
 
         /// <summary>
@@ -231,6 +257,7 @@ namespace BH
         /// <param name="deg">The rotation in degrees.</param>
         public void RotateSelected(float deg)
         {
+<<<<<<< HEAD
             
             Vector3 center = FindCenter(_selectedTransforms.ToArray());
             Vector3 rotAxis;
@@ -251,6 +278,13 @@ namespace BH
             foreach (Selectable selectable in _selected)
             {
                 selectable.Rotate(center, rotAxis, deg);
+=======
+            Vector3 center = FindCenter(_selectedTransforms.ToArray());
+
+            foreach (Selectable selectable in _selected)
+            {
+                selectable.Rotate(center, Vector3.up, deg);
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             }
         }
 
@@ -270,6 +304,7 @@ namespace BH
 
             return bounds.center;
         }
+<<<<<<< HEAD
 
         /// <summary>
         /// Changes the color of the selected game objects.
@@ -366,5 +401,7 @@ namespace BH
         {
             return this.actions;
         }
+=======
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
     }
 }

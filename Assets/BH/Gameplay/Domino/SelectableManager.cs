@@ -118,6 +118,7 @@ namespace BH
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// Resets the layout to the currently loaded layout by restoring all selectables to their saved transforms.
         /// </summary>
         public void ResetLayout()
@@ -134,6 +135,18 @@ namespace BH
                 {
                     _activeSelectables[i].SetTransform(serializedActiveTransforms._serializableTransforms[i]);
                 }
+=======
+        /// Resets the layout to the currently loaded layout.
+        /// </summary>
+        public void ResetLayout()
+        {
+            DespawnAllSelectable();
+
+            SerializableTransforms serializedActiveTransforms = JsonUtility.FromJson<SerializableTransforms>(_currentSave);
+            foreach (SerializableTransform st in serializedActiveTransforms._serializableTransforms)
+            {
+                SpawnSelectable(st._position, st._rotation);
+>>>>>>> c1d8484c23117d42372cef2a4ed4486fe19f5978
             }
         }
 
