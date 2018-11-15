@@ -1,2 +1,3 @@
-# domino_game
-For CS 130, main project
+# Domino Simulator
+CS 130 Project
+Unity 2018.2.14f1 (64-bit)
