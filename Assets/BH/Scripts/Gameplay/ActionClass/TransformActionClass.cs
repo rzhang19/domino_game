@@ -11,14 +11,14 @@ namespace BH
     /// <seealso cref="BH.ActionClass" />
     public class TransformActionClass : ActionClass
     {
-        public Dictionary<Component, CustomTransform> oldTargetStates = new Dictionary<Component, CustomTransform>();
+        Dictionary<Component, CustomTransform> oldTargetStates = new Dictionary<Component, CustomTransform>();
 
         /// <summary>
         /// Saves a 1-to-1 mapping between targets and their to-be-saved transforms.
         /// Will be switched to a constructor later. (Had some confusion because many Unity classes can't have constructors.)
         /// </summary>
         /// <param name="targets">List of Selectable targets.</param>
-        /// <param name="targets">List of CustomTransforms to save.</param>
+        /// <param name="oldProperties">List of CustomTransforms to save.</param>
         public void Init(List<Component> targets, List<CustomTransform> oldProperties) {
             for (int i = 0; i < targets.Count; i++)
             {

@@ -10,14 +10,14 @@ namespace BH
     /// <seealso cref="BH.ActionClass" />
     public class ColorActionClass : ActionClass
     {
-        public Dictionary<Selectable, Color> oldTargetStates = new Dictionary<Selectable, Color>();
+        Dictionary<Selectable, Color> oldTargetStates = new Dictionary<Selectable, Color>();
 
         /// <summary>
         /// Saves a 1-to-1 mapping between targets and their to-be-saved colors.
         /// Will be switched to a constructor later. (Had some confusion because many Unity classes can't have constructors.)
         /// </summary>
         /// <param name="targets">List of Selectable targets.</param>
-        /// <param name="targets">List of Colors to save.</param>
+        /// <param name="oldProperties">List of Colors to save.</param>
         public void Init(List<Selectable> targets, List<Color> oldProperties) {
             for (int i = 0; i < targets.Count; i++)
             {
