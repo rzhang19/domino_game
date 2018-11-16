@@ -22,7 +22,6 @@ Important folders & subfolders:
 - Docs: our Doxygen-generated documentation
 
 Unimportant folders:
-- Library: NOT libraries! Apparently Unity generates this to store metadata and caches. We didn't touch this
 - Packages: we won't add packages here. We'll add them inside /Assets
 ```
 
