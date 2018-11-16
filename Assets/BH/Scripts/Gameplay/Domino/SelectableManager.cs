@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BH.DesignPatterns;
-using System.IO; // May need this to write data out to a file.
+using System.IO;
 
 namespace BH
 {
