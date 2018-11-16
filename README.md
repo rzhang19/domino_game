@@ -7,7 +7,7 @@ Team: Robin Zhang, Sinan Cetin, Gladys Ng, Manas Kumar, Brandon Hua
 Built with Unity 2018.2.14f1 (64-bit).
 
 ### Tests
-We tested using Unity's built-in Test Runner. All tests are located in the .cs files in the [Assets/PlayModeTests](Assets/PlayModeTests) folder.
+We tested using Unity's built-in Test Runner. All tests are located in the .cs files in the [Assets/PlayModeTests](Assets/PlayModeTests) folder. There are currently 2 .cs files with tests: [DominoManipulation.cs](Assets/PlayModeTests/DominoManipulation.cs) and [SceneInitCorrect.cs](Assets/PlayModeTests/SceneInitCorrect.cs).
 
 #### Test Overview
 Each test loads the initial state of the simulator as a scene, with all important components already instantiated in the scene. The tests can access and manipulate these components to perform a test, usually in the form of an assert. Each test is a function marked with [UnityTest] before its declaration.
@@ -40,6 +40,10 @@ public IEnumerator _Adds_New_Domino()
     Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 1);
 }
 ```
+To Shaghayegh: the Part B report has summaries of the other test cases!
+
+### Documentation
+We generated documentation with a Unity Doxygen plugin. The home page of our documentation is [here](Docs/html/annotated.html). All the significant application code is under the BH namespace which is listed [here](Docs/html/namespace_b_h.html). All documentation is located in the [/Docs/html](Docs/html) folder.
 
 ### Notes
 We will primarily be using Unity Collab for version control, while backing up our work onto this Github repository occasionally.
