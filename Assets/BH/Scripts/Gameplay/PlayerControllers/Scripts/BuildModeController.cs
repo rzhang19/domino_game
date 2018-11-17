@@ -33,8 +33,8 @@ namespace BH
 
         // For pickup functionality
         [SerializeField] Vector3 _pickUpOffset = Vector3.up;
-        bool _waitingForRelease = false;
         Vector3 _offset;
+        Vector3 _offsetBase;
         Rigidbody _pickedUp = null;
         ClosestColliderBelow _closestColliderBelow = null;
         [SerializeField] AnimationCurve _velocityCurve;
@@ -47,9 +47,10 @@ namespace BH
         // Store actions to allow undos
         Stack<ActionClass> actions = new Stack<ActionClass>();
         
-        // Thresholds to detect start of new scrolling, i.e. new rotation
-        int _scrollBeginThreshold = 20;
-        int _numZeroScrolls = 0;
+        // Variables needed for detecting "new" scrolls.
+        [SerializeField] float _scrollRefreshPeriod = .5f;
+        bool _saveOnScroll = true;
+        Coroutine _resetSaveOnScrollCoroutine;
 
         void GetInput()
         {
@@ -99,12 +100,21 @@ namespace BH
             {
                 ActionClass lastAction = actions.Pop();
                 lastAction.Undo();
+
+                // If the player undoes an action, it's clear they've stopped scrolling! Reset _saveOnScroll.
+                _saveOnScroll = true;
+
+                // Stop any running timers that will reset _saveOnScroll needlessly.
+                if (_resetSaveOnScrollCoroutine != null)
+                {
+                    StopCoroutine(_resetSaveOnScrollCoroutine);
+                    _resetSaveOnScrollCoroutine = null;
+                }
             }
 
             // Pickup release
-            if (_waitingForRelease && _pickupUp)
+            if (_pickedUp && _pickupUp)
             {
-                _waitingForRelease = false;
                 if (_pickedUp.velocity.y > 0)
                     _pickedUp.velocity = new Vector3(_pickedUp.velocity.x, 0f, _pickedUp.velocity.z);
                 _pickedUp.useGravity = true;
@@ -126,41 +136,44 @@ namespace BH
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
 
-            Vector3 offsetBase = Vector3.zero;
-            if (Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask))
+            // If some Selectable is picked up, move its position accordingly.
+            if (_pickedUp)
             {
-                offsetBase = hitInfo.point;
-                if (_pickedUp)
-                {
-                    float closestColliderY = float.MinValue;
-                    if (_closestColliderBelow && _closestColliderBelow._closestTransform)
-                        closestColliderY = _closestColliderBelow._closestTransform.position.y;
+                CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _offsetBase, out _offsetBase);
+                
+                float closestColliderY = float.MinValue;
+                if (_closestColliderBelow && _closestColliderBelow._closestTransform)
+                    closestColliderY = _closestColliderBelow._closestTransform.position.y;
 
-                    Vector3 desiredPos = offsetBase + _offset;
-                    desiredPos.y = Mathf.Max(desiredPos.y, closestColliderY + _bufferDistance);
-                    Vector3 diff = desiredPos - _pickedUp.position;
-                    _pickedUp.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
-                }
+                Vector3 desiredPos = _offsetBase + _offset;
+                desiredPos.y = Mathf.Max(desiredPos.y, closestColliderY + _bufferDistance);
+                Vector3 diff = desiredPos - _pickedUp.position;
+                _pickedUp.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
             }
-
-            if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
+            else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
+                // If nothing is picked up, raycast to see if you can pick up or select a Selectable.
+                // Note: if you've already picked something up, it doesn't make sense to have the ability
+                //     up another Selectable (same with selecting).
+
+                // Get a reference to the Selectable that you hit with the raycast.
                 Selectable sel = hitInfo.collider.GetComponentInChildren<Selectable>();
                 if (sel)
                 {
-                    // Pickup
-                    if (_pickupDown && !_waitingForRelease && sel._canBePickedUp)
+                    // Check if the player pressed the "pick up" input.
+                    if (_pickupDown && sel._canBePickedUp)
                     {
-                        _waitingForRelease = true;
+                        // Save a reference to the picked up object. Probably better IHP to save a reference to the Selectable directly...
                         _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
                         if (_pickedUp)
-                        {                                    
+                        {
                             SaveOldTransformsActionOf(new List<Component>(new Component[] {_pickedUp}));
                             _pickedUp.useGravity = false;
                         }
-                        else
-                            _waitingForRelease = false;
-                        _offset = _pickedUp.position - offsetBase + _pickUpOffset;
+                        
+                        // Set offset base's value, offset's value.
+                        CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp.position, out _offsetBase);
+                        _offset = _pickedUp.position - _offsetBase + _pickUpOffset;
 
                         _closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
                         if (_closestColliderBelow)
@@ -168,16 +181,12 @@ namespace BH
 
                         //Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
                     }
-
-                    // Select
-                    if (_selectDown)
+                    else if (_selectDown) // Else check if the player pressed the "select" input.
                     {
                         Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
-                        if (selectable.IsSelected())
+                        if (selectable.IsSelected()) // Already selected? Then deselect it.
                         {
-                            _selected.Remove(selectable);
-                            _selectedTransforms.Remove(selectable.transform);
-                            selectable.Deselect();
+                            Deselect(selectable);
                         }
                         else
                         {
@@ -191,7 +200,7 @@ namespace BH
         }
 
         /// <summary>
-        /// Selects the target Selectable.
+        /// Selects the specified target.
         /// </summary>
         /// <param name="target">The Selectable to be selected.</param>
         public void Select(Selectable target)
@@ -199,6 +208,20 @@ namespace BH
             _selected.Add(target);
             _selectedTransforms.Add(target.transform);
             target.Select();
+        }
+
+        /// <summary>
+        /// Deselects the specified target.
+        /// </summary>
+        /// <param name="target">The Selectable to be deselected.</param>
+        public void Deselect(Selectable target)
+        {
+            if (target.IsSelected())
+            {
+                _selected.Remove(target);
+                _selectedTransforms.Remove(target.transform);
+                target.Deselect();
+            }
         }
 
         /// <summary>
@@ -303,20 +326,40 @@ namespace BH
         /// </summary>
         private void HandleRotation()
         {
-            if (_scrollWheel == 0f)
+            if (_scrollWheel != 0f)
             {
-                _numZeroScrolls++;
-            }
-            else if (_scrollWheel != 0f)
-            {
-                if (_numZeroScrolls > _scrollBeginThreshold)
+                if (_saveOnScroll)
                 {
-                    // Save only when scrolling begins after a long period of no scrolling
                     SaveOldTransformsActionOf(_selected.Cast<Component>().ToList());
+                    _saveOnScroll = false;
+
+                    // Set a timer to reset _saveOnScroll back to true. Save the reference to it so you can refresh it (if you need to).
+                    _resetSaveOnScrollCoroutine = StartCoroutine(AsyncResetSaveOnScroll(_scrollRefreshPeriod));
                 }
-                _numZeroScrolls = 0;
+                else
+                {
+                    // If a timer is running, refresh it.
+                    // Note: if you reach this section of code, there definitely should be a timer running.
+                    if (_resetSaveOnScrollCoroutine != null)
+                    {
+                        StopCoroutine(_resetSaveOnScrollCoroutine);
+                        _resetSaveOnScrollCoroutine = StartCoroutine(AsyncResetSaveOnScroll(_scrollRefreshPeriod));
+                    }
+                    else
+                    {
+                        Debug.LogError("_saveOnScroll is false, but a timer isn't running to reset it. How did this happen? wtf");
+                    }
+                }
+                
                 RotateSelected(_scrollWheel * 10f);
             }
+        }
+
+        // A coroutine that resets _saveOnScroll after a specified period of time.
+        IEnumerator AsyncResetSaveOnScroll(float sec)
+        {
+            yield return new WaitForSeconds(sec);
+            _saveOnScroll = true;
         }
 
         /// <summary>
@@ -368,6 +411,38 @@ namespace BH
         public Stack<ActionClass> GetActions()
         {
             return this.actions;
+        }
+        
+        // Calculates an offset base with the following preferences:
+        //   1) Set offsetBase to the hit point of the raycast to a selectable surface
+        //   2) Set offsetBase to the hit point of the raycast to a horizontal plane that backupOffsetBase lies on.
+        //   3) If 1 and 2 fail, set offsetBase to backupOffsetBase. (It is the backup offset base after all.)
+        bool CalculateOffsetBase(Ray ray, float distance, LayerMask selectableSurfaceMask, Vector3 backupOffsetBase, out Vector3 offsetBase)
+        {
+            RaycastHit hitInfo;
+
+            // Initially try to raycast to see if you can hit a selectable surface.
+            if (Physics.Raycast(ray, out hitInfo, distance, selectableSurfaceMask))
+            {
+                offsetBase = hitInfo.point;
+                return true;
+            }
+            else
+            {
+                // Create an "imaginary" selectable surface that is a horizontal plane going through the backup offset base.
+                Plane plane = new Plane(Vector3.up, backupOffsetBase);
+
+                float enter;
+                if (plane.Raycast(ray, out enter))
+                {
+                    offsetBase = ray.GetPoint(enter);
+                    return true;
+                }
+            }
+
+            // Just use the backup offset base, if we can't calculate one.
+            offsetBase = backupOffsetBase;
+            return false;
         }
     }
 }
