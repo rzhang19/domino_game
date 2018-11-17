@@ -160,7 +160,7 @@ namespace BH
         {
             foreach (Selectable selectable in _selected)
             {
-                selectable.ChangeColor(new Color(r, g, b, 1.0f));
+                selectable.SetColor(new Color(r, g, b, 1.0f));
             }
         }
     }

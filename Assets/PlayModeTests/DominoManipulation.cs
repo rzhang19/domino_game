@@ -98,7 +98,7 @@ public class DominoManipulation
             RandTransformChange(domino.transform);
         }
 
-        dominoManager.ResetLayout();
+        dominoManager.ResetData(); // ResetLayout() -> ResetData(). - Brandon
 
         // Check if original transforms were restored
         for (int i = 0; i < 10; i++)

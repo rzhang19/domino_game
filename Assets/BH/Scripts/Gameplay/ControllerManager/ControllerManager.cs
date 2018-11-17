@@ -61,7 +61,7 @@ namespace BH
             {
                 case Controller.BuildMode:
                     SaveActions();
-                    SelectableManager.Instance.SaveLayout();
+                    SelectableManager.Instance.SaveDataLocal();
                     SpectatorMode();
                     break;
                 //case Controller.BuildModeFreeFly:
@@ -69,7 +69,7 @@ namespace BH
                 //    break;
                 case Controller.SpectatorMode:
                     ((BuildModeController)_buildModeInputs[0]).SetActions(this.actions);
-                    SelectableManager.Instance.ResetLayout();
+                    SelectableManager.Instance.ResetData();
                     BuildMode();
                     break;
                 //case Controller.SpectatorModeFreeFly:

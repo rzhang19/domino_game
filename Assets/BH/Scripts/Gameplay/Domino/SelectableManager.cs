@@ -18,8 +18,8 @@ namespace BH
 
         List<Selectable> _activeSelectables = new List<Selectable>();
         [SerializeField] Selectable _selectablePrefab;
-        // string _persistentSave = ""; // Eventually we will have to distinguish a persistent save from a local save.
-        string _currentSave = "";
+
+        Data _localData;
 
         bool _freezeRotation = false;
 
@@ -28,7 +28,7 @@ namespace BH
             if (!_selectablePrefab)
                 Debug.LogError("Selectable prefab is not initialized.");
 
-            SaveLayout();
+            _localData = new Data();
         }
 
         /// <summary>
@@ -105,47 +105,59 @@ namespace BH
         }
 
         /// <summary>
-        /// Saves the layout of spawned selectables locally.
+        /// Saves the data of spawned selectables in persistent memory (as well as locally).
         /// </summary>
-        public void SaveLayout()
+        public void SaveDataPersistent()
         {
-            List<Transform> activeTransforms = new List<Transform>();
-            foreach (Selectable activeSelectable in _activeSelectables)
-            {
-                activeTransforms.Add(activeSelectable.transform);
-            }
+            SaveDataLocal();
 
-            SerializableTransforms serializedActiveTransforms = new SerializableTransforms(activeTransforms.ToArray());
-            _currentSave = JsonUtility.ToJson(serializedActiveTransforms);
-
-            // Write the JSON to a file
+            // Example call to DataManager
+            DataManager.Instance.SaveData("dinorider23", "hunter2", _localData, (err) => {
+                if (err != DataManagerStatusCodes.SUCCESS)
+                    Debug.LogError("Couldn't save data!");
+            });
         }
 
         /// <summary>
-        /// Loads the layout (not implemented).
+        /// Saves the data of spawned selectables locally.
         /// </summary>
-        public void LoadLayout()
+        public void SaveDataLocal()
+        {
+            _localData = new Data(_activeSelectables.ToArray());
+        }
+
+        /// <summary>
+        /// Loads the data of spawned selectables from persistent memory (not implemented).
+        /// </summary>
+        public void LoadData()
         {
             // Load JSON from a file
         }
 
         /// <summary>
-        /// Resets the layout to the currently loaded layout by restoring all selectables to their saved transforms.
+        /// Resets scene with the local data by restoring all selectables using their saved representations.
         /// </summary>
-        public void ResetLayout()
+        public void ResetData()
         {
-            SerializableTransforms serializedActiveTransforms = JsonUtility.FromJson<SerializableTransforms>(_currentSave);
-            if (_activeSelectables.Count != serializedActiveTransforms._serializableTransforms.Count)
+            List<SerializableSelectable> serializableSelectables = _localData._serializableSelectables._serializableSelectables;
+            
+            if (_activeSelectables.Count != serializableSelectables.Count)
             {
-                Debug.LogError("Error: # of active selectables != # of saved transforms. Should be the same, since spectator mode never changes # of selectables.");
+                Debug.LogError("Error: # of active selectables != # of saved selectables. Should be the same, since spectator mode never changes # of selectables.");
                 return;
             }
             else
             {
                 for (int i = 0; i < _activeSelectables.Count; i++)
                 {
-                    _activeSelectables[i].SetTransform(serializedActiveTransforms._serializableTransforms[i]);
+                    // Transform
+                    _activeSelectables[i].SetTransform(serializableSelectables[i]._serializableTransform);
+
+                    // Physics
                     _activeSelectables[i].ResetVelocities();
+
+                    // Color
+                    _activeSelectables[i].SetColor(serializableSelectables[i]._color);
                 }
             }
         }

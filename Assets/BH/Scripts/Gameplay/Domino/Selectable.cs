@@ -181,7 +181,7 @@ namespace BH
         /// Sets the material color.
         /// </summary>
         /// <param name="color">The color.</param>
-        public void ChangeColor(Color color)
+        public void SetColor(Color color)
         {
             // Changes the color of the material
             _color = color;

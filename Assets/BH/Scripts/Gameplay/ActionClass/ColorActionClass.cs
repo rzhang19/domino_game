@@ -34,7 +34,7 @@ namespace BH
             {
                 Selectable target = state.Key;
                 Color oldColor = state.Value;
-                target.ChangeColor(oldColor);
+                target.SetColor(oldColor);
             }
         }
     }

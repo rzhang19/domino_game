@@ -8,6 +8,13 @@ using UnityEngine;
 [System.Serializable]
 public class SerializableTransform
 {
+    public SerializableTransform()
+    {
+        _position = Vector3.zero;
+        _rotation = Quaternion.identity;
+        _scale = Vector3.one;
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SerializableTransform"/> class.
     /// </summary>

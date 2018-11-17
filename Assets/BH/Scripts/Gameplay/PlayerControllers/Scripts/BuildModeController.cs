@@ -306,7 +306,7 @@ namespace BH
             SaveOldColorsAction();
             foreach (Selectable selectable in _selected)
             {
-                selectable.ChangeColor(color);
+                selectable.SetColor(color);
             }
         }
 
