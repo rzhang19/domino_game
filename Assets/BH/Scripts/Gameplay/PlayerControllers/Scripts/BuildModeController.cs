@@ -52,6 +52,8 @@ namespace BH
         bool _saveOnScroll = true;
         Coroutine _resetSaveOnScrollCoroutine;
 
+        DetectColliderBelow _detectColliderBelow;
+
         void GetInput()
         {
             if (_locks.Count > 0)
@@ -89,6 +91,13 @@ namespace BH
                 if (!_cam)
                     Debug.LogError("Camera is not initialized.");
             }
+
+            if (!_detectColliderBelow)
+            {
+                _detectColliderBelow = GetComponentInChildren<DetectColliderBelow>();
+                if (!_detectColliderBelow)
+                    Debug.LogError("Detect Collider Below reference is not initialized.");
+            }
         }
 
         void Update()
@@ -120,12 +129,15 @@ namespace BH
                 _pickedUp.useGravity = true;
                 _pickedUp = null;
                 _offset = Vector3.zero;
+                
+                //if (_closestColliderBelow)
+                //{
+                //    _closestColliderBelow.enabled = false;
+                //    _closestColliderBelow = null;
+                //}
 
-                if (_closestColliderBelow)
-                {
-                    _closestColliderBelow.enabled = false;
-                    _closestColliderBelow = null;
-                }
+                if (_detectColliderBelow.enabled)
+                    _detectColliderBelow.SetInactive();
             }
 
             if(_upOrSide)
@@ -141,9 +153,13 @@ namespace BH
             {
                 CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _offsetBase, out _offsetBase);
                 
+                //float closestColliderY = float.MinValue;
+                //if (_closestColliderBelow && _closestColliderBelow._closestTransform)
+                //    closestColliderY = _closestColliderBelow._closestTransform.position.y;
+                
                 float closestColliderY = float.MinValue;
-                if (_closestColliderBelow && _closestColliderBelow._closestTransform)
-                    closestColliderY = _closestColliderBelow._closestTransform.position.y;
+                if (_detectColliderBelow.enabled && _detectColliderBelow.GetClosestTransform())
+                    closestColliderY = _detectColliderBelow.GetClosestTransform().position.y;
 
                 Vector3 desiredPos = _offsetBase + _offset;
                 desiredPos.y = Mathf.Max(desiredPos.y, closestColliderY + _bufferDistance);
@@ -174,10 +190,14 @@ namespace BH
                         // Set offset base's value, offset's value.
                         CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp.position, out _offsetBase);
                         _offset = _pickedUp.position - _offsetBase + _pickUpOffset;
+                        
+                        //_closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
+                        //if (_closestColliderBelow)
+                        //    _closestColliderBelow.enabled = true;
 
-                        _closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
-                        if (_closestColliderBelow)
-                            _closestColliderBelow.enabled = true;
+                        MeshFilter pickedUpMeshFilter = hitInfo.collider.GetComponentInChildren<MeshFilter>();
+                        if (pickedUpMeshFilter)
+                            _detectColliderBelow.SetActiveMeshFilter(pickedUpMeshFilter, 1.2f, 2f);
 
                         //Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
                     }

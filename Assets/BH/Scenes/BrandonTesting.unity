@@ -2782,6 +2782,7 @@ GameObject:
   - component: {fileID: 1632067962}
   - component: {fileID: 1632067963}
   - component: {fileID: 1632067964}
+  - component: {fileID: 1632067965}
   m_Layer: 0
   m_Name: BuildModeController
   m_TagString: Untagged
@@ -2860,6 +2861,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buildModeController: {fileID: 1632067963}
+--- !u!114 &1632067965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1632067961}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb9f33129a43c047a25046034d33f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _colliderMask:
+    serializedVersion: 2
+    m_Bits: 512
+  _defaultXScale: 1.2
+  _defaultZScale: 1.2
 --- !u!1 &1644121948
 GameObject:
   m_ObjectHideFlags: 0
