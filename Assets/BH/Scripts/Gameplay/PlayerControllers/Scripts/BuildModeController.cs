@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BH
 {
@@ -18,6 +19,8 @@ namespace BH
         bool _selectUp = false;
         bool _pickupDown = false;
         bool _pickupUp = false;
+        bool _spawnSelectableDown = false;
+        bool _spawnSelectableUp = false;
         bool _upOrSide = false;
         bool changeAxis = false;
         bool _undoDown = false;
@@ -43,6 +46,7 @@ namespace BH
         [SerializeField] float _bufferDistance = 2f;
 
         [SerializeField] LayerMask _selectableSurfaceMask;
+        [SerializeField] LayerMask _spawnableSurfaceMask;
 
         // Store actions to allow undos
         Stack<ActionClass> actions = new Stack<ActionClass>();
@@ -52,7 +56,14 @@ namespace BH
         bool _saveOnScroll = true;
         Coroutine _resetSaveOnScrollCoroutine;
 
+        // Needed to detect objects below a held object.
         DetectColliderBelow _detectColliderBelow;
+
+        // Needed to show a "preview" before spawning a selectable.
+        [SerializeField] GhostSelectable _ghostSelectablePrefab;
+        GhostSelectable _ghostSelectable;
+        Vector3 _theMiddleOfNowhere = Vector3.down * 1000f;
+        bool _ghostSelectableSpawnedThisFrame = true;
 
         void GetInput()
         {
@@ -62,9 +73,12 @@ namespace BH
                 _selectUp = true;
                 _pickupDown = false;
                 _pickupUp = true;
+                _spawnSelectableDown = false;
+                _spawnSelectableUp = true;
                 _upOrSide = false;
                 _undoDown = false;
                 _scrollWheel = 0f;
+
                 // Unselect everything upon input lock.
                 foreach (Selectable selectable in _selected)
                     selectable.Deselect();
@@ -74,10 +88,12 @@ namespace BH
                 return;
             }
 
-            _selectDown = InputManager.GetKeyDown("Attack2");
+            _selectDown = InputManager.GetKeyDown("Attack2") && !EventSystem.current.IsPointerOverGameObject();
             _selectUp = InputManager.GetKeyUp("Attack2");
-            _pickupDown = InputManager.GetKeyDown("Attack1");
+            _pickupDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
             _pickupUp = InputManager.GetKeyUp("Attack1");
+            _spawnSelectableDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
+            _spawnSelectableUp = InputManager.GetKeyUp("Attack1");
             _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
             _undoDown = InputManager.GetKeyDown("Undo");
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
@@ -98,11 +114,22 @@ namespace BH
                 if (!_detectColliderBelow)
                     Debug.LogError("Detect Collider Below reference is not initialized.");
             }
+
+            if (!_ghostSelectablePrefab)
+            {
+                Debug.LogError("Ghost Selectable prefab is not initialized.");
+            }
+            else
+            {
+                _ghostSelectable = Instantiate(_ghostSelectablePrefab, _theMiddleOfNowhere, Quaternion.identity);
+            }
         }
 
         void Update()
         {
             GetInput();
+
+            Vector3 ghostPosition = _theMiddleOfNowhere;
 
             // Undo last action
             if (_undoDown && actions.Count > 0)
@@ -183,14 +210,14 @@ namespace BH
                         _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
                         if (_pickedUp)
                         {
-                            SaveOldTransformsActionOf(new List<Component>(new Component[] {_pickedUp}));
+                            SaveOldTransformsActionOf(new List<Component>(new Component[] { _pickedUp }));
                             _pickedUp.useGravity = false;
                         }
-                        
+
                         // Set offset base's value, offset's value.
                         CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp.position, out _offsetBase);
                         _offset = _pickedUp.position - _offsetBase + _pickUpOffset;
-                        
+
                         //_closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
                         //if (_closestColliderBelow)
                         //    _closestColliderBelow.enabled = true;
@@ -215,8 +242,23 @@ namespace BH
                     }
                 }
             }
+            else if (_locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+            {
+                ghostPosition = hitInfo.point;
+
+                if (_spawnSelectableDown)
+                {
+                    SelectableManager.Instance.SpawnSelectable(hitInfo.point);
+                }
+            }
 
             HandleRotation();
+
+            // Preview of selectable before placement.
+            if (_ghostSelectableSpawnedThisFrame)
+                _ghostSelectable.AnimateFadeIn();
+            _ghostSelectable.transform.position = ghostPosition;
+            _ghostSelectableSpawnedThisFrame = ghostPosition == _theMiddleOfNowhere;
         }
 
         /// <summary>

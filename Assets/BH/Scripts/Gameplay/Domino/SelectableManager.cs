@@ -60,6 +60,15 @@ namespace BH
         }
 
         /// <summary>
+        /// Spawns an instance of the selectable prefab with specified position and default rotation.
+        /// </summary>
+        /// <param name="pos">The position.</param>
+        public void SpawnSelectable(Vector3 pos)
+        {
+            SpawnSelectable(pos, Quaternion.identity);
+        }
+
+        /// <summary>
         /// Spawns an instance of the selectable prefab with specified position and rotation.
         /// </summary>
         /// <param name="pos">The position.</param>
@@ -192,6 +201,15 @@ namespace BH
             {
                 activeSelectable.UnfreezeRotation();
             }
+        }
+        
+        /// <summary>
+        /// Gets the selectable prefab.
+        /// </summary>
+        /// <returns>Returns the selectable prefab.</returns>
+        public Selectable GetSelectablePrefab()
+        {
+            return _selectablePrefab;
         }
     }
 }

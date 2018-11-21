@@ -2007,7 +2007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b018d2a45c02b4aae31bf3914b431e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _selectablePrefab: {fileID: 114852131950177650, guid: d5c42c944e01ed949b15ccee09fc7aec,
+  _selectablePrefab: {fileID: 114139919163990840, guid: b2c8bd7e6dc2c27479225f8e7f9ebbd6,
     type: 2}
 --- !u!4 &866881761
 Transform:
@@ -4013,7 +4013,12 @@ MonoBehaviour:
   _selectableSurfaceMask:
     serializedVersion: 2
     m_Bits: 1024
+  _spawnableSurfaceMask:
+    serializedVersion: 2
+    m_Bits: 1025
   _scrollRefreshPeriod: 0.5
+  _ghostSelectablePrefab: {fileID: 114209379308398508, guid: 600147cf27cbc25489fed904d88f859c,
+    type: 2}
 --- !u!114 &1632067964
 MonoBehaviour:
   m_ObjectHideFlags: 0
