@@ -60,10 +60,15 @@ namespace BH
         DetectColliderBelow _detectColliderBelow;
 
         // Needed to show a "preview" before spawning a selectable.
+        bool _spawningSelectable = false;
         [SerializeField] GhostSelectable _ghostSelectablePrefab;
         GhostSelectable _ghostSelectable;
         Vector3 _theMiddleOfNowhere = Vector3.down * 1000f;
-        bool _ghostSelectableSpawnedThisFrame = true;
+        bool _ghostInTheMiddleOfNowhereLastFrame = true;
+        
+        // Rotation for ghost / spawned selectable.
+        Quaternion _spawnRotation = Quaternion.identity;
+        [SerializeField] float _rotationPerTick = 10f;
 
         void GetInput()
         {
@@ -84,6 +89,8 @@ namespace BH
                     selectable.Deselect();
                 _selected.RemoveAll(selected => true);
                 _selectedTransforms.RemoveAll(selected => true);
+
+                _spawningSelectable = false;
 
                 return;
             }
@@ -129,8 +136,6 @@ namespace BH
         {
             GetInput();
 
-            Vector3 ghostPosition = _theMiddleOfNowhere;
-
             // Undo last action
             if (_undoDown && actions.Count > 0)
             {
@@ -174,6 +179,7 @@ namespace BH
             
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
+            Vector3 newGhostPosition = _theMiddleOfNowhere;
 
             // If some Selectable is picked up, move its position accordingly.
             if (_pickedUp)
@@ -242,23 +248,43 @@ namespace BH
                     }
                 }
             }
-            else if (_locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+            else if (_spawningSelectable && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
             {
-                ghostPosition = hitInfo.point;
+                newGhostPosition = hitInfo.point;
 
                 if (_spawnSelectableDown)
                 {
-                    SelectableManager.Instance.SpawnSelectable(hitInfo.point);
+                    SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
                 }
             }
 
             HandleRotation();
+            
+            // Ghost preview during spawning of the selectable.
+            if (_spawningSelectable)
+            {
+                if (_scrollWheel != 0f)
+                {
+                    _spawnRotation = Quaternion.Euler(_spawnRotation.eulerAngles.x,
+                        _spawnRotation.eulerAngles.y + _rotationPerTick * _scrollWheel,
+                        _spawnRotation.eulerAngles.z);
 
-            // Preview of selectable before placement.
-            if (_ghostSelectableSpawnedThisFrame)
-                _ghostSelectable.AnimateFadeIn();
-            _ghostSelectable.transform.position = ghostPosition;
-            _ghostSelectableSpawnedThisFrame = ghostPosition == _theMiddleOfNowhere;
+                    _ghostSelectable.transform.rotation = _spawnRotation;
+                }
+
+                // If ghost just "spawned", play the fade-in animation.
+                bool ghostSpawnedThisFrame = _ghostInTheMiddleOfNowhereLastFrame && newGhostPosition != _theMiddleOfNowhere;
+                if (ghostSpawnedThisFrame)
+                    _ghostSelectable.AnimateFadeIn();
+
+                _ghostSelectable.transform.position = newGhostPosition;
+                _ghostInTheMiddleOfNowhereLastFrame = _ghostSelectable.transform.position == _theMiddleOfNowhere;
+            }
+            else
+            {
+                _ghostSelectable.transform.position = _theMiddleOfNowhere;
+                _ghostInTheMiddleOfNowhereLastFrame = true;
+            }
         }
 
         /// <summary>
@@ -505,6 +531,17 @@ namespace BH
             // Just use the backup offset base, if we can't calculate one.
             offsetBase = backupOffsetBase;
             return false;
+        }
+
+        /// <summary>
+        /// Toggles "spawn selectable" mode.
+        /// </summary>
+        public void ToggleSpawnSelectable()
+        {
+            if (_spawningSelectable)
+                _spawningSelectable = false;
+            else
+                _spawningSelectable = true;
         }
     }
 }

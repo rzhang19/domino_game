@@ -2499,7 +2499,7 @@ GameObject:
   - component: {fileID: 1265822807}
   - component: {fileID: 1265822806}
   m_Layer: 5
-  m_Name: ButtonAdd
+  m_Name: ButtonSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2563,8 +2563,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 866881760}
-        m_MethodName: SpawnSelectable
+      - m_Target: {fileID: 1632067963}
+        m_MethodName: ToggleSpawnSelectable
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2677,7 +2677,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Add Domino
+  m_Text: Toggle Spawn Dominoes
 --- !u!222 &1272494888
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4019,6 +4019,7 @@ MonoBehaviour:
   _scrollRefreshPeriod: 0.5
   _ghostSelectablePrefab: {fileID: 114209379308398508, guid: 600147cf27cbc25489fed904d88f859c,
     type: 2}
+  _rotationPerTick: 10
 --- !u!114 &1632067964
 MonoBehaviour:
   m_ObjectHideFlags: 0
