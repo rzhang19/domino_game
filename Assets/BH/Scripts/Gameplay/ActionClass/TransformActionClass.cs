@@ -11,7 +11,7 @@ namespace BH
     /// <seealso cref="BH.ActionClass" />
     public class TransformActionClass : ActionClass
     {
-        Dictionary<Component, CustomTransform> oldTargetStates = new Dictionary<Component, CustomTransform>();
+        Dictionary<Selectable, CustomTransform> oldTargetStates = new Dictionary<Selectable, CustomTransform>();
 
         /// <summary>
         /// Saves a 1-to-1 mapping between targets and their to-be-saved transforms.
@@ -19,7 +19,7 @@ namespace BH
         /// </summary>
         /// <param name="targets">List of Selectable targets.</param>
         /// <param name="oldProperties">List of CustomTransforms to save.</param>
-        public void Init(List<Component> targets, List<CustomTransform> oldProperties) {
+        public void Init(List<Selectable> targets, List<CustomTransform> oldProperties) {
             for (int i = 0; i < targets.Count; i++)
             {
                 oldTargetStates.Add(targets[i], oldProperties[i]);
@@ -31,13 +31,14 @@ namespace BH
         /// </summary>
         public override void Undo() 
         {
-            foreach(KeyValuePair<Component, CustomTransform> state in this.oldTargetStates)
+            foreach(KeyValuePair<Selectable, CustomTransform> state in this.oldTargetStates)
             {
-                Component target = state.Key;
+                Selectable target = state.Key;
                 CustomTransform oldTransform = state.Value;
                 target.transform.position = oldTransform.position;
                 target.transform.rotation = oldTransform.rotation;
                 target.transform.localScale = oldTransform.localScale;
+                target.ResetVelocities();
             }
         }
     }

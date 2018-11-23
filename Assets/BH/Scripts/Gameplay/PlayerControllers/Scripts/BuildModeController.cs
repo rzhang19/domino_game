@@ -216,7 +216,7 @@ namespace BH
                         _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
                         if (_pickedUp)
                         {
-                            SaveOldTransformsActionOf(new List<Component>(new Component[] { _pickedUp }));
+                            SaveOldTransformsActionOf(new List<Selectable>(new Selectable[] { sel }));
                             _pickedUp.useGravity = false;
                         }
 
@@ -254,7 +254,8 @@ namespace BH
 
                 if (_spawnSelectableDown)
                 {
-                    SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
+                    Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
+                    SaveAddActionOf(new List<Selectable>(new Selectable[] { newSel }));
                 }
             }
 
@@ -317,6 +318,8 @@ namespace BH
         /// </summary>
         public void DespawnSelected()
         {
+            SaveDeleteActionOf(_selected);
+            
             foreach (Selectable selectable in _selected)
             {
                 SelectableManager.Instance.DespawnSelectable(selectable);
@@ -418,7 +421,7 @@ namespace BH
             {
                 if (_saveOnScroll)
                 {
-                    SaveOldTransformsActionOf(_selected.Cast<Component>().ToList());
+                    SaveOldTransformsActionOf(_selected);
                     _saveOnScroll = false;
 
                     // Set a timer to reset _saveOnScroll back to true. Save the reference to it so you can refresh it (if you need to).
@@ -451,13 +454,13 @@ namespace BH
         }
 
         /// <summary>
-        /// Saves the target components' transforms (i.e. positions, rotations) into action history.
+        /// Saves the target Selectables' transforms (i.e. positions, rotations) into action history.
         /// </summary>
-        private void SaveOldTransformsActionOf(List<Component> targets)
+        private void SaveOldTransformsActionOf(List<Selectable> targets)
         {
-            List<Component> selectedObjs = new List<Component>();
+            List<Selectable> selectedObjs = new List<Selectable>();
             List<CustomTransform> oldTransforms = new List<CustomTransform>();
-            foreach (Component sObj in targets)
+            foreach (Selectable sObj in targets)
             {
                 selectedObjs.Add(sObj);
                 oldTransforms.Add(new CustomTransform(sObj.transform));
@@ -482,6 +485,26 @@ namespace BH
             ColorActionClass SavedColorsAction = new ColorActionClass();
             SavedColorsAction.Init(selectables, colors);
             actions.Push(SavedColorsAction);
+        }
+
+        /// <summary>
+        /// Saves the creation of the target Selectables into action history.
+        /// </summary>
+        private void SaveAddActionOf(List<Selectable> targets)
+        {
+            AddActionClass savedAddAction = new AddActionClass();
+            savedAddAction.Init(targets);
+            actions.Push(savedAddAction);
+        }
+
+        /// <summary>
+        /// Saves the deletion of the target Selectables into action history.
+        /// </summary>
+        private void SaveDeleteActionOf(List<Selectable> targets)
+        {
+            DeleteActionClass savedDeleteAction = new DeleteActionClass();
+            savedDeleteAction.Init(targets);
+            actions.Push(savedDeleteAction);
         }
 
         /// <summary>

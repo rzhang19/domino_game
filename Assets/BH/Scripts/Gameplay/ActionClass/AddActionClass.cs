@@ -17,7 +17,8 @@ namespace BH
         /// Will be switched to a constructor later. (Had some confusion because many Unity classes can't have constructors.)
         /// </summary>
         /// <param name="targets">List of Selectable targets that were created.</param>
-        public void Init(List<Selectable> targets) {
+        public void Init(List<Selectable> targets) 
+        {
             this.targets = new List<Selectable>(targets);
         }
 
@@ -26,7 +27,9 @@ namespace BH
         /// </summary>
         public override void Undo() 
         {
-            // Todo
+            foreach (Selectable sel in targets) {
+                SelectableManager.Instance.DespawnSelectable(sel);
+            }
         }
     }
 }

@@ -54,18 +54,24 @@ namespace BH
         /// <summary>
         /// Spawns an instance of the selectable prefab with default position and rotation.
         /// </summary>
-        public void SpawnSelectable()
+        /// <returns>
+        ///   The spawned <c>Selectable</c>.
+        /// </returns>
+        public Selectable SpawnSelectable()
         {
-            SpawnSelectable(Vector3.zero + Vector3.up * 2, Quaternion.identity);
+            return SpawnSelectable(Vector3.zero + Vector3.up * 2, Quaternion.identity);
         }
 
         /// <summary>
         /// Spawns an instance of the selectable prefab with specified position and default rotation.
         /// </summary>
         /// <param name="pos">The position.</param>
-        public void SpawnSelectable(Vector3 pos)
+        /// <returns>
+        ///   The spawned <c>Selectable</c>.
+        /// </returns>
+        public Selectable SpawnSelectable(Vector3 pos)
         {
-            SpawnSelectable(pos, Quaternion.identity);
+            return SpawnSelectable(pos, Quaternion.identity);
         }
 
         /// <summary>
@@ -73,7 +79,10 @@ namespace BH
         /// </summary>
         /// <param name="pos">The position.</param>
         /// <param name="rot">The rotation.</param>
-        public void SpawnSelectable(Vector3 pos, Quaternion rot)
+        /// <returns>
+        ///   The spawned <c>Selectable</c>.
+        /// </returns>
+        public Selectable SpawnSelectable(Vector3 pos, Quaternion rot)
         {
             Selectable sel = _selectablePrefab.Get<Selectable>(null, pos, rot);
             sel.transform.position = pos;
@@ -84,6 +93,7 @@ namespace BH
             else
                 sel.UnfreezeRotation();
             _activeSelectables.Add(sel);
+            return sel;
         }
 
         /// <summary>
