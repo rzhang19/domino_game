@@ -216,7 +216,7 @@ namespace BH
                         _pickedUp = sel;
 
                         // Save old transforms so we can undo this pick-up later.
-                        SaveOldTransformsActionOf(new List<Component>(new Component[] { _pickedUp }));
+                        SaveOldTransformsActionOf(new List<Selectable>(new Selectable[] { _pickedUp }));
 
                         // Unfreeze the position for movement. Set gravity off.
                         _pickedUp.UnfreezePosition();
@@ -494,7 +494,7 @@ namespace BH
             SelectableManager.Instance.FreezeRotation();
             SelectableManager.Instance.FreezePosition();
 
-            List<Component> selectedObjs = new List<Component>();
+            List<Selectable> selectedObjs = new List<Selectable>();
             List<CustomTransform> oldTransforms = new List<CustomTransform>();
             foreach (Selectable sObj in targets)
             {
