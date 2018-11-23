@@ -10,7 +10,7 @@ namespace BH
     /// This script must be attached to a game object if it is to be interacted with by the player in any way.
     /// </summary>
     /// <seealso cref="BH.DesignPatterns.PooledMonobehaviour" />
-    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(Rigidbody), typeof(Collider))]
     public class Selectable : PooledMonobehaviour
     {
         bool _isSelected = false;
@@ -19,7 +19,8 @@ namespace BH
         [SerializeField] Material _selectedMaterial;
 
         MeshRenderer _renderer;
-        Rigidbody _rigidBody;
+        public Rigidbody _rigidbody { get; private set; }
+        Collider _collider;
         Color _color = Color.white;
         Color _originalColor;
 
@@ -37,7 +38,8 @@ namespace BH
             _renderer = GetComponentInChildren<MeshRenderer>();
             _renderer.material = _defaultMaterial;
 
-            _rigidBody = GetComponent<Rigidbody>();
+            _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
 
             _originalColor = _renderer.material.GetColor("_AlbedoColor");
         }
@@ -131,9 +133,19 @@ namespace BH
         /// <param name="point">The point.</param>
         /// <param name="axis">The axis.</param>
         /// <param name="deg">The deg.</param>
-        public void Rotate(Vector3 point, Vector3 axis, float deg)
+        public void RotateAround(Vector3 point, Vector3 axis, float deg)
         {
             transform.RotateAround(point, axis, deg);
+        }
+
+        public void RotateX(float deg)
+        {
+            RotateAround(GetColliderCenter(), transform.right, deg);
+        }
+
+        Vector3 GetColliderCenter()
+        {
+            return _collider.bounds.center;
         }
 
         /// <summary>
@@ -141,7 +153,7 @@ namespace BH
         /// </summary>
         public void FreezeRotation()
         {
-            _rigidBody.freezeRotation = true;
+            _rigidbody.constraints = RigidbodyConstraints.FreezeRotation | _rigidbody.constraints;
         }
 
         /// <summary>
@@ -149,7 +161,23 @@ namespace BH
         /// </summary>
         public void UnfreezeRotation()
         {
-            _rigidBody.freezeRotation = false;
+            _rigidbody.constraints = ~RigidbodyConstraints.FreezeRotation & _rigidbody.constraints;
+        }
+
+        /// <summary>
+        /// Freezes the position of the attached rigidbody.
+        /// </summary>
+        public void FreezePosition()
+        {
+            _rigidbody.constraints = RigidbodyConstraints.FreezePosition | _rigidbody.constraints;
+        }
+
+        /// <summary>
+        /// Unfreezes the position of the attached rigidbody.
+        /// </summary>
+        public void UnfreezePosition()
+        {
+            _rigidbody.constraints = ~RigidbodyConstraints.FreezePosition & _rigidbody.constraints;
         }
 
         /// <summary>
@@ -157,7 +185,7 @@ namespace BH
         /// </summary>
         public void SetVelocity(Vector3 vel)
         {
-            _rigidBody.velocity = vel;
+            _rigidbody.velocity = vel;
         }
 
         /// <summary>
@@ -165,7 +193,7 @@ namespace BH
         /// </summary>
         public void SetAngularVelocity(Vector3 vel)
         {
-            _rigidBody.angularVelocity = vel;
+            _rigidbody.angularVelocity = vel;
         }
 
         /// <summary>

@@ -122,6 +122,7 @@ namespace BH
             _spectatorModeCanvas.enabled = false;
             
             SelectableManager.Instance.FreezeRotation();
+            SelectableManager.Instance.FreezePosition();
         }
 
         void SpectatorModeFreeFly()
@@ -136,6 +137,7 @@ namespace BH
             _spectatorModeCanvas.enabled = false;
             
             SelectableManager.Instance.FreezeRotation();
+            SelectableManager.Instance.FreezePosition();
         }
 
         void BuildMode()
@@ -154,6 +156,7 @@ namespace BH
             //((BuildModeController)_buildModeInputs[0]).SetActions(this.actions);
 
             SelectableManager.Instance.FreezeRotation();
+            SelectableManager.Instance.FreezePosition();
         }
 
         void SpectatorMode()
@@ -168,6 +171,7 @@ namespace BH
             _spectatorModeCanvas.enabled = true;
             
             SelectableManager.Instance.UnfreezeRotation();
+            SelectableManager.Instance.UnfreezePosition();
         }
 
         void SaveActions()

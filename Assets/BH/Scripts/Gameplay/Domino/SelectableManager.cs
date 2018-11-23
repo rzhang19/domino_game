@@ -22,6 +22,7 @@ namespace BH
         Data _localData;
 
         bool _freezeRotation = false;
+        bool _freezePosition = false;
 
         void Awake()
         {
@@ -88,10 +89,17 @@ namespace BH
             sel.transform.position = pos;
             sel.SetVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
             sel.SetAngularVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
+
             if (_freezeRotation)
                 sel.FreezeRotation();
             else
                 sel.UnfreezeRotation();
+
+            if (_freezePosition)
+                sel.FreezePosition();
+            else
+                sel.UnfreezePosition();
+
             _activeSelectables.Add(sel);
             return sel;
         }
@@ -186,9 +194,6 @@ namespace BH
         /// </summary>
         public void FreezeRotation()
         {
-            if (_freezeRotation)
-                return;
-
             _freezeRotation = true;
 
             foreach (Selectable activeSelectable in _activeSelectables)
@@ -202,9 +207,6 @@ namespace BH
         /// </summary>
         public void UnfreezeRotation()
         {
-            if (!_freezeRotation)
-                return;
-
             _freezeRotation = false;
 
             foreach (Selectable activeSelectable in _activeSelectables)
@@ -212,7 +214,33 @@ namespace BH
                 activeSelectable.UnfreezeRotation();
             }
         }
-        
+
+        /// <summary>
+        /// Freezes the position of every spawned selectable.
+        /// </summary>
+        public void FreezePosition()
+        {
+            _freezePosition = true;
+
+            foreach (Selectable activeSelectable in _activeSelectables)
+            {
+                activeSelectable.FreezePosition();
+            }
+        }
+
+        /// <summary>
+        /// Unfreezes the position of every spawned selectable.
+        /// </summary>
+        public void UnfreezePosition()
+        {
+            _freezePosition = false;
+
+            foreach (Selectable activeSelectable in _activeSelectables)
+            {
+                activeSelectable.UnfreezePosition();
+            }
+        }
+
         /// <summary>
         /// Gets the selectable prefab.
         /// </summary>
