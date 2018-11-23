@@ -28,7 +28,9 @@ namespace BH
             {"Toggle Free-fly",             new KeyCode[] {KeyCode.F, KeyCode.None}},
             
             {"Toggle Rotation Axis",        new KeyCode[] {KeyCode.R, KeyCode.None}},
-            {"Undo",                        new KeyCode[] {KeyCode.Z, KeyCode.None}}
+            {"Undo",                        new KeyCode[] {KeyCode.Z, KeyCode.None}},
+
+            {"Toggle Projection",           new KeyCode[] {KeyCode.V, KeyCode.None}}
         };
 
         /// <summary>

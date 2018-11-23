@@ -280,9 +280,9 @@ namespace BH
             _sensitivity = sens;
         }
 
-        public void SetFOV(float fov)
-        {
-            _cam.fieldOfView = fov;
-        }
+        //public void SetFOV(float fov)
+        //{
+        //    _cam.fieldOfView = fov;
+        //}
     }
 }
