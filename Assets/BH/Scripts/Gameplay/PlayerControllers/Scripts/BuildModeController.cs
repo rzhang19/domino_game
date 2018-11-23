@@ -38,7 +38,7 @@ namespace BH
         [SerializeField] Vector3 _pickUpOffset = Vector3.up;
         Vector3 _offset;
         Vector3 _offsetBase;
-        Rigidbody _pickedUp = null;
+        Selectable _pickedUp;
         ClosestColliderBelow _closestColliderBelow = null;
         [SerializeField] AnimationCurve _velocityCurve;
         [SerializeField] float _maxVelocityDistance = 10f;
@@ -156,12 +156,12 @@ namespace BH
             // Pickup release
             if (_pickedUp && _pickupUp)
             {
-                if (_pickedUp.velocity.y > 0)
-                    _pickedUp.velocity = new Vector3(_pickedUp.velocity.x, 0f, _pickedUp.velocity.z);
-                _pickedUp.useGravity = true;
+                if (_pickedUp._rigidbody.velocity.y > 0f)
+                    _pickedUp._rigidbody.velocity = new Vector3(_pickedUp._rigidbody.velocity.x, 0f, _pickedUp._rigidbody.velocity.z);
+                _pickedUp._rigidbody.useGravity = true;
                 _pickedUp = null;
                 _offset = Vector3.zero;
-                
+
                 //if (_closestColliderBelow)
                 //{
                 //    _closestColliderBelow.enabled = false;
@@ -196,8 +196,8 @@ namespace BH
 
                 Vector3 desiredPos = _offsetBase + _offset;
                 desiredPos.y = Mathf.Max(desiredPos.y, closestColliderY + _bufferDistance);
-                Vector3 diff = desiredPos - _pickedUp.position;
-                _pickedUp.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
+                Vector3 diff = desiredPos - _pickedUp._rigidbody.position;
+                _pickedUp._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
             }
             else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
@@ -212,17 +212,19 @@ namespace BH
                     // Check if the player pressed the "pick up" input.
                     if (_pickupDown && sel._canBePickedUp)
                     {
-                        // Save a reference to the picked up object. Probably better IHP to save a reference to the Selectable directly...
-                        _pickedUp = hitInfo.collider.GetComponent<Rigidbody>();
-                        if (_pickedUp)
-                        {
-                            SaveOldTransformsActionOf(new List<Component>(new Component[] { _pickedUp }));
-                            _pickedUp.useGravity = false;
-                        }
+                        // Save a reference to the picked-up selectable.
+                        _pickedUp = sel;
+
+                        // Save old transforms so we can undo this pick-up later.
+                        SaveOldTransformsActionOf(new List<Component>(new Component[] { _pickedUp }));
+
+                        // Unfreeze the position for movement. Set gravity off.
+                        _pickedUp.UnfreezePosition();
+                        _pickedUp._rigidbody.useGravity = false;
 
                         // Set offset base's value, offset's value.
-                        CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp.position, out _offsetBase);
-                        _offset = _pickedUp.position - _offsetBase + _pickUpOffset;
+                        CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp._rigidbody.position, out _offsetBase);
+                        _offset = _pickedUp._rigidbody.position - _offsetBase + _pickUpOffset;
 
                         //_closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
                         //if (_closestColliderBelow)
@@ -326,18 +328,18 @@ namespace BH
             _selectedTransforms.RemoveAll(selected => true);
         }
         
-        /// <summary>
-        /// Rotates the selected game objects at a constant speed.
-        /// </summary>
-        public void RotateSelected()
-        {
-            Vector3 center = FindCenter(_selectedTransforms.ToArray());
+        ///// <summary>
+        ///// Rotates the selected game objects at a constant speed.
+        ///// </summary>
+        //public void RotateSelected()
+        //{
+        //    Vector3 center = FindCenter(_selectedTransforms.ToArray());
 
-            foreach (Selectable selectable in _selected)
-            {
-                selectable.RotateAround(center, Vector3.up, 30f * Time.deltaTime);
-            }
-        }
+        //    foreach (Selectable selectable in _selected)
+        //    {
+        //        selectable.RotateAround(center, Vector3.up, 30f * Time.deltaTime);
+        //    }
+        //}
 
         /// <summary>
         /// Rotates the selected game objects a specified amount.
@@ -345,7 +347,9 @@ namespace BH
         /// <param name="deg">The rotation in degrees.</param>
         public void RotateSelected(float deg)
         {
-            
+            // Freeze all positions.
+            SelectableManager.Instance.FreezePosition();
+
             Vector3 center = FindCenter(_selectedTransforms.ToArray());
 
             //Debug.Log(_upOrSide);
@@ -475,6 +479,18 @@ namespace BH
         /// </summary>
         private void SaveOldTransformsActionOf(List<Component> targets)
         {
+            // Freeze everything. Needed so that undo function is never broken.
+            // Why?:
+            //   We're currently only saving data for selected objects, so
+            //   non-selected objects should be static. If they aren't static,
+            //   we don't have the historical information about them to undo
+            //   their changes and that's bad.
+            // An alternative would be to save every object's transforms, but
+            // that does not scale nearly as well as the current solution does.
+            // It's a straightforward and surefire solution with performance tradeoffs.
+            SelectableManager.Instance.FreezeRotation();
+            SelectableManager.Instance.FreezePosition();
+
             List<Component> selectedObjs = new List<Component>();
             List<CustomTransform> oldTransforms = new List<CustomTransform>();
             foreach (Component sObj in targets)

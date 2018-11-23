@@ -19,7 +19,7 @@ namespace BH
         [SerializeField] Material _selectedMaterial;
 
         MeshRenderer _renderer;
-        Rigidbody _rigidBody;
+        public Rigidbody _rigidbody { get; private set; }
         Collider _collider;
         Color _color = Color.white;
         Color _originalColor;
@@ -38,7 +38,7 @@ namespace BH
             _renderer = GetComponentInChildren<MeshRenderer>();
             _renderer.material = _defaultMaterial;
 
-            _rigidBody = GetComponent<Rigidbody>();
+            _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
 
             _originalColor = _renderer.material.GetColor("_AlbedoColor");
@@ -153,7 +153,7 @@ namespace BH
         /// </summary>
         public void FreezeRotation()
         {
-            _rigidBody.freezeRotation = true;
+            _rigidbody.constraints = RigidbodyConstraints.FreezeRotation | _rigidbody.constraints;
         }
 
         /// <summary>
@@ -161,7 +161,23 @@ namespace BH
         /// </summary>
         public void UnfreezeRotation()
         {
-            _rigidBody.freezeRotation = false;
+            _rigidbody.constraints = ~RigidbodyConstraints.FreezeRotation & _rigidbody.constraints;
+        }
+
+        /// <summary>
+        /// Freezes the position of the attached rigidbody.
+        /// </summary>
+        public void FreezePosition()
+        {
+            _rigidbody.constraints = RigidbodyConstraints.FreezePosition | _rigidbody.constraints;
+        }
+
+        /// <summary>
+        /// Unfreezes the position of the attached rigidbody.
+        /// </summary>
+        public void UnfreezePosition()
+        {
+            _rigidbody.constraints = ~RigidbodyConstraints.FreezePosition & _rigidbody.constraints;
         }
 
         /// <summary>
@@ -169,7 +185,7 @@ namespace BH
         /// </summary>
         public void SetVelocity(Vector3 vel)
         {
-            _rigidBody.velocity = vel;
+            _rigidbody.velocity = vel;
         }
 
         /// <summary>
@@ -177,7 +193,7 @@ namespace BH
         /// </summary>
         public void SetAngularVelocity(Vector3 vel)
         {
-            _rigidBody.angularVelocity = vel;
+            _rigidbody.angularVelocity = vel;
         }
 
         /// <summary>
