@@ -335,7 +335,7 @@ namespace BH
 
             foreach (Selectable selectable in _selected)
             {
-                selectable.Rotate(center, Vector3.up, 30f * Time.deltaTime);
+                selectable.RotateAround(center, Vector3.up, 30f * Time.deltaTime);
             }
         }
 
@@ -347,24 +347,33 @@ namespace BH
         {
             
             Vector3 center = FindCenter(_selectedTransforms.ToArray());
-            Vector3 rotAxis;
 
             //Debug.Log(_upOrSide);
 
+            //if (changeAxis)
+            //{
+            //    rotAxis = Vector3.left;
+            //    //Debug.Log("Rotating left");
+            //}
+            //else
+            //{
+            //    rotAxis = Vector3.up;
+            //    //Debug.Log("Rotating up");
+            //}
+
             if (changeAxis)
             {
-                rotAxis = Vector3.left;
-                //Debug.Log("Rotating left");
+                foreach (Selectable selectable in _selected)
+                {
+                    selectable.RotateX(deg);
+                }
             }
             else
             {
-                rotAxis = Vector3.up;
-                //Debug.Log("Rotating up");
-            }
-
-            foreach (Selectable selectable in _selected)
-            {
-                selectable.Rotate(center, rotAxis, deg);
+                foreach (Selectable selectable in _selected)
+                {
+                    selectable.RotateAround(center, Vector3.up, deg);
+                }
             }
         }
 

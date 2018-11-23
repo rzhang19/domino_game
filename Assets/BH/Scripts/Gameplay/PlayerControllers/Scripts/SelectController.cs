@@ -125,7 +125,7 @@ namespace BH
 
             foreach (Selectable selectable in _selected)
             {
-                selectable.Rotate(center, rotAxis, 30f * Time.deltaTime);
+                selectable.RotateAround(center, rotAxis, 30f * Time.deltaTime);
             }
         }
 
@@ -135,7 +135,7 @@ namespace BH
 
             foreach (Selectable selectable in _selected)
             {
-                selectable.Rotate(center, Vector3.up, deg);
+                selectable.RotateAround(center, Vector3.up, deg);
             }
         }
 
