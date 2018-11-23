@@ -376,13 +376,24 @@ namespace BH
             if (tfs.Length == 1)
                 return tfs[0].position;
 
-            Bounds bounds = new Bounds();
+            //Bounds bounds = new Bounds();
+            //foreach (Transform tf in tfs)
+            //{
+            //    bounds.Encapsulate(tf.position);
+            //}
+
+            //return bounds.center;
+
+            float xSum = 0f, ySum = 0f, zSum = 0f;
+
             foreach (Transform tf in tfs)
             {
-                bounds.Encapsulate(tf.position);
+                xSum += tf.position.x;
+                ySum += tf.position.y;
+                zSum += tf.position.z;
             }
 
-            return bounds.center;
+            return new Vector3(xSum, ySum, zSum) / tfs.Length;
         }
 
         /// <summary>
