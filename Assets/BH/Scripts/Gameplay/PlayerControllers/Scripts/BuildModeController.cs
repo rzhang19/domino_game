@@ -33,6 +33,7 @@ namespace BH
         // For selection functionality
         List<Selectable> _selected = new List<Selectable>();
         List<Transform> _selectedTransforms = new List<Transform>();
+        [SerializeField] SelectionRectController _selectionRectController;
 
         // For pickup functionality
         [SerializeField] Vector3 _pickUpOffset = Vector3.up;
@@ -299,6 +300,39 @@ namespace BH
             _selected.Add(target);
             _selectedTransforms.Add(target.transform);
             target.Select();
+        }
+
+        /// <summary>
+        /// Handles mass rectangular selection.
+        /// </summary>
+        /// <returns>
+        ///     <c>true</c> if at least one unit was selected in the rectangle.
+        /// </returns>
+        public bool HandleRectSelection()
+        {
+            List<Selectable> possibleSelectedUnits = _selectionRectController.AttemptMassSelection(
+                SelectableManager.Instance.GetActiveSelectables(),
+                Input.mousePosition,
+                _selectDown,
+                _selectUp
+            );
+
+            if (possibleSelectedUnits.Count > 0)
+            {
+                foreach (Selectable unit in possibleSelectedUnits)
+                {
+                    if (unit.IsSelected())
+                    {
+                        Deselect(unit);
+                    }
+                    else
+                    {
+                        Select(unit);
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
