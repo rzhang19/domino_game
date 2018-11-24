@@ -268,7 +268,9 @@ namespace BH
             {
                 Vector3 newGhostPosition = _theMiddleOfNowhere;
 
-                if (_locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+                if (!_pickedUp && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                    && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
+                    && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                 {
                     newGhostPosition = hitInfo.point;
                 }
