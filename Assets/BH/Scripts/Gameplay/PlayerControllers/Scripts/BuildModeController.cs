@@ -32,7 +32,6 @@ namespace BH
         
         // For selection functionality
         List<Selectable> _selected = new List<Selectable>();
-        List<Transform> _selectedTransforms = new List<Transform>();
         [SerializeField] SelectionRectController _selectionRectController;
 
         // For pickup functionality
@@ -89,7 +88,6 @@ namespace BH
                 foreach (Selectable selectable in _selected)
                     selectable.Deselect();
                 _selected.RemoveAll(selected => true);
-                _selectedTransforms.RemoveAll(selected => true);
 
                 _spawningSelectable = false;
 
@@ -180,17 +178,16 @@ namespace BH
             
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
-            Vector3 newGhostPosition = _theMiddleOfNowhere;
 
             // If some Selectable is picked up, move its position accordingly.
             if (_pickedUp)
             {
                 CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _offsetBase, out _offsetBase);
-                
+
                 //float closestColliderY = float.MinValue;
                 //if (_closestColliderBelow && _closestColliderBelow._closestTransform)
                 //    closestColliderY = _closestColliderBelow._closestTransform.position.y;
-                
+
                 float closestColliderY = float.MinValue;
                 if (_detectColliderBelow.enabled && _detectColliderBelow.GetClosestTransform())
                     closestColliderY = _detectColliderBelow.GetClosestTransform().position.y;
@@ -200,7 +197,7 @@ namespace BH
                 Vector3 diff = desiredPos - _pickedUp._rigidbody.position;
                 _pickedUp._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
             }
-            else if (HandleRectSelection()) {}
+            else if (HandleRectSelection()) { }
             else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
                 // If nothing is picked up, raycast to see if you can pick up or select a Selectable.
@@ -252,15 +249,16 @@ namespace BH
                     }
                 }
             }
-            else if (_spawningSelectable && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+            else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
             {
-                newGhostPosition = hitInfo.point;
-
-                if (_spawnSelectableDown)
-                {
-                    Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
-                    SaveAddActionOf(new List<Selectable>(new Selectable[] { newSel }));
-                }
+                // Spawn a selectable if the player requests.
+                Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
+                SaveAddActionOf(new List<Selectable>(new Selectable[] { newSel }));
+            }
+            else if (_selectDown && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
+            {
+                // Clicked on an area without any dominoes => deselect all!
+                DeselectAll();
             }
 
             HandleRotation();
@@ -268,6 +266,13 @@ namespace BH
             // Ghost preview during spawning of the selectable.
             if (_spawningSelectable)
             {
+                Vector3 newGhostPosition = _theMiddleOfNowhere;
+
+                if (_locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+                {
+                    newGhostPosition = hitInfo.point;
+                }
+
                 if (_scrollWheel != 0f)
                 {
                     _spawnRotation = Quaternion.Euler(_spawnRotation.eulerAngles.x,
@@ -299,7 +304,6 @@ namespace BH
         public void Select(Selectable target)
         {
             _selected.Add(target);
-            _selectedTransforms.Add(target.transform);
             target.Select();
         }
 
@@ -348,9 +352,18 @@ namespace BH
             if (target.IsSelected())
             {
                 _selected.Remove(target);
-                _selectedTransforms.Remove(target.transform);
                 target.Deselect();
             }
+        }
+
+        /// <summary>
+        /// Deselects all currently selected selectables.
+        /// </summary>
+        public void DeselectAll()
+        {
+            foreach (Selectable selectable in _selected)
+                selectable.Deselect();
+            _selected.RemoveAll(selected => true);
         }
 
         /// <summary>
@@ -361,12 +374,9 @@ namespace BH
             SaveDeleteActionOf(_selected);
             
             foreach (Selectable selectable in _selected)
-            {
                 SelectableManager.Instance.DespawnSelectable(selectable);
-            }
 
             _selected.RemoveAll(selected => true);
-            _selectedTransforms.RemoveAll(selected => true);
         }
         
         ///// <summary>
@@ -391,7 +401,11 @@ namespace BH
             // Freeze all positions.
             SelectableManager.Instance.FreezePosition();
 
-            Vector3 center = FindCenter(_selectedTransforms.ToArray());
+            List<Transform> selectedTransforms = new List<Transform>();
+            foreach (Selectable sel in _selected)
+                selectedTransforms.Add(sel.transform);
+
+            Vector3 center = FindCenter(selectedTransforms.ToArray());
 
             //Debug.Log(_upOrSide);
 
