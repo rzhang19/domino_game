@@ -200,6 +200,7 @@ namespace BH
                 Vector3 diff = desiredPos - _pickedUp._rigidbody.position;
                 _pickedUp._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
             }
+            else if (HandleRectSelection()) {}
             else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
                 // If nothing is picked up, raycast to see if you can pick up or select a Selectable.
@@ -321,6 +322,9 @@ namespace BH
             {
                 foreach (Selectable unit in possibleSelectedUnits)
                 {
+                    // Todo: i think we should change this to always select units, that's more intuitive to me.
+                    // Then we'd need another easy way to deselect all units at once.
+                    // e.g. a quick right click on something other than a domino will deselect everything
                     if (unit.IsSelected())
                     {
                         Deselect(unit);

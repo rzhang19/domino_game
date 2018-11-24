@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace BH
 {
     /// <summary>
-    /// Draws the selection rectangle and returns selected dominos, if any
+    /// Draws the selection rectangle and returns a list of the selected dominos, if any.
     /// Code heavily based off of https://www.habrador.com/tutorials/select-units-within-rectangle/.
     /// </summary>
     public class SelectionRectController : MonoBehaviour
@@ -35,6 +35,17 @@ namespace BH
             selectionRectTrans.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Attempts to draw the selection rectangle by clicking and dragging a button of the client's choice. 
+        /// Detects if any Selectables are within the rectangle.
+        /// <param name="allUnits">List of all Selectables currently in the map.</param>
+        /// <param name="mousePos">The current mouse position. Determines rectangle boundaries.</param>
+        /// <param name="mouseDown">True if the desired mouse click is down.</param>
+        /// <param name="mouseUp">True if the desired mouse click is up.</param>
+        /// </summary>
+        /// <returns>
+        ///     A <c>List&lt;Selectable&gt;</c> representing the selectables within the rectangle. Empty if no such selectables.
+        /// </returns>
         public List<Selectable> AttemptMassSelection(List<Selectable> allUnits, Vector3 mousePos, bool mouseDown, bool mouseUp)
         {
             List<Selectable> selectedUnits = new List<Selectable>();
@@ -193,7 +204,7 @@ namespace BH
 
             //From screen to world
             RaycastHit hit;
-            var layermask = (1 << 9) | (1 << 10) | (1 << 11);
+            var layermask = (1 << 9) | (1 << 10);
             int i = 0;
             //Fire ray from camera
             if (Physics.Raycast(Camera.main.ScreenPointToRay(TL), out hit, Mathf.Infinity, layermask))
