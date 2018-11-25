@@ -36,14 +36,13 @@ namespace BH
 
         // For pickup functionality
         [SerializeField] Vector3 _pickUpOffset = Vector3.up;
-        Vector3 _offset;
         Vector3 _offsetBase;
-        Selectable _pickedUp;
-        ClosestColliderBelow _closestColliderBelow = null;
         [SerializeField] AnimationCurve _velocityCurve;
         [SerializeField] float _maxVelocityDistance = 10f;
         [SerializeField] float _maxVelocity = 50f;
         [SerializeField] float _bufferDistance = 2f;
+
+        List<PickedUpSelectable> _pickedUpSelectables = new List<PickedUpSelectable>();
 
         [SerializeField] LayerMask _selectableSurfaceMask;
         [SerializeField] LayerMask _spawnableSurfaceMask;
@@ -56,8 +55,8 @@ namespace BH
         bool _saveOnScroll = true;
         Coroutine _resetSaveOnScrollCoroutine;
 
-        // Needed to detect objects below a held object.
-        DetectColliderBelow _detectColliderBelow;
+        //// Needed to detect objects below a held object.
+        //DetectColliderBelow _detectColliderBelow;
 
         // Needed to show a "preview" before spawning a selectable.
         bool _spawningSelectable = false;
@@ -114,12 +113,12 @@ namespace BH
                     Debug.LogError("Camera is not initialized.");
             }
 
-            if (!_detectColliderBelow)
-            {
-                _detectColliderBelow = GetComponentInChildren<DetectColliderBelow>();
-                if (!_detectColliderBelow)
-                    Debug.LogError("Detect Collider Below reference is not initialized.");
-            }
+            //if (!_detectColliderBelow)
+            //{
+            //    _detectColliderBelow = GetComponentInChildren<DetectColliderBelow>();
+            //    if (!_detectColliderBelow)
+            //        Debug.LogError("Detect Collider Below reference is not initialized.");
+            //}
 
             if (!_ghostSelectablePrefab)
             {
@@ -153,25 +152,23 @@ namespace BH
             }
 
             // Pickup release
-            if (_pickedUp && _pickupUp)
+            if (_pickedUpSelectables.Count > 0 && _pickupUp)
             {
-                if (_pickedUp._rigidbody.velocity.y > 0f)
-                    _pickedUp._rigidbody.velocity = new Vector3(_pickedUp._rigidbody.velocity.x, 0f, _pickedUp._rigidbody.velocity.z);
-                _pickedUp._rigidbody.useGravity = true;
-                _pickedUp = null;
-                _offset = Vector3.zero;
+                foreach (PickedUpSelectable pickedUpSelectable in _pickedUpSelectables)
+                {
+                    //if (pickedUpSelectable._selectable._rigidbody.velocity.y > 0f)
+                    //    pickedUpSelectable._selectable._rigidbody.velocity = new Vector3(pickedUpSelectable._selectable._rigidbody.velocity.x, 0f, pickedUpSelectable._selectable._rigidbody.velocity.z);
+                    pickedUpSelectable._selectable._rigidbody.velocity = Vector3.zero;
+                    pickedUpSelectable._selectable._rigidbody.useGravity = true;
+                }
 
-                //if (_closestColliderBelow)
-                //{
-                //    _closestColliderBelow.enabled = false;
-                //    _closestColliderBelow = null;
-                //}
+                _pickedUpSelectables.Clear();
 
-                if (_detectColliderBelow.enabled)
-                    _detectColliderBelow.SetInactive();
+                //if (_detectColliderBelow.enabled)
+                //    _detectColliderBelow.SetInactive();
             }
 
-            if(_upOrSide)
+            if (_upOrSide)
             {
                 changeAxis = !changeAxis;
             }
@@ -180,73 +177,125 @@ namespace BH
             RaycastHit hitInfo;
 
             // If some Selectable is picked up, move its position accordingly.
-            if (_pickedUp)
+            if (_pickedUpSelectables.Count > 0)
             {
                 CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _offsetBase, out _offsetBase);
-
+                
                 //float closestColliderY = float.MinValue;
-                //if (_closestColliderBelow && _closestColliderBelow._closestTransform)
-                //    closestColliderY = _closestColliderBelow._closestTransform.position.y;
+                //if (_detectColliderBelow.enabled && _detectColliderBelow.GetClosestTransform())
+                //    closestColliderY = _detectColliderBelow.GetClosestTransform().position.y;
 
-                float closestColliderY = float.MinValue;
-                if (_detectColliderBelow.enabled && _detectColliderBelow.GetClosestTransform())
-                    closestColliderY = _detectColliderBelow.GetClosestTransform().position.y;
-
-                Vector3 desiredPos = _offsetBase + _offset;
-                desiredPos.y = Mathf.Max(desiredPos.y, closestColliderY + _bufferDistance);
-                Vector3 diff = desiredPos - _pickedUp._rigidbody.position;
-                _pickedUp._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
+                foreach (PickedUpSelectable pickedUpSelectable in _pickedUpSelectables)
+                {
+                    Vector3 desiredPos = _offsetBase + pickedUpSelectable._offset;
+                    //desiredPos.y = Mathf.Max(desiredPos.y, closestColliderY + _bufferDistance);
+                    Vector3 diff = desiredPos - pickedUpSelectable._selectable._rigidbody.position;
+                    pickedUpSelectable._selectable._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
+                }
             }
             else if (HandleRectSelection()) { }
-            else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
+            else if (_pickupDown && Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
-                // If nothing is picked up, raycast to see if you can pick up or select a Selectable.
-                // Note: if you've already picked something up, it doesn't make sense to have the ability
-                //     up another Selectable (same with selecting).
-
                 // Get a reference to the Selectable that you hit with the raycast.
-                Selectable sel = hitInfo.collider.GetComponentInChildren<Selectable>();
-                if (sel)
+                Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
+                CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, selectable._rigidbody.position, out _offsetBase);
+                _pickedUpSelectables.Clear();
+
+                if (_selected.Contains(selectable))
                 {
-                    // Check if the player pressed the "pick up" input.
-                    if (_pickupDown && sel._canBePickedUp)
+                    foreach (Selectable sel in _selected)
                     {
-                        // Save a reference to the picked-up selectable.
-                        _pickedUp = sel;
-
-                        // Save old transforms so we can undo this pick-up later.
-                        SaveOldTransformsActionOf(new List<Selectable>(new Selectable[] { _pickedUp }));
-
-                        // Unfreeze the position for movement. Set gravity off.
-                        _pickedUp.UnfreezePosition();
-                        _pickedUp._rigidbody.useGravity = false;
-
-                        // Set offset base's value, offset's value.
-                        CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp._rigidbody.position, out _offsetBase);
-                        _offset = _pickedUp._rigidbody.position - _offsetBase + _pickUpOffset;
-
-                        //_closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
-                        //if (_closestColliderBelow)
-                        //    _closestColliderBelow.enabled = true;
-
-                        MeshFilter pickedUpMeshFilter = hitInfo.collider.GetComponentInChildren<MeshFilter>();
-                        if (pickedUpMeshFilter)
-                            _detectColliderBelow.SetActiveMeshFilter(pickedUpMeshFilter, 1.2f, 2f);
-
-                        //Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
-                    }
-                    else if (_selectDown) // Else check if the player pressed the "select" input.
-                    {
-                        Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
-                        if (selectable.IsSelected()) // Already selected? Then deselect it.
+                        if (sel._canBePickedUp)
                         {
-                            Deselect(selectable);
-                        }
-                        else
-                        {
-                            Select(selectable);
+                            Vector3 offset = sel._rigidbody.position - _offsetBase + _pickUpOffset;
+                            PickedUpSelectable pickedUp = new PickedUpSelectable(sel, offset);
+                            _pickedUpSelectables.Add(pickedUp);
+
+                            pickedUp._selectable.UnfreezePosition();
+                            pickedUp._selectable._rigidbody.useGravity = false;
                         }
                     }
+                }
+                else
+                {
+                    DeselectAll();
+
+                    if (selectable._canBePickedUp)
+                    {
+                        Vector3 offset = selectable._rigidbody.position - _offsetBase + _pickUpOffset;
+                        PickedUpSelectable pickedUp = new PickedUpSelectable(selectable, offset);
+                        _pickedUpSelectables.Add(pickedUp);
+
+                        pickedUp._selectable.UnfreezePosition();
+                        pickedUp._selectable._rigidbody.useGravity = false;
+                    }
+                }
+                
+                List<Selectable> toSave = new List<Selectable>();
+                foreach (PickedUpSelectable pickedUpSelectable in _pickedUpSelectables)
+                {
+                    toSave.Add(pickedUpSelectable._selectable);
+                }
+                SaveOldTransformsActionOf(toSave);
+            }
+            //else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
+            //{
+
+            //    // Get a reference to the Selectable that you hit with the raycast.
+            //    Selectable sel = hitInfo.collider.GetComponentInChildren<Selectable>();
+            //    if (sel)
+            //    {
+            //        // Check if the player pressed the "pick up" input.
+            //        if (_pickupDown && sel._canBePickedUp)
+            //        {
+            //            // Save a reference to the picked-up selectable.
+            //            _pickedUp = sel;
+
+            //            // Save old transforms so we can undo this pick-up later.
+            //            SaveOldTransformsActionOf(new List<Selectable>(new Selectable[] { _pickedUp }));
+
+            //            // Unfreeze the position for movement. Set gravity off.
+            //            _pickedUp.UnfreezePosition();
+            //            _pickedUp._rigidbody.useGravity = false;
+
+            //            // Set offset base's value, offset's value.
+            //            CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp._rigidbody.position, out _offsetBase);
+            //            _offset = _pickedUp._rigidbody.position - _offsetBase + _pickUpOffset;
+
+            //            //_closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
+            //            //if (_closestColliderBelow)
+            //            //    _closestColliderBelow.enabled = true;
+
+            //            MeshFilter pickedUpMeshFilter = hitInfo.collider.GetComponentInChildren<MeshFilter>();
+            //            if (pickedUpMeshFilter)
+            //                _detectColliderBelow.SetActiveMeshFilter(pickedUpMeshFilter, 1.2f, 2f);
+
+            //            //Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
+            //        }
+            //        else if (_selectDown) // Else check if the player pressed the "select" input.
+            //        {
+            //            Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
+            //            if (selectable.IsSelected()) // Already selected? Then deselect it.
+            //            {
+            //                Deselect(selectable);
+            //            }
+            //            else
+            //            {
+            //                Select(selectable);
+            //            }
+            //        }
+            //    }
+            //}
+            else if (_selectDown && Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
+            {
+                Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
+                if (selectable.IsSelected()) // Already selected? Then deselect it.
+                {
+                    Deselect(selectable);
+                }
+                else
+                {
+                    Select(selectable);
                 }
             }
             else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
@@ -261,27 +310,28 @@ namespace BH
                 DeselectAll();
             }
 
-            HandleRotation();
+            if (_pickedUpSelectables.Count <= 0)
+                HandleRotation();
             
             // Ghost preview during spawning of the selectable.
             if (_spawningSelectable)
             {
                 Vector3 newGhostPosition = _theMiddleOfNowhere;
 
-                if (!_pickedUp && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
                     && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
                     && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                 {
                     newGhostPosition = hitInfo.point;
-                }
 
-                if (_scrollWheel != 0f)
-                {
-                    _spawnRotation = Quaternion.Euler(_spawnRotation.eulerAngles.x,
-                        _spawnRotation.eulerAngles.y + _rotationPerTick * _scrollWheel,
-                        _spawnRotation.eulerAngles.z);
+                    if (_scrollWheel != 0f)
+                    {
+                        _spawnRotation = Quaternion.Euler(_spawnRotation.eulerAngles.x,
+                            _spawnRotation.eulerAngles.y + _rotationPerTick * _scrollWheel,
+                            _spawnRotation.eulerAngles.z);
 
-                    _ghostSelectable.transform.rotation = _spawnRotation;
+                        _ghostSelectable.transform.rotation = _spawnRotation;
+                    }
                 }
 
                 // If ghost just "spawned", play the fade-in animation.
@@ -400,9 +450,6 @@ namespace BH
         /// <param name="deg">The rotation in degrees.</param>
         public void RotateSelected(float deg)
         {
-            // Freeze all positions.
-            SelectableManager.Instance.FreezePosition();
-
             List<Transform> selectedTransforms = new List<Transform>();
             foreach (Selectable sel in _selected)
                 selectedTransforms.Add(sel.transform);
@@ -536,17 +583,23 @@ namespace BH
         /// </summary>
         private void SaveOldTransformsActionOf(List<Selectable> targets)
         {
-            // Freeze everything. Needed so that undo function is never broken.
+            // Freeze non-target selectables. Needed so that undo function is never broken.
             // Why?:
-            //   We're currently only saving data for selected objects, so
-            //   non-selected objects should be static. If they aren't static,
+            //   We're currently only saving data for target objects, so
+            //   non-target objects should be static. If they aren't static,
             //   we don't have the historical information about them to undo
             //   their changes and that's bad.
             // An alternative would be to save every object's transforms, but
             // that does not scale nearly as well as the current solution does.
             // It's a straightforward and surefire solution with performance tradeoffs.
-            SelectableManager.Instance.FreezeRotation();
-            SelectableManager.Instance.FreezePosition();
+            foreach (Selectable selectable in SelectableManager.Instance.GetActiveSelectables())
+            {
+                if (!targets.Contains(selectable))
+                {
+                    selectable.FreezePosition();
+                    selectable.FreezeRotation();
+                }
+            }
 
             List<Selectable> selectedObjs = new List<Selectable>();
             List<CustomTransform> oldTransforms = new List<CustomTransform>();
@@ -656,5 +709,17 @@ namespace BH
             else
                 _spawningSelectable = true;
         }
+    }
+
+    class PickedUpSelectable
+    {
+        public PickedUpSelectable(Selectable selectable, Vector3 offset)
+        {
+            _selectable = selectable;
+            _offset = offset;
+        }
+
+        public Selectable _selectable;
+        public Vector3 _offset;
     }
 }
