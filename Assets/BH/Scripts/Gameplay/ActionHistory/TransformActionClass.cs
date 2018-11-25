@@ -9,7 +9,7 @@ namespace BH
     /// Transforms must be of our custom type CustomTransform because Unity restricts Transform instantiation.
     /// </summary>
     /// <seealso cref="BH.ActionClass" />
-    public class TransformActionClass : ActionClass
+    public class TransformActionClass : ActionInterface
     {
         Dictionary<int, SelectableToTransform> oldSelectableStates = new Dictionary<int, SelectableToTransform>();
 
@@ -29,7 +29,7 @@ namespace BH
         /// <summary>
         /// Restores each target to their mapped transform. Cannot reverse once executed.
         /// </summary>
-        public override void Undo() 
+        public void Undo() 
         {
             foreach(SelectableToTransform state in this.oldSelectableStates.Values)
             {
@@ -50,7 +50,7 @@ namespace BH
         /// <returns>
         ///     A <c>List&lt;int&gt;</c> of the targets' instance IDs.
         /// </returns>
-        public override List<int> GetTargetIDs() 
+        public List<int> GetTargetIDs() 
         {
             return new List<int>(oldSelectableStates.Keys);
         }
@@ -60,7 +60,7 @@ namespace BH
         /// <param name='oldID'>ID of the old Selectable instance, as returned by Unity's Object.GetInstanceID(). </param>
         /// <param name='newInstance'>New Selectable instance to update to. </param>
         /// </summary>
-        public override void UpdateInstance(int oldID, Selectable newInstance)
+        public void UpdateInstance(int oldID, Selectable newInstance)
         {
             if (!oldSelectableStates.ContainsKey(oldID)) return;
             SelectableToTransform savedTransformMapping = oldSelectableStates[oldID];

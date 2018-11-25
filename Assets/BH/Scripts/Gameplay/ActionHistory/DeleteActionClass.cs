@@ -8,7 +8,7 @@ namespace BH
     /// Represents the action of deleting one or more targets. Used to save and restore dominos.
     /// </summary>
     /// <seealso cref="BH.ActionClass" />
-    public class DeleteActionClass : ActionClass
+    public class DeleteActionClass : ActionInterface
     {
         Dictionary<int, SelectableFields> savedSelectables = new Dictionary<int, SelectableFields>();
         
@@ -34,7 +34,7 @@ namespace BH
         /// <summary>
         /// Respawns dominos with their original colors and transforms.
         /// </summary>
-        public override void Undo() 
+        public void Undo() 
         {
             foreach (KeyValuePair<int, SelectableFields> update in savedSelectables)
             {
@@ -58,7 +58,7 @@ namespace BH
         /// <returns>
         ///     A <c>List&lt;int&gt;</c> of the targets' instance IDs.
         /// </returns>
-        public override List<int> GetTargetIDs() 
+        public List<int> GetTargetIDs() 
         {
             return new List<int>(savedSelectables.Keys);
         }
@@ -68,7 +68,7 @@ namespace BH
         /// <param name='oldID'>ID of the old Selectable instance, as returned by Unity's Object.GetInstanceID(). </param>
         /// <param name='newInstance'>New Selectable instance to update to. </param>
         /// </summary>
-        public override void UpdateInstance(int oldID, Selectable newInstance)
+        public void UpdateInstance(int oldID, Selectable newInstance)
         {
             if (!savedSelectables.ContainsKey(oldID)) return;
             SelectableFields savedFields = savedSelectables[oldID];

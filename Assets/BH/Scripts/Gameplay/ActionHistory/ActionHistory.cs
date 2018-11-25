@@ -9,30 +9,30 @@ namespace BH
     /// </summary>
     public class ActionHistory
     {
-        Stack<ActionClass> actions;
-        Dictionary<int, HashSet<ActionClass>> instances;
+        Stack<ActionInterface> actions;
+        Dictionary<int, HashSet<ActionInterface>> instances;
         
         /// <summary>
         /// Initializes to an empty stack.
         /// </summary>
         public ActionHistory() 
         { 
-            actions = new Stack<ActionClass>();
-            instances = new Dictionary<int, HashSet<ActionClass>>();
+            actions = new Stack<ActionInterface>();
+            instances = new Dictionary<int, HashSet<ActionInterface>>();
         }
         
         /*
-        public ActionHistory(Stack<ActionClass> existingHistory)
+        public ActionHistory(Stack<ActionInterface> existingHistory)
         {
-            ActionClass actions[] = existingHistory.ToArray();
-            foreach (ActionClass a in actions)
+            ActionInterface actions[] = existingHistory.ToArray();
+            foreach (ActionInterface a in actions)
             {
                 List<int> instanceIDs = a.GetTargetIDs();
                 foreach (int id in instanceIDs)
                 {
                     if (!instances.ContainsKey(id))
                     {
-                        instances[id] = new HashSet<ActionClass>(a);
+                        instances[id] = new HashSet<ActionInterface>(a);
                     }
                     instances[id].Add(a);
                 }
@@ -103,13 +103,13 @@ namespace BH
         {
             if (actions.Count <= 0) return false;
 
-            ActionClass actionToUndo = actions.Pop();
+            ActionInterface actionToUndo = actions.Pop();
 
             // Remove action from all instance-action mappings in this.instances
             List<int> affectedSelectableIDs = actionToUndo.GetTargetIDs();
             foreach (int id in affectedSelectableIDs)
             {
-                HashSet<ActionClass> actionsOnInstance;
+                HashSet<ActionInterface> actionsOnInstance;
                 if (instances.TryGetValue(id, out actionsOnInstance))
                 {
                     actionsOnInstance.Remove(actionToUndo);
@@ -127,7 +127,7 @@ namespace BH
                 {
                     int oldID = update.Key;
                     Selectable newSelectable = update.Value;
-                    HashSet<ActionClass> oldActions;
+                    HashSet<ActionInterface> oldActions;
                     if (instances.TryGetValue(oldID, out oldActions))
                     {
                         instances.Remove(oldID);
@@ -135,7 +135,7 @@ namespace BH
                         if (!instances.ContainsKey(newID))
                         {
                             instances.Add(newID, oldActions);
-                            foreach (ActionClass a in oldActions)
+                            foreach (ActionInterface a in oldActions)
                             {
                                 a.UpdateInstance(oldID, newSelectable);
                             }
@@ -157,14 +157,14 @@ namespace BH
             return true;
         }
 
-        void AddActionOnSelectablesToInstancesMap(List<Selectable> selectables, ActionClass action)
+        void AddActionOnSelectablesToInstancesMap(List<Selectable> selectables, ActionInterface action)
         {
             foreach (Selectable sel in selectables)
             {
                 int ID = sel.GetInstanceID();
                 if (!instances.ContainsKey(ID))
                 {
-                    instances[ID] = new HashSet<ActionClass>();
+                    instances[ID] = new HashSet<ActionInterface>();
                 }
                 instances[ID].Add(action);
             }

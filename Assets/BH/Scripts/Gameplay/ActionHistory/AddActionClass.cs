@@ -8,7 +8,7 @@ namespace BH
     /// Represents the action of creating target(s). Used to undo domino creation.
     /// </summary>
     /// <seealso cref="BH.ActionClass" />
-    public class AddActionClass : ActionClass
+    public class AddActionClass : ActionInterface
     {
         Dictionary<int, Selectable> savedSelectables = new Dictionary<int, Selectable>();
 
@@ -28,7 +28,7 @@ namespace BH
         /// <summary>
         /// Deletes the saved target.
         /// </summary>
-        public override void Undo() 
+        public void Undo() 
         {
             foreach (Selectable sel in savedSelectables.Values) 
             {
@@ -43,7 +43,7 @@ namespace BH
         /// <param name='oldID'>ID of the old Selectable instance, as returned by Unity's Object.GetInstanceID(). </param>
         /// <param name='newInstance'>New Selectable instance to update to. </param>
         /// </summary>
-        public override void UpdateInstance(int oldID, Selectable newInstance)
+        public void UpdateInstance(int oldID, Selectable newInstance)
         {
             if (!savedSelectables.ContainsKey(oldID)) return;
             savedSelectables.Remove(oldID);
@@ -56,7 +56,7 @@ namespace BH
         /// <returns>
         ///     A <c>List&lt;int&gt;</c> of the targets' instance IDs.
         /// </returns>
-        public override List<int> GetTargetIDs() 
+        public List<int> GetTargetIDs() 
         {
             return new List<int>(savedSelectables.Keys);
         }     
