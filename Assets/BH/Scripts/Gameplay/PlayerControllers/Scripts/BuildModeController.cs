@@ -379,17 +379,7 @@ namespace BH
             {
                 foreach (Selectable unit in possibleSelectedUnits)
                 {
-                    // Todo: i think we should change this to always select units, that's more intuitive to me.
-                    // Then we'd need another easy way to deselect all units at once.
-                    // e.g. a quick right click on something other than a domino will deselect everything
-                    if (unit.IsSelected())
-                    {
-                        Deselect(unit);
-                    }
-                    else
-                    {
-                        Select(unit);
-                    }
+                    Select(unit);
                 }
                 return true;
             }
@@ -532,6 +522,7 @@ namespace BH
         /// </summary>
         public void ResetColor()
         {
+            SaveOldColorsActionOf(_selected);
             foreach (Selectable selectable in _selected)
             {
                 selectable.ResetColor();
