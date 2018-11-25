@@ -33,7 +33,7 @@ namespace BH
         Controller _controller;
 
         // Maintain action history as the user switches modes.
-        Stack<ActionClass> actions = new Stack<ActionClass>();
+        ActionHistory actionHistory = new ActionHistory();
 
         void Start()
         {
@@ -68,7 +68,7 @@ namespace BH
                 //    BuildMode();
                 //    break;
                 case Controller.SpectatorMode:
-                    ((BuildModeController)_buildModeInputs[0]).SetActions(this.actions);
+                    ((BuildModeController)_buildModeInputs[0]).SetActionHistory(this.actionHistory);
                     SelectableManager.Instance.ResetData();
                     BuildMode();
                     break;
@@ -177,7 +177,7 @@ namespace BH
         void SaveActions()
         {
             if (_controller != Controller.BuildMode) return;
-            this.actions = ((BuildModeController)_buildModeInputs[0]).GetActions();
+            this.actionHistory = ((BuildModeController)_buildModeInputs[0]).GetActionHistory();
         }
     }
 }

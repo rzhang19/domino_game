@@ -46,14 +46,13 @@ namespace BH
 
         [SerializeField] LayerMask _selectableSurfaceMask;
         [SerializeField] LayerMask _spawnableSurfaceMask;
-
-        // Store actions to allow undos
-        Stack<ActionClass> actions = new Stack<ActionClass>();
         
         // Variables needed for detecting "new" scrolls.
         [SerializeField] float _scrollRefreshPeriod = .5f;
         bool _saveOnScroll = true;
         Coroutine _resetSaveOnScrollCoroutine;
+
+        ActionHistory actionHistory = new ActionHistory();
 
         //// Needed to detect objects below a held object.
         //DetectColliderBelow _detectColliderBelow;
@@ -135,19 +134,21 @@ namespace BH
             GetInput();
 
             // Undo last action
-            if (_undoDown && actions.Count > 0)
+            if (_undoDown)
             {
-                ActionClass lastAction = actions.Pop();
-                lastAction.Undo();
+                bool undoSucceeded = actionHistory.AttemptUndo();
 
-                // If the player undoes an action, it's clear they've stopped scrolling! Reset _saveOnScroll.
-                _saveOnScroll = true;
-
-                // Stop any running timers that will reset _saveOnScroll needlessly.
-                if (_resetSaveOnScrollCoroutine != null)
+                if (undoSucceeded)
                 {
-                    StopCoroutine(_resetSaveOnScrollCoroutine);
-                    _resetSaveOnScrollCoroutine = null;
+                    // If the player undoes an action, it's clear they've stopped scrolling! Reset _saveOnScroll.
+                    _saveOnScroll = true;
+
+                    // Stop any running timers that will reset _saveOnScroll needlessly.
+                    if (_resetSaveOnScrollCoroutine != null)
+                    {
+                        StopCoroutine(_resetSaveOnScrollCoroutine);
+                        _resetSaveOnScrollCoroutine = null;
+                    }
                 }
             }
 
@@ -519,7 +520,7 @@ namespace BH
         /// <param name="color">The color.</param>
         public void ChangeColor(Color color)
         {
-            SaveOldColorsAction();
+            SaveOldColorsActionOf(_selected);
             foreach (Selectable selectable in _selected)
             {
                 selectable.SetColor(color);
@@ -578,10 +579,8 @@ namespace BH
             _saveOnScroll = true;
         }
 
-        /// <summary>
-        /// Saves the target Selectables' transforms (i.e. positions, rotations) into action history.
-        /// </summary>
-        private void SaveOldTransformsActionOf(List<Selectable> targets)
+        // Saves the target Selectables' transforms (i.e. positions, rotations) into action history.
+        void SaveOldTransformsActionOf(List<Selectable> targets)
         {
             // Freeze non-target selectables. Needed so that undo function is never broken.
             // Why?:
@@ -601,70 +600,55 @@ namespace BH
                 }
             }
 
-            List<Selectable> selectedObjs = new List<Selectable>();
-            List<CustomTransform> oldTransforms = new List<CustomTransform>();
-            foreach (Selectable sObj in targets)
+            Dictionary<Selectable, CustomTransform> transformActionState = new Dictionary<Selectable, CustomTransform>();
+            foreach (Selectable sel in targets)
             {
-                selectedObjs.Add(sObj);
-                oldTransforms.Add(new CustomTransform(sObj.transform));
+                transformActionState[sel] = new CustomTransform(sel.transform);
             }
-            TransformActionClass SavedTransformsAction = new TransformActionClass();
-            SavedTransformsAction.Init(selectedObjs, oldTransforms);
-            actions.Push(SavedTransformsAction);
+            actionHistory.PushTransformAction(transformActionState);
         }
 
-        /// <summary>
-        /// Saves the currently selected game objects' colors into action history.
-        /// </summary>
-        private void SaveOldColorsAction()
+        // Saves the target Selectables' colors into action history.
+        void SaveOldColorsActionOf(List<Selectable> targets)
         {
-            List<Selectable> selectables = new List<Selectable>();
-            List<Color> colors = new List<Color>();
-            foreach (Selectable selectable in _selected)
+            Dictionary<Selectable, Color> colorActionState = new Dictionary<Selectable, Color>();
+            foreach (Selectable sel in targets)
             {
-                selectables.Add(selectable);
-                colors.Add(selectable.GetColor());
+                colorActionState[sel] = sel.GetColor();
             }
-            ColorActionClass SavedColorsAction = new ColorActionClass();
-            SavedColorsAction.Init(selectables, colors);
-            actions.Push(SavedColorsAction);
+            actionHistory.PushColorAction(colorActionState);
         }
 
-        /// <summary>
-        /// Saves the creation of the target Selectables into action history.
-        /// </summary>
-        private void SaveAddActionOf(List<Selectable> targets)
+        // Saves the creation of the target Selectables into action history.
+        void SaveAddActionOf(List<Selectable> targets)
         {
-            AddActionClass savedAddAction = new AddActionClass();
-            savedAddAction.Init(targets);
-            actions.Push(savedAddAction);
+            actionHistory.PushAddAction(targets);
         }
 
-        /// <summary>
-        /// Saves the deletion of the target Selectables into action history.
-        /// </summary>
-        private void SaveDeleteActionOf(List<Selectable> targets)
+        // Saves the deletion of the target Selectables into action history.
+        void SaveDeleteActionOf(List<Selectable> targets)
         {
-            DeleteActionClass savedDeleteAction = new DeleteActionClass();
-            savedDeleteAction.Init(targets);
-            actions.Push(savedDeleteAction);
+            actionHistory.PushDeleteAction(targets);
         }
 
         /// <summary>
         /// Setter for BuildModeController's action history. 
         /// Allows action history to persist outside of BuildModeController's life.
         /// </summary>
-        public void SetActions(Stack<ActionClass> actions)
+        public void SetActionHistory(ActionHistory history)
         {
-            this.actions = actions;
+            this.actionHistory = history;
         }
 
         /// <summary>
         /// Getter for BuildModeController's action history.
         /// </summary>
-        public Stack<ActionClass> GetActions()
+        /// <returns>
+        ///     The BuildModeController's ActionHistory instance.
+        /// </returns>
+        public ActionHistory GetActionHistory()
         {
-            return this.actions;
+            return this.actionHistory;
         }
         
         // Calculates an offset base with the following preferences:

@@ -11,7 +11,7 @@ namespace BH
     /// <seealso cref="BH.ActionClass" />
     public class TransformActionClass : ActionClass
     {
-        Dictionary<Selectable, CustomTransform> oldTargetStates = new Dictionary<Selectable, CustomTransform>();
+        Dictionary<int, SelectableToTransform> oldSelectableStates = new Dictionary<int, SelectableToTransform>();
 
         /// <summary>
         /// Saves a 1-to-1 mapping between targets and their to-be-saved transforms.
@@ -22,7 +22,7 @@ namespace BH
         public void Init(List<Selectable> targets, List<CustomTransform> oldProperties) {
             for (int i = 0; i < targets.Count; i++)
             {
-                oldTargetStates.Add(targets[i], oldProperties[i]);
+                oldSelectableStates[targets[i].GetInstanceID()] = new SelectableToTransform(targets[i], oldProperties[i]);
             }
         }
 
@@ -31,14 +31,54 @@ namespace BH
         /// </summary>
         public override void Undo() 
         {
-            foreach(KeyValuePair<Selectable, CustomTransform> state in this.oldTargetStates)
+            foreach(SelectableToTransform state in this.oldSelectableStates.Values)
             {
-                Selectable target = state.Key;
-                CustomTransform oldTransform = state.Value;
+                Selectable target = state.sel;
+                CustomTransform oldTransform = state.transform;
                 target.transform.position = oldTransform.position;
                 target.transform.rotation = oldTransform.rotation;
                 target.transform.localScale = oldTransform.localScale;
                 target.ResetVelocities();
+            }
+
+            oldSelectableStates.Clear();
+        }
+
+        /// <summary>
+        /// Getter for the list containing the instance IDs of the Selectables targeted by this action.
+        /// </summary>
+        /// <returns>
+        ///     A <c>List&lt;int&gt;</c> of the targets' instance IDs.
+        /// </returns>
+        public override List<int> GetTargetIDs() 
+        {
+            return new List<int>(oldSelectableStates.Keys);
+        }
+
+        /// <summary>
+        /// Updates the requested Selectable's instance if relevant to this action. Useful if instance changes.
+        /// <param name='oldID'>ID of the old Selectable instance, as returned by Unity's Object.GetInstanceID(). </param>
+        /// <param name='newInstance'>New Selectable instance to update to. </param>
+        /// </summary>
+        public override void UpdateInstance(int oldID, Selectable newInstance)
+        {
+            if (!oldSelectableStates.ContainsKey(oldID)) return;
+            SelectableToTransform savedTransformMapping = oldSelectableStates[oldID];
+            savedTransformMapping.sel = newInstance;
+            oldSelectableStates.Remove(oldID);
+            oldSelectableStates[newInstance.GetInstanceID()] = savedTransformMapping;
+        }
+
+        // Links a Selectable to its saved transform.
+        struct SelectableToTransform
+        {
+            public Selectable sel;
+            public CustomTransform transform;
+
+            public SelectableToTransform(Selectable s, CustomTransform t)
+            {
+                sel = s;
+                transform = t;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace BH
     /// <seealso cref="BH.ActionClass" />
     public class ColorActionClass : ActionClass
     {
-        Dictionary<Selectable, Color> oldTargetStates = new Dictionary<Selectable, Color>();
+        Dictionary<int, SelectableToColor> oldSelectableStates = new Dictionary<int, SelectableToColor>();
 
         /// <summary>
         /// Saves a 1-to-1 mapping between targets and their to-be-saved colors.
@@ -21,7 +21,7 @@ namespace BH
         public void Init(List<Selectable> targets, List<Color> oldProperties) {
             for (int i = 0; i < targets.Count; i++)
             {
-                oldTargetStates.Add(targets[i], oldProperties[i]);
+                oldSelectableStates[targets[i].GetInstanceID()] = new SelectableToColor(targets[i], oldProperties[i]);
             }
         }
 
@@ -30,11 +30,51 @@ namespace BH
         /// </summary>
         public override void Undo() 
         {
-            foreach(KeyValuePair<Selectable, Color> state in this.oldTargetStates)
+            foreach(SelectableToColor state in this.oldSelectableStates.Values)
             {
-                Selectable target = state.Key;
-                Color oldColor = state.Value;
+                Selectable target = state.sel;
+                Color oldColor = state.color;
                 target.SetColor(oldColor);
+            }
+
+            oldSelectableStates.Clear();
+        }
+        
+        /// <summary>
+        /// Getter for the list containing the instance IDs of the Selectables targeted by this action.
+        /// </summary>
+        /// <returns>
+        ///     A <c>List&lt;int&gt;</c> of the targets' instance IDs.
+        /// </returns>
+        public override List<int> GetTargetIDs() 
+        {
+            return new List<int>(oldSelectableStates.Keys);
+        }
+
+        /// <summary>
+        /// Updates the requested Selectable's instance if relevant to this action. Useful if instance changes.
+        /// <param name='oldID'>ID of the old Selectable instance, as returned by Unity's Object.GetInstanceID(). </param>
+        /// <param name='newInstance'>New Selectable instance to update to. </param>
+        /// </summary>
+        public override void UpdateInstance(int oldID, Selectable newInstance)
+        {
+            if (!oldSelectableStates.ContainsKey(oldID)) return;
+            SelectableToColor savedColorMapping = oldSelectableStates[oldID];
+            savedColorMapping.sel = newInstance;
+            oldSelectableStates.Remove(oldID);
+            oldSelectableStates[newInstance.GetInstanceID()] = savedColorMapping;
+        }
+
+        // Links a Selectable to its saved color.
+        struct SelectableToColor
+        {
+            public Selectable sel;
+            public Color color;
+
+            public SelectableToColor(Selectable s, Color c)
+            {
+                sel = s;
+                color = c;
             }
         }
     }
