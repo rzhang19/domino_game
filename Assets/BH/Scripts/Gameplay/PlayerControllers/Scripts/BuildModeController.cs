@@ -140,6 +140,13 @@ namespace BH
 
                 if (undoSucceeded)
                 {
+                    // Lazy way to prevent updating _selected based on the undone action.
+                    // Otherwise, something like this could happen:
+                    // add domino X and Y --> select both --> undo Y's placement AddAction (*) --> press delete --> undo
+                    // will strangely redisplay both instead of just X, because _selected wasn't updated after (*) step.
+                    // I think this way's reasonable anyway, lmk if you disagree! -gladys
+                    DeselectAll();
+
                     // If the player undoes an action, it's clear they've stopped scrolling! Reset _saveOnScroll.
                     _saveOnScroll = true;
 

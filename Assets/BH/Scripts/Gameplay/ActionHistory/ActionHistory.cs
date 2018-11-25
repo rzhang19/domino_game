@@ -97,7 +97,7 @@ namespace BH
         /// </summary>
         /// <returns>
         ///     <c>True</c> if the undo succeeded. 
-        ///     Note: If it returns false, the action history may be corrupted.
+        ///     Note: If it returns false, the action history may be corrupted. This should never happen though.
         /// </returns>
         public bool AttemptUndo()
         {
