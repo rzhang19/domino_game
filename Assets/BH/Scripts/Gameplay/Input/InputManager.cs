@@ -30,6 +30,8 @@ namespace BH
             {"Toggle Rotation Axis",        new KeyCode[] {KeyCode.R, KeyCode.None}},
             {"Undo",                        new KeyCode[] {KeyCode.Z, KeyCode.None}},
 
+            {"Toggle drag mouse",           new KeyCode[] {KeyCode.M, KeyCode.None}},
+
             {"Toggle Projection",           new KeyCode[] {KeyCode.V, KeyCode.None}}
         };
 
