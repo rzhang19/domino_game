@@ -24,6 +24,11 @@ namespace BH
         Color _color = Color.white;
         Color _originalColor;
 
+        AudioSource collisionAudio;
+        public AudioClip clip;
+        public Material[] materials;
+        int matNumber = 0;
+
         public bool _canBePickedUp = true;
         public bool _canBePushed = true;
 
@@ -40,7 +45,8 @@ namespace BH
 
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-
+            collisionAudio = gameObject.GetComponent<AudioSource>();
+            _renderer.sharedMaterial = materials[0];
             _originalColor = _renderer.material.GetColor("_AlbedoColor");
         }
 
@@ -55,6 +61,18 @@ namespace BH
         {
             Deselect();
             base.OnDisable();
+        }
+
+        /// <summary>
+        /// Plays collision audio upon collisions.
+        /// </summary>
+        void OnCollisionEnter(Collision other)
+        {
+            Rigidbody otherRB = other.gameObject.GetComponent<Rigidbody>();
+            if (otherRB == null)
+                otherRB = _rigidbody;
+            collisionAudio.clip = clip;
+            collisionAudio.Play();
         }
 
         /// <summary>
@@ -242,6 +260,17 @@ namespace BH
         void RefreshColor()
         {
             _renderer.material.SetColor("_AlbedoColor", _color);
+        }
+
+        /// <summary>
+        /// Sets the material of the domino
+        /// </summary>
+        public void SetMaterial()
+        {
+            matNumber++;
+            Debug.Log(materials.Length);
+            Debug.Log(Mathf.Abs(matNumber) % materials.Length);
+            _renderer.sharedMaterial = materials[Mathf.Abs(matNumber) % materials.Length];
         }
     }
 }
