@@ -24,10 +24,10 @@ namespace BH
         Color _color = Color.white;
         Color _originalColor;
 
-        AudioSource collisionAudio;
-        public AudioClip clip;
-        public Material[] materials;
-        int matNumber = 0;
+        AudioSource _audioSource;
+        [SerializeField] AudioClip _playOnCollision;
+        //public Material[] materials;
+        //int matNumber = 0;
 
         public bool _canBePickedUp = true;
         public bool _canBePushed = true;
@@ -44,9 +44,10 @@ namespace BH
             _renderer.material = _defaultMaterial;
 
             _rigidbody = GetComponent<Rigidbody>();
+           
             _collider = GetComponent<Collider>();
-            collisionAudio = gameObject.GetComponent<AudioSource>();
-            _renderer.sharedMaterial = materials[0];
+
+            //_renderer.sharedMaterial = materials[0];
             _originalColor = _renderer.material.GetColor("_AlbedoColor");
         }
 
@@ -68,11 +69,10 @@ namespace BH
         /// </summary>
         void OnCollisionEnter(Collision other)
         {
-            Rigidbody otherRB = other.gameObject.GetComponent<Rigidbody>();
-            if (otherRB == null)
-                otherRB = _rigidbody;
-            collisionAudio.clip = clip;
-            collisionAudio.Play();
+            //Rigidbody otherRB = other.gameObject.GetComponent<Rigidbody>();
+            //if (otherRB == null)
+            //    otherRB = _rigidbody;
+            AudioSource.PlayClipAtPoint(_playOnCollision, other.contacts[0].point);
         }
 
         /// <summary>
@@ -267,10 +267,10 @@ namespace BH
         /// </summary>
         public void SetMaterial()
         {
-            matNumber++;
-            Debug.Log(materials.Length);
-            Debug.Log(Mathf.Abs(matNumber) % materials.Length);
-            _renderer.sharedMaterial = materials[Mathf.Abs(matNumber) % materials.Length];
+            //matNumber++;
+            //Debug.Log(materials.Length);
+            //Debug.Log(Mathf.Abs(matNumber) % materials.Length);
+            //_renderer.sharedMaterial = materials[Mathf.Abs(matNumber) % materials.Length];
         }
     }
 }
