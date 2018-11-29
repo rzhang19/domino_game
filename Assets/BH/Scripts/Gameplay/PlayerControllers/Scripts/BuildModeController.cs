@@ -24,7 +24,14 @@ namespace BH
         bool _upOrSide = false;
         bool changeAxis = false;
         bool _undoDown = false;
+        bool _matChange = false;
+        bool _dragMouse = false;
+        bool _mouseholddown = false;
+        bool _dragMode = false;
         float _scrollWheel = 0f;
+
+        float timeBetweenDominoes = 0.5f;
+        float timer;
 
         Camera _cam;
         float _distance = float.MaxValue;
@@ -80,6 +87,10 @@ namespace BH
                 _spawnSelectableUp = true;
                 _upOrSide = false;
                 _undoDown = false;
+                _matChange = false;
+                _dragMouse = false;
+                _dragMode = false;
+                _mouseholddown = false;
                 _scrollWheel = 0f;
 
                 // Unselect everything upon input lock.
@@ -98,9 +109,12 @@ namespace BH
             _pickupUp = InputManager.GetKeyUp("Attack1");
             _spawnSelectableDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
             _spawnSelectableUp = InputManager.GetKeyUp("Attack1");
+            _mouseholddown = InputManager.GetKey("Attack1");
             _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
             _undoDown = InputManager.GetKeyDown("Undo");
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
+            _matChange = InputManager.GetKeyDown("Change Material");
+            _dragMouse = InputManager.GetKeyDown("Toggle drag mouse");
         }
 
         void Awake()
@@ -132,6 +146,8 @@ namespace BH
         void Update()
         {
             GetInput();
+
+            timer += Time.deltaTime;
 
             // Undo last action
             if (_undoDown)
@@ -179,6 +195,17 @@ namespace BH
             if (_upOrSide)
             {
                 changeAxis = !changeAxis;
+            }
+
+            if (_dragMouse)
+            {
+                _dragMode = !_dragMode;
+            }
+
+            //Changes material of dominoes
+            if (_matChange)
+            {
+                ChangeMaterial();
             }
             
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
@@ -306,7 +333,7 @@ namespace BH
                     Select(selectable);
                 }
             }
-            else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+            else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
             {
                 // Spawn a selectable if the player requests.
                 Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
@@ -320,6 +347,17 @@ namespace BH
 
             if (_pickedUpSelectables.Count <= 0)
                 HandleRotation();
+
+            if (_dragMode)
+            {
+                if ( _mouseholddown && timer >= timeBetweenDominoes && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+                {
+                    // Spawn a selectable if the player requests.
+                    Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
+                    SaveAddActionOf(new List<Selectable>(new Selectable[] { newSel }));
+                    timer = 0;
+                }
+            }
             
             // Ghost preview during spawning of the selectable.
             if (_spawningSelectable)
@@ -521,6 +559,14 @@ namespace BH
             foreach (Selectable selectable in _selected)
             {
                 selectable.SetColor(color);
+            }
+        }
+
+        public void ChangeMaterial()
+        {
+            foreach (Selectable selectable in _selected)
+            {
+                selectable.SetMaterial();
             }
         }
 
