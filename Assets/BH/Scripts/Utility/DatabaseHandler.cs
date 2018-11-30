@@ -15,7 +15,7 @@ public class DatabaseHandler : MonoBehaviour
     {
         connectionString = "URI=file:" + Application.dataPath + "/DominoesDB.sqlite";
 
-        AddUser("manas", "kumar", "SAVE1");
+        /*AddUser("manas", "kumar", "SAVE1");
         AddUser("manas", "kumar", "SAVE1");
         AddUser("banas", "kumar", "SAVE2");
         AddUser("lanas", "kumar", "SAVE3");
@@ -27,7 +27,7 @@ public class DatabaseHandler : MonoBehaviour
         DeleteUser("manas");
         DeleteUser("banas");
         DeleteUser("lanas");
-        DeleteUser("lanas");
+        DeleteUser("lanas");*/
     }
 
 
