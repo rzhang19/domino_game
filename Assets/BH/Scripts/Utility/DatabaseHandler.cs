@@ -24,6 +24,10 @@ public class DatabaseHandler : MonoBehaviour
         Debug.Log(GetUserPassword("manas"));
         Debug.Log(GetUserPassword("banas"));
         Debug.Log(GetSaveState("lanas"));
+        DeleteUser("manas");
+        DeleteUser("banas");
+        DeleteUser("lanas");
+        DeleteUser("lanas");
     }
 
 
@@ -175,4 +179,31 @@ public class DatabaseHandler : MonoBehaviour
             }
         }
     }
+
+
+    private void DeleteUser(string id)
+    {
+        if (!IsUser(id))
+        {
+            Debug.Log("ERROR: Username not found!");
+            return;
+        }
+
+        using (IDbConnection dbConnection = new SqliteConnection(connectionString))
+        {
+            dbConnection.Open();
+
+            using (IDbCommand dbCmd = dbConnection.CreateCommand())
+            {
+                //DELETE FROM "save_states" WHERE user_id = id
+                string sqlQuery = "DELETE FROM \"save_states\" WHERE user_id = '" + id + "'";
+                Debug.Log(sqlQuery);
+                dbCmd.CommandText = sqlQuery;
+                dbCmd.ExecuteScalar();
+                dbConnection.Close();
+            }
+        }
+    }
+
+
 }
