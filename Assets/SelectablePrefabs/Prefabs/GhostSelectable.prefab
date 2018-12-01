@@ -172,4 +172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 437b20f1e3f4709458fbc40c4c944b5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialPoolSize: 100
+  _defaultMaterial: {fileID: 2100000, guid: e6bf7464b4ff8fe4c94bb265c772580b, type: 2}
   _anim: {fileID: 95637980475703192}

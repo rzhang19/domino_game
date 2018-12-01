@@ -44,12 +44,13 @@ namespace BH
         [SerializeField] SelectionRectController _selectionRectController;
 
         // For copy functionality
-        List<SelectableInfo> _copied = new List<SelectableInfo>();
+        //List<SelectableInfo> _copied = new List<SelectableInfo>();
+        List<SerializableSelectable> _copied = new List<SerializableSelectable>();
 
         // For paste functionality
         List<GhostSelectable> _ghostSelectablesToPaste = new List<GhostSelectable>();
         bool _spawningPastables = false;
-        bool _justSpawnedPastables = false;
+        bool _ghostCenterInTheMiddleOfNowhereLastFrame = true;
 
         // For pickup functionality
         [SerializeField] Vector3 _pickUpOffset = Vector3.up;
@@ -153,13 +154,17 @@ namespace BH
             }
             else
             {
-                _ghostSelectable = Instantiate(_ghostSelectablePrefab, _theMiddleOfNowhere, Quaternion.identity);
+                //_ghostSelectable = Instantiate(_ghostSelectablePrefab, _theMiddleOfNowhere, Quaternion.identity);
+                _ghostSelectable = _ghostSelectablePrefab.Get<GhostSelectable>(null, _theMiddleOfNowhere, Quaternion.identity);
             }
         }
 
         void Update()
         {
             GetInput();
+            
+            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitInfo;
 
             timer += Time.deltaTime;
 
@@ -184,36 +189,35 @@ namespace BH
                 }
             }
 
+            // Copy
             if (_copyDown && _selected.Count > 0)
             {
-                // Save info of selected dominos *persistently*
+                // Save info of selected dominos *persistently*.
                 _copied.Clear();
-                foreach (Selectable sel in _selected)
-                {
-                    SerializableTransform transform = new SerializableTransform(sel.transform);
-                    Color baseColor = sel.GetColor();
-                    Color color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a);
-                    _copied.Add(new SelectableInfo(transform, color));
-                }
+                foreach (Selectable selectable in _selected)
+                    _copied.Add(new SerializableSelectable(selectable));
+
                 DeselectAll();
             }
 
-            if (_pasteDown && !_spawningPastables && _copied.Count > 0)
+            // Paste
+            if (_spawningSelectable && _pasteDown && _copied.Count > 0 && Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask))
             {
-                _spawningSelectable = false;
                 _spawningPastables = true;
-                _justSpawnedPastables = false;
 
-                // create ghost selectables for all copied dominos
-                foreach (SelectableInfo info in _copied)
+                // Purge old preview ghosts.
+                ClearPastedSelectablesPreview();
+
+                // Bring in the new preview ghosts.
+                foreach (SerializableSelectable serializableSelectable in _copied)
                 {
-                    SerializableTransform baseTransform = info.transform;
-                    Color baseColor = info.color;
-                    GhostSelectable preview = Instantiate(_ghostSelectablePrefab);
-                    preview.SetTransform(baseTransform);
-                    preview.SetColor(baseColor);
+                    // Initially spawn them in their original positions.
+                    GhostSelectable preview = _ghostSelectablePrefab.Get<GhostSelectable>();
+                    preview.SetTransform(serializableSelectable._serializableTransform);
+                    preview.SetColor(serializableSelectable._color);
                     _ghostSelectablesToPaste.Add(preview);
                 }
+
                 DeselectAll();
             }
 
@@ -222,8 +226,6 @@ namespace BH
             {
                 foreach (PickedUpSelectable pickedUpSelectable in _pickedUpSelectables)
                 {
-                    //if (pickedUpSelectable._selectable._rigidbody.velocity.y > 0f)
-                    //    pickedUpSelectable._selectable._rigidbody.velocity = new Vector3(pickedUpSelectable._selectable._rigidbody.velocity.x, 0f, pickedUpSelectable._selectable._rigidbody.velocity.z);
                     pickedUpSelectable._selectable._rigidbody.velocity = Vector3.zero;
                     pickedUpSelectable._selectable._rigidbody.useGravity = true;
                 }
@@ -249,9 +251,6 @@ namespace BH
             {
                 ChangeMaterial();
             }
-            
-            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
 
             // If some Selectable is picked up, move its position accordingly.
             if (_pickedUpSelectables.Count > 0)
@@ -375,28 +374,31 @@ namespace BH
                     Select(selectable);
                 }
             }
-            else if (_spawningPastables && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
-            {
-                // Spawn the pasted dominos in _pastables
-                List<Selectable> newlySpawned = new List<Selectable>();
-                foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
-                {  
-                    newlySpawned.Add(SelectableManager.Instance.SpawnSelectableFromGameObj(gSel));
-                    gSel.transform.position = _theMiddleOfNowhere;
-                    Destroy(gSel);
-                }
-                _spawningPastables = false;
-                _justSpawnedPastables = false;
-                _ghostSelectablesToPaste.Clear();
-                
-                SaveAddActionOf(newlySpawned);
-            }
-
             else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
             {
-                // Spawn a selectable if the player requests.
-                Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
-                SaveAddActionOf(new List<Selectable>(new Selectable[] { newSel }));
+                // "Spawning pastables" is a special case of "spawning selectable".
+                if (_spawningPastables) // Player wants to spawn (possibly) multiple selectables.
+                {
+                    // Spawn the pasted dominos in _pastables
+                    List<Selectable> newlySpawned = new List<Selectable>();
+                    foreach (GhostSelectable ghostSelectable in _ghostSelectablesToPaste)
+                    {  
+                        newlySpawned.Add(SelectableManager.Instance.SpawnSelectableFromGameObj(ghostSelectable));
+                        //ghostSelectable.transform.position = _theMiddleOfNowhere;
+                        ghostSelectable.Delete();
+                    }
+                    _spawningPastables = false;
+                    //_justSpawnedPastables = false;
+                    _ghostSelectablesToPaste.Clear();
+                
+                    SaveAddActionOf(newlySpawned);
+                }
+                else // Player wants to spawn a single selectable.
+                {
+                    // Spawn a selectable if the player requests.
+                    Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
+                    SaveAddActionOf(new List<Selectable>(new Selectable[] { newSel }));
+                }
             }
             else if (_selectDown && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
@@ -418,73 +420,121 @@ namespace BH
                 }
             }
             
-            if (_spawningPastables) {
-                // cancel ghost preview with right click
-                if (_selectDown) {
-                     ClearPastedSelectablesPreview();
-                }
+            //if (_spawningPastables) {
+            //    // cancel ghost preview with right click
+            //    if (_selectDown) {
+            //         ClearPastedSelectablesPreview();
+            //    }
 
-                // show ghost preview of pasted dominos    
-                if (_ghostSelectablesToPaste.Count > 0 && _pickedUpSelectables.Count <= 0 && _locks.Count <= 0 
-                    && !EventSystem.current.IsPointerOverGameObject()
-                    // && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) <-- Removed for smoother hovering
-                    && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
-                {
-                    Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
-                    Vector3 pastablesCenter = FindCenter(pastablesTransforms);
-                    Vector3 pastablesOffset = hitInfo.point - pastablesCenter;
+            //    // show ghost preview of pasted dominos    
+            //    if (_ghostSelectablesToPaste.Count > 0 && _pickedUpSelectables.Count <= 0 && _locks.Count <= 0 
+            //        && !EventSystem.current.IsPointerOverGameObject()
+            //        // && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) <-- Removed for smoother hovering
+            //        && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+            //    {
+            //        Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
+            //        Vector3 pastablesCenter = FindCenter(pastablesTransforms);
+            //        Vector3 pastablesOffset = hitInfo.point - pastablesCenter;
 
-                    foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
-                    {
-                        if (_justSpawnedPastables) 
-                        {
-                            gSel.AnimateFadeIn();
-                        }
-                        gSel.transform.position += pastablesOffset;
-                    }
+            //        foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
+            //        {
+            //            if (_justSpawnedPastables) 
+            //            {
+            //                gSel.AnimateFadeIn();
+            //            }
+            //            gSel.transform.position += pastablesOffset;
+            //        }
 
-                    if (_scrollWheel != 0f)
-                    {
-                        float deg = _rotationPerTick * _scrollWheel;
-                        RotateGameObjs(deg, _ghostSelectablesToPaste.Select(s => (GameObj)s).ToList());
-                    }
+            //        if (_scrollWheel != 0f)
+            //        {
+            //            float deg = _rotationPerTick * _scrollWheel;
+            //            RotateGameObjs(deg, _ghostSelectablesToPaste.Select(s => (GameObj)s).ToList());
+            //        }
 
-                    _justSpawnedPastables = false;
-                }
-            }
+            //        _justSpawnedPastables = false;
+            //    }
+            //}
             
-            if (_spawningSelectable && !_spawningPastables)
+            // The following conditional handles ghost preview logic.
+            if (_spawningSelectable)
             {
-                Vector3 newGhostPosition = _theMiddleOfNowhere;
-
-                if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
-                    //&& !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) <-- Removed for smoother hovering
-                    && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+                // Either spawning a single selectable or a set of copied selectables.
+                if (_spawningPastables)
                 {
-                    newGhostPosition = hitInfo.point;
+                    // No need for the normal ghost preview.
+                    _ghostSelectable.transform.position = _theMiddleOfNowhere;
+                    _ghostInTheMiddleOfNowhereLastFrame = true;
 
-                    if (_scrollWheel != 0f)
+                    Vector3 newGhostCenter = _theMiddleOfNowhere;
+                    Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
+                    Vector3 currentGhostCenter = FindCenter(pastablesTransforms);
+
+                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                        && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
+                        && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                     {
-                        _spawnRotation = Quaternion.Euler(_spawnRotation.eulerAngles.x,
-                            _spawnRotation.eulerAngles.y + _rotationPerTick * _scrollWheel,
-                            _spawnRotation.eulerAngles.z);
+                        newGhostCenter = hitInfo.point;
 
-                        _ghostSelectable.transform.rotation = _spawnRotation;
+                        if (_scrollWheel != 0f)
+                        {
+                            float deg = _rotationPerTick * _scrollWheel;
+                            RotateGameObjs(deg, _ghostSelectablesToPaste.Select(s => (GameObj)s).ToList());
+                        }
                     }
+                    
+                    // If ghosts just "spawned", play the fade-in animation.
+                    bool ghostsSpawnedThisFrame = _ghostCenterInTheMiddleOfNowhereLastFrame && newGhostCenter != _theMiddleOfNowhere;
+                    if (ghostsSpawnedThisFrame)
+                    {
+                        foreach (GhostSelectable ghostSelectable in _ghostSelectablesToPaste)
+                            ghostSelectable.AnimateFadeIn();
+                    }
+
+                    // "Normalize" the positions of the ghosts around the new ghost center.
+                    foreach (GhostSelectable ghostSelectable in _ghostSelectablesToPaste)
+                        ghostSelectable.transform.position = ghostSelectable.transform.position - currentGhostCenter + newGhostCenter;
+
+                    _ghostCenterInTheMiddleOfNowhereLastFrame = newGhostCenter == _theMiddleOfNowhere;
+                }
+                else
+                {
+                    Vector3 newGhostPosition = _theMiddleOfNowhere;
+
+                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                        && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
+                        && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+                    {
+                        newGhostPosition = hitInfo.point;
+
+                        if (_scrollWheel != 0f)
+                        {
+                            _spawnRotation = Quaternion.Euler(_spawnRotation.eulerAngles.x,
+                                _spawnRotation.eulerAngles.y + _rotationPerTick * _scrollWheel,
+                                _spawnRotation.eulerAngles.z);
+
+                            _ghostSelectable.transform.rotation = _spawnRotation;
+                        }
+                    }
+
+                    // If ghost just "spawned", play the fade-in animation.
+                    bool ghostSpawnedThisFrame = _ghostInTheMiddleOfNowhereLastFrame && newGhostPosition != _theMiddleOfNowhere;
+                    if (ghostSpawnedThisFrame)
+                        _ghostSelectable.AnimateFadeIn();
+
+                    _ghostSelectable.transform.position = newGhostPosition;
+                    _ghostInTheMiddleOfNowhereLastFrame = _ghostSelectable.transform.position == _theMiddleOfNowhere;
+                }
+            }
+            else // Not in the right mode to spawn selectables. Remove all ghost previews.
+            {
+                if (!_ghostInTheMiddleOfNowhereLastFrame)
+                {
+                    _ghostSelectable.transform.position = _theMiddleOfNowhere;
+                    _ghostInTheMiddleOfNowhereLastFrame = true;
                 }
 
-                // If ghost just "spawned", play the fade-in animation.
-                bool ghostSpawnedThisFrame = _ghostInTheMiddleOfNowhereLastFrame && newGhostPosition != _theMiddleOfNowhere;
-                if (ghostSpawnedThisFrame)
-                    _ghostSelectable.AnimateFadeIn();
-
-                _ghostSelectable.transform.position = newGhostPosition;
-                _ghostInTheMiddleOfNowhereLastFrame = _ghostSelectable.transform.position == _theMiddleOfNowhere;
-            }
-            else
-            {
-                _ghostSelectable.transform.position = _theMiddleOfNowhere;
-                _ghostInTheMiddleOfNowhereLastFrame = true;
+                if (_ghostSelectablesToPaste.Count > 0)
+                    ClearPastedSelectablesPreview();
             }
         }
 
@@ -850,12 +900,8 @@ namespace BH
         void ClearPastedSelectablesPreview()
         {
             foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
-            {
-                gSel.transform.position = _theMiddleOfNowhere;
-                Destroy(gSel);
-            }
-            _spawningPastables = false;
-            _justSpawnedPastables = false;
+                gSel.Delete();
+
             _ghostSelectablesToPaste.Clear();
         }
     }

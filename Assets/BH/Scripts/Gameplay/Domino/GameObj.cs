@@ -92,7 +92,7 @@ namespace BH
         /// </returns>
         public Color GetColor()
         {
-            return _color;
+            return new Color(_color.r, _color.g, _color.b);
         }
 
         /// <summary>
