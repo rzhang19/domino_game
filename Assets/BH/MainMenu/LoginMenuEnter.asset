@@ -9,5 +9,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98705c799119ff045a356bf1a1508cc6, type: 3}
-  m_Name: MainMenuUIEnter
+  m_Name: LoginMenuEnter
   m_EditorClassIdentifier: 
