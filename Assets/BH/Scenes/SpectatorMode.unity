@@ -543,7 +543,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: fe993cb4036396b45b1d74c0104e5414, type: 2}
+  - {fileID: 2100000, guid: 4324933d2f64d8e41b652411afb62a5f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -577,8 +577,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 266186062}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_LocalPosition: {x: 0, y: 20, z: 0}
+  m_LocalScale: {x: 10000, y: 1, z: 10000}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -765,27 +765,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 6.61
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -5.96
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0.43308318
+      value: 0.42261827
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 0.901354
+      value: 0.9063079
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_RootOrder
@@ -793,7 +793,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4846232590456578, guid: 7903b9dac69bc474cbe0b716374b051c, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 51.327003
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 143096144924567366, guid: 7903b9dac69bc474cbe0b716374b051c,
         type: 2}
