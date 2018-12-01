@@ -1685,7 +1685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6491198267d7d58478665e6a8c138c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorSpeed: 3
+  _animatorSpeed: 2
   _blink: 0
   _enterFadeIn: 1
   _enterBounceUp: 1
@@ -2005,7 +2005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6491198267d7d58478665e6a8c138c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorSpeed: 3
+  _animatorSpeed: 2
   _blink: 0
   _enterFadeIn: 1
   _enterBounceUp: 1
@@ -2170,7 +2170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6491198267d7d58478665e6a8c138c45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorSpeed: 3
+  _animatorSpeed: 2
   _blink: 0
   _enterFadeIn: 1
   _enterBounceUp: 1
