@@ -28,6 +28,8 @@ namespace BH
         bool _dragMouse = false;
         bool _mouseholddown = false;
         bool _dragMode = false;
+        bool _copyDown = false;
+        bool _pasteDown = false;
         float _scrollWheel = 0f;
 
         float timeBetweenDominoes = 0.5f;
@@ -40,6 +42,14 @@ namespace BH
         // For selection functionality
         List<Selectable> _selected = new List<Selectable>();
         [SerializeField] SelectionRectController _selectionRectController;
+
+        // For copy functionality
+        List<Selectable> _copied = new List<Selectable>();
+
+        // For paste functionality
+        List<GhostSelectable> _ghostSelectablesToPaste = new List<GhostSelectable>();
+        bool _spawningPastables = false;
+        bool _justSpawnedPastables = false;
 
         // For pickup functionality
         [SerializeField] Vector3 _pickUpOffset = Vector3.up;
@@ -91,6 +101,8 @@ namespace BH
                 _dragMouse = false;
                 _dragMode = false;
                 _mouseholddown = false;
+                _copyDown = false;
+                _pasteDown = false;
                 _scrollWheel = 0f;
 
                 // Unselect everything upon input lock.
@@ -115,6 +127,8 @@ namespace BH
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
             _matChange = InputManager.GetKeyDown("Change Material");
             _dragMouse = InputManager.GetKeyDown("Toggle drag mouse");
+            _copyDown = InputManager.GetKeyDown("Copy");
+            _pasteDown = InputManager.GetKeyDown("Paste");
         }
 
         void Awake()
@@ -156,11 +170,6 @@ namespace BH
 
                 if (undoSucceeded)
                 {
-                    // Lazy way to prevent updating _selected based on the undone action.
-                    // Otherwise, something like this could happen:
-                    // add domino X and Y --> select both --> undo Y's placement AddAction (*) --> press delete --> undo
-                    // will strangely redisplay both instead of just X, because _selected wasn't updated after (*) step.
-                    // I think this way's reasonable anyway, lmk if you disagree! -gladys
                     DeselectAll();
 
                     // If the player undoes an action, it's clear they've stopped scrolling! Reset _saveOnScroll.
@@ -172,6 +181,31 @@ namespace BH
                         StopCoroutine(_resetSaveOnScrollCoroutine);
                         _resetSaveOnScrollCoroutine = null;
                     }
+                }
+            }
+
+            if (_copyDown && _selected.Count > 0)
+            {
+                _copied.Clear();
+                foreach (Selectable sel in _selected)
+                {
+                    _copied.Add(sel);
+                }
+                DeselectAll();
+            }
+
+            if (_pasteDown && _copied.Count > 0)
+            {
+                _spawningSelectable = false;
+                _spawningPastables = true;
+                _justSpawnedPastables = false;
+
+                // create ghost selectables for all copied dominos
+                foreach (Selectable sel in _copied)
+                {
+                    GhostSelectable preview = Instantiate(_ghostSelectablePrefab, sel.transform);
+                    //todo: copy color too
+                    _ghostSelectablesToPaste.Add(preview);
                 }
             }
 
@@ -333,6 +367,23 @@ namespace BH
                     Select(selectable);
                 }
             }
+            else if (_spawningPastables && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
+            {
+                // Spawn the pasted dominos in _pastables
+                List<Selectable> newlySpawned = new List<Selectable>();
+                foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
+                {  
+                    newlySpawned.Add(SelectableManager.Instance.SpawnSelectable(gSel.transform.position, gSel.transform.rotation));
+                    gSel.transform.position = _theMiddleOfNowhere;
+                    Destroy(gSel);
+                }
+                _spawningPastables = false;
+                _justSpawnedPastables = false;
+                _copied.Clear();
+                _ghostSelectablesToPaste.Clear();
+                //todo: undo
+            }
+
             else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
             {
                 // Spawn a selectable if the player requests.
@@ -359,7 +410,33 @@ namespace BH
                 }
             }
             
-            // Ghost preview during spawning of the selectable.
+            if (_spawningPastables) {
+                // show ghost preview of pasted dominos    
+                if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                    && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) //todo: pastable preview override
+                    && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+                {
+                    Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
+                    Vector3 pastablesCenter = FindCenter(pastablesTransforms);
+                    Vector3 pastablesOffset = hitInfo.point - pastablesCenter;
+
+                    foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
+                    {
+                        if (_justSpawnedPastables) 
+                        {
+                            gSel.AnimateFadeIn();
+                        }
+                        gSel.transform.position += pastablesOffset;
+                    }
+
+                    _justSpawnedPastables = false;
+                }
+            }
+            else
+            {
+
+            }
+
             if (_spawningSelectable)
             {
                 Vector3 newGhostPosition = _theMiddleOfNowhere;

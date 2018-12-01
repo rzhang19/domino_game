@@ -105,6 +105,17 @@ namespace BH
         }
 
         /// <summary>
+        /// Spawns a new copy of the given Selectable.
+        /// </summary>
+        /// <param name="orig">The Selectable to copy.</param>
+        public Selectable SpawnSelectableFromCopy(Selectable orig)
+        {
+            Selectable newSel = SpawnSelectable(orig.transform.position, orig.transform.rotation);
+            newSel.SetColor(orig.GetColor());
+            return newSel;
+        }
+
+        /// <summary>
         /// Despawns the selectable boject.
         /// </summary>
         /// <param name="sel">The selectable object.</param>
