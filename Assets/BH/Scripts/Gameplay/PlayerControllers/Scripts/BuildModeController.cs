@@ -44,7 +44,7 @@ namespace BH
         [SerializeField] SelectionRectController _selectionRectController;
 
         // For copy functionality
-        List<Selectable> _copied = new List<Selectable>();
+        List<SelectableInfo> _copied = new List<SelectableInfo>();
 
         // For paste functionality
         List<GhostSelectable> _ghostSelectablesToPaste = new List<GhostSelectable>();
@@ -186,27 +186,35 @@ namespace BH
 
             if (_copyDown && _selected.Count > 0)
             {
+                // Save info of selected dominos *persistently*
                 _copied.Clear();
                 foreach (Selectable sel in _selected)
                 {
-                    _copied.Add(sel);
+                    SerializableTransform transform = new SerializableTransform(sel.transform);
+                    Color baseColor = sel.GetColor();
+                    Color color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a);
+                    _copied.Add(new SelectableInfo(transform, color));
                 }
                 DeselectAll();
             }
 
-            if (_pasteDown && _copied.Count > 0)
+            if (_pasteDown && !_spawningPastables && _copied.Count > 0)
             {
                 _spawningSelectable = false;
                 _spawningPastables = true;
                 _justSpawnedPastables = false;
 
                 // create ghost selectables for all copied dominos
-                foreach (Selectable sel in _copied)
+                foreach (SelectableInfo info in _copied)
                 {
-                    GhostSelectable preview = Instantiate(_ghostSelectablePrefab, sel.transform);
-                    //todo: copy color too
+                    SerializableTransform baseTransform = info.transform;
+                    Color baseColor = info.color;
+                    GhostSelectable preview = Instantiate(_ghostSelectablePrefab);
+                    preview.SetTransform(baseTransform);
+                    preview.SetColor(baseColor);
                     _ghostSelectablesToPaste.Add(preview);
                 }
+                DeselectAll();
             }
 
             // Pickup release
@@ -373,15 +381,15 @@ namespace BH
                 List<Selectable> newlySpawned = new List<Selectable>();
                 foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
                 {  
-                    newlySpawned.Add(SelectableManager.Instance.SpawnSelectable(gSel.transform.position, gSel.transform.rotation));
+                    newlySpawned.Add(SelectableManager.Instance.SpawnSelectableFromGameObj(gSel));
                     gSel.transform.position = _theMiddleOfNowhere;
                     Destroy(gSel);
                 }
                 _spawningPastables = false;
                 _justSpawnedPastables = false;
-                _copied.Clear();
                 _ghostSelectablesToPaste.Clear();
-                //todo: undo
+                
+                SaveAddActionOf(newlySpawned);
             }
 
             else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
@@ -396,7 +404,7 @@ namespace BH
                 DeselectAll();
             }
 
-            if (_pickedUpSelectables.Count <= 0)
+            if (_selected.Count > 0 && _pickedUpSelectables.Count <= 0)
                 HandleRotation();
 
             if (_dragMode)
@@ -411,9 +419,15 @@ namespace BH
             }
             
             if (_spawningPastables) {
+                // cancel ghost preview with right click
+                if (_selectDown) {
+                     ClearPastedSelectablesPreview();
+                }
+
                 // show ghost preview of pasted dominos    
-                if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
-                    && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) //todo: pastable preview override
+                if (_ghostSelectablesToPaste.Count > 0 && _pickedUpSelectables.Count <= 0 && _locks.Count <= 0 
+                    && !EventSystem.current.IsPointerOverGameObject()
+                    // && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) <-- Removed for smoother hovering
                     && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                 {
                     Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
@@ -429,20 +443,22 @@ namespace BH
                         gSel.transform.position += pastablesOffset;
                     }
 
+                    if (_scrollWheel != 0f)
+                    {
+                        float deg = _rotationPerTick * _scrollWheel;
+                        RotateGameObjs(deg, _ghostSelectablesToPaste.Select(s => (GameObj)s).ToList());
+                    }
+
                     _justSpawnedPastables = false;
                 }
             }
-            else
-            {
-
-            }
-
-            if (_spawningSelectable)
+            
+            if (_spawningSelectable && !_spawningPastables)
             {
                 Vector3 newGhostPosition = _theMiddleOfNowhere;
 
                 if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
-                    && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
+                    //&& !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) <-- Removed for smoother hovering
                     && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                 {
                     newGhostPosition = hitInfo.point;
@@ -558,7 +574,23 @@ namespace BH
         //}
 
         /// <summary>
-        /// Rotates the selected game objects a specified amount.
+        /// Rotates the given game objects a specified amount. 
+        /// Only rotates around the objects' averaged centers.
+        /// </summary>
+        /// <param name="deg">The rotation in degrees.</param>
+        public void RotateGameObjs(float deg, List<GameObj> targets)
+        {
+            Transform[] targetTransforms = targets.Select(t => t.transform).ToArray();
+            Vector3 center = FindCenter(targetTransforms);
+            foreach (GameObj target in targets)
+            {
+                target.RotateAround(center, Vector3.up, deg);
+            }
+        }
+
+        /// <summary>
+        /// Rotates the currently selected Selectables a specified amount. 
+        /// Rotation can be w.r.t. the objects' individual centers, or their averaged center.
         /// </summary>
         /// <param name="deg">The rotation in degrees.</param>
         public void RotateSelected(float deg)
@@ -814,6 +846,18 @@ namespace BH
             else
                 _spawningSelectable = true;
         }
+
+        void ClearPastedSelectablesPreview()
+        {
+            foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
+            {
+                gSel.transform.position = _theMiddleOfNowhere;
+                Destroy(gSel);
+            }
+            _spawningPastables = false;
+            _justSpawnedPastables = false;
+            _ghostSelectablesToPaste.Clear();
+        }
     }
 
     class PickedUpSelectable
@@ -826,5 +870,16 @@ namespace BH
 
         public Selectable _selectable;
         public Vector3 _offset;
+    }
+
+    class SelectableInfo
+    {
+        public SerializableTransform transform;
+        public Color color;
+        public SelectableInfo(SerializableTransform transform, Color color)
+        {
+            this.transform = transform;
+            this.color = color;
+        }
     }
 }
