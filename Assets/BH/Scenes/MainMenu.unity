@@ -5309,7 +5309,7 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    Delay: 1.5
+    Delay: 1.8
   _baseDelay: 0
 --- !u!1001 &1294352541
 Prefab:
