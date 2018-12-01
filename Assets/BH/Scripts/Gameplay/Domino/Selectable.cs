@@ -11,18 +11,14 @@ namespace BH
     /// </summary>
     /// <seealso cref="BH.DesignPatterns.PooledMonobehaviour" />
     [RequireComponent(typeof(Rigidbody), typeof(Collider))]
-    public class Selectable : PooledMonobehaviour
+    public class Selectable : GameObj
     {
         bool _isSelected = false;
 
-        [SerializeField] Material _defaultMaterial;
         [SerializeField] Material _selectedMaterial;
 
-        MeshRenderer _renderer;
         public Rigidbody _rigidbody { get; private set; }
         Collider _collider;
-        Color _color = Color.white;
-        Color _originalColor;
 
         AudioSource _audioSource;
         [SerializeField] AudioClip _playOnCollision;
@@ -123,39 +119,6 @@ namespace BH
                 Select();
         }
 
-        /// <summary>
-        /// Disables the game object that the instance is attached to.
-        /// By disabling the object, this makes the game object eligible for pool collection.
-        /// </summary>
-        public void Delete()
-        {
-            Debug.Log("Deleted " + name);
-            gameObject.SetActive(false);
-        }
-
-        /// <summary>
-        /// Setter for transform. Input is our custom SerializableTransform to bypass Unity's Transform restrictions.
-        /// <param name="newT">The SerializableTransform to copy from.</param>
-        /// </summary>
-        public void SetTransform(SerializableTransform newT)
-        {
-            transform.position = newT._position;
-            transform.rotation = newT._rotation;
-            transform.localScale = newT._scale;
-            //ResetVelocities(); ? maybe useful here
-        }
-
-        /// <summary>
-        /// Rotates the attached transform about axis passing through point in world coordinates by deg degrees.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="axis">The axis.</param>
-        /// <param name="deg">The deg.</param>
-        public void RotateAround(Vector3 point, Vector3 axis, float deg)
-        {
-            transform.RotateAround(point, axis, deg);
-        }
-
         public void RotateX(float deg)
         {
             RotateAround(GetColliderCenter(), transform.right, deg);
@@ -221,45 +184,6 @@ namespace BH
         {
             SetVelocity(Vector3.zero);
             SetAngularVelocity(Vector3.zero);
-        }
-
-        /// <summary>
-        /// Sets the material color.
-        /// </summary>
-        /// <param name="color">The color.</param>
-        public void SetColor(Color color)
-        {
-            // Changes the color of the material
-            _color = color;
-            RefreshColor();
-        }
-
-        /// <summary>
-        /// Resets the material color to its first, original color.
-        /// </summary>
-        public void ResetColor()
-        {
-            _color = _originalColor;
-            RefreshColor();
-        }
-
-        /// <summary>
-        /// Getter for the material's current color.
-        /// </summary>
-        /// <returns>
-        ///   An object of type <c>Color</c> representing the current color.
-        /// </returns>
-        public Color GetColor()
-        {
-            return _color;
-        }
-
-        /// <summary>
-        /// Completely re-initialize the material's color.
-        /// </summary>
-        void RefreshColor()
-        {
-            _renderer.material.SetColor("_AlbedoColor", _color);
         }
 
         /// <summary>

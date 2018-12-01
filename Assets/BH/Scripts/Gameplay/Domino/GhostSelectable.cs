@@ -4,7 +4,10 @@ using UnityEngine;
 
 namespace BH
 {
-    public class GhostSelectable : MonoBehaviour
+    /// <summary>
+    /// A game object that can be "ghost-animated" into display.
+    /// </summary>
+    public class GhostSelectable : GameObj
     {
         [SerializeField] Animator _anim;
 
@@ -14,6 +17,18 @@ namespace BH
             {
                 _anim = GetComponentInChildren<Animator>();
             }
+
+            if (!_defaultMaterial)
+                Debug.LogError("Default material is not initialized.");
+
+            _renderer = GetComponentInChildren<MeshRenderer>();
+            _renderer.material = _defaultMaterial;
+            _originalColor = _renderer.material.GetColor("_AlbedoColor");
+        }
+        
+        void OnEnable()
+        {
+            ResetColor();
         }
 
         public void AnimateFadeIn()
