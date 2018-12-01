@@ -32,7 +32,10 @@ namespace BH
 
             {"Toggle drag mouse",           new KeyCode[] {KeyCode.M, KeyCode.None}},
 
-            {"Toggle Projection",           new KeyCode[] {KeyCode.V, KeyCode.None}}
+            {"Toggle Projection",           new KeyCode[] {KeyCode.G, KeyCode.None}}, //was V, but Paste took V
+
+            {"Copy",                        new KeyCode[] {KeyCode.C, KeyCode.None}},
+            {"Paste",                        new KeyCode[] {KeyCode.V, KeyCode.None}}
         };
 
         /// <summary>
