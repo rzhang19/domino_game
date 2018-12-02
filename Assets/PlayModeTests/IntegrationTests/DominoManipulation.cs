@@ -354,6 +354,76 @@ public class DominoManipulation
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
     }
 
+    /// User can copy and paste the selected dominos.
+    /// Pasted dominos can have different positions than the copied ones, 
+    /// and I can't compute these (since they're in world space and my mouse position coordinates are screen space),
+    /// so ignore positions. But colors and rotations should be the same.
+    [UnityTest]
+    public IEnumerator _Copy_Paste_UI()
+    {
+        yield return new WaitForFixedUpdate();
+
+        // Make sure we're starting with 0 dominos, so we can keep track of how many dominos are in the world
+        SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+        Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
+
+        // Turn on spawn mode
+        yield return SimulateTogglingSpawnMode();
+
+        // Add 2 selected dominos
+        Vector3 firstDominoPos = new Vector3(Screen.width/2f,Screen.height/2f,0);
+        yield return SimulateUIToAddDominoAt(firstDominoPos);
+        BH.Selectable selectedDomino1 = requestedDomino;
+        Utility.ProgrammaticallySelectDomino(selectedDomino1);
+        yield return SimulateUIToAddDominoAt(new Vector3(firstDominoPos.x+50,firstDominoPos.y,0));
+        BH.Selectable selectedDomino2 = requestedDomino;
+        Utility.ProgrammaticallySelectDomino(selectedDomino2);
+
+        // Store the 2 dominos for reference later
+        System.Collections.Generic.List<BH.Selectable> oldList 
+            = new System.Collections.Generic.List<BH.Selectable>(dominoManager.GetActiveSelectables());
+
+        // Simulate copying them by pressing the copy key
+        yield return SimulateKeyDown("Copy");
+        yield return SimulateKeyUp("Copy");
+
+        // Simulate pasting them. This displays a ghost preview of the pasted dominos that moves with the cursor.
+        yield return SimulateKeyDown("Paste");
+        yield return SimulateKeyUp("Paste");
+
+        // Move the cursor to move the preview, and click to place the pasted dominos at a new location (towards +y-axis)
+        InputManager.SimulateCursorMoveTo(new Vector3(firstDominoPos.x, firstDominoPos.y+50, 0));
+        yield return new WaitForEndOfFrame();
+        yield return SimulateKeyDown("Attack1");
+        yield return SimulateKeyUp("Attack1");
+
+        // Check that 2 more dominos were added
+        System.Collections.Generic.List<BH.Selectable> newList = dominoManager.GetActiveSelectables();
+        System.Collections.Generic.List<BH.Selectable> addedDominos = newList.Except(oldList).ToList();
+        Assert.AreEqual(addedDominos.Count, 2);
+
+        // Check that each new domino's color and rotation maps to an old domino's. (ugliest way ever, sorry)
+        System.Collections.Generic.List<BH.Selectable> oldDominos = newList.Except(addedDominos).ToList();
+        bool allDominosCovered = 
+            (addedDominos[0].GetColor() == oldDominos[0].GetColor() 
+                && addedDominos[0].transform.rotation == oldDominos[0].transform.rotation 
+                && addedDominos[1].GetColor() == oldDominos[1].GetColor() 
+                && addedDominos[1].transform.rotation == oldDominos[1].transform.rotation) 
+            ||
+            (addedDominos[1].GetColor() == oldDominos[0].GetColor() 
+                && addedDominos[1].transform.rotation == oldDominos[0].transform.rotation 
+                && addedDominos[0].GetColor() == oldDominos[1].GetColor() 
+                && addedDominos[0].transform.rotation == oldDominos[1].transform.rotation);
+        Assert.AreEqual(allDominosCovered, true);
+    }
+
+    /// User can right click and drag to create a selectable rectangle.
+    [UnityTest]
+    public IEnumerator _Mass_Select_UI()
+    {
+        yield return null;
+    }
+
     //=======================================================
     // Private helpers for this test. Mainly to simulate user input
     //=======================================================
