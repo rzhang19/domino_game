@@ -10,9 +10,13 @@ namespace BH
     public static class InputManager
     {
         public static KeyCode _pauseKey = (Application.isEditor ? KeyCode.T : KeyCode.Escape);
-        // saves the last programmatically simulated key. Stays null for normal gaming; only for testing
-        public static string _simulatedKeyDown = null; 
-        public static string _simulatedKeyUp = null; 
+        // saves the last programmatically simulated key. Stays null/false for normal gaming; only used for testing
+        static bool _isSimulatingKeyDown = false;
+        static string _simulatedKeyDown = null;
+        static bool _isSimulatingKeyUp = false;
+        static string _simulatedKeyUp = null; 
+        static bool _isSimulatingCursor = false;
+        static Vector3 _simulatedCursorPos;
         
         public static Dictionary<string, KeyCode[]> _keyDict = new Dictionary<string, KeyCode[]>()
         {
@@ -56,10 +60,8 @@ namespace BH
                 {
                     if (Input.GetKey(val))
                         return true;
-                    else if (_simulatedKeyDown == key && _simulatedKeyUp == null)
+                    else if (_isSimulatingKeyDown && _simulatedKeyDown == key)
                     {
-                        _simulatedKeyDown = null;
-                        _simulatedKeyUp = key;
                         return true;
                     }
                 }
@@ -82,10 +84,8 @@ namespace BH
                 {
                     if (Input.GetKeyDown(val))
                         return true;
-                    else if (_simulatedKeyDown == key)
+                    else if (_isSimulatingKeyDown && _simulatedKeyDown == key)
                     {
-                        _simulatedKeyDown = null;
-                        _simulatedKeyUp = key;
                         return true;
                     }
                 }
@@ -108,10 +108,8 @@ namespace BH
                 {
                     if (Input.GetKeyUp(val))
                         return true;
-                    else if (_simulatedKeyUp == key)
+                    else if (_isSimulatingKeyUp && _simulatedKeyUp == key)
                     {
-                        _simulatedKeyDown = null;
-                        _simulatedKeyUp = null;
                         return true;
                     }
                 }
@@ -144,6 +142,24 @@ namespace BH
         }
 
         /// <summary>
+        /// Returns the current cursor position.
+        /// If the position is simulated, the simulation is wiped after.
+        /// </summary>
+        public static Vector3 GetCursorPos()
+        {
+            Vector3 pos;
+            if (_isSimulatingCursor)
+            {
+                pos = _simulatedCursorPos;
+            }
+            else
+            {
+                pos = Input.mousePosition;
+            }
+            return pos;
+        }
+
+        /// <summary>
         /// Overwrites the keybind for specified key, val, and index.
         /// </summary>
         /// <param name="key">The key.</param>
@@ -159,11 +175,47 @@ namespace BH
 
         /// <summary>
         /// Programmatically simulate a down keypress. 
-        /// Once simulated, the key will be pressed until one of the GetKeyDown methods requesting it is called.
         /// </summary>
         public static void SimulateKeyDown(string key)
         {
+            _isSimulatingKeyDown = true;
             _simulatedKeyDown = key;
+        }
+
+        /// <summary>
+        /// Programmatically simulate a down keypress. 
+        /// </summary>
+        public static void SimulateKeyUp(string key)
+        {
+            _isSimulatingKeyUp = true;
+            _simulatedKeyUp = key;
+        }
+
+        /// <summary>
+        /// Programmatically turns on cursor simulation and simulates cursor movement. 
+        /// Once simulated, the movement will stay until it has been retrieved by GetCursorPos
+        /// </summary>
+        public static void SimulateCursorMoveTo(Vector3 pos)
+        {
+            _isSimulatingCursor = true;
+            _simulatedCursorPos = pos;
+        }
+
+        /// <summary>
+        /// Programmatically turns off cursor simulation.
+        /// </summary>
+        public static void DisableCursorSimulation()
+        {
+            _isSimulatingCursor = false;
+        }
+
+        /// <summary>
+        /// Programmatically turns off keypress simulation
+        /// </summary>
+        public static void DisableKeypressSimulation()
+        {
+            _isSimulatingKeyDown = false;
+            _isSimulatingKeyUp = false;
         }
     }
 }

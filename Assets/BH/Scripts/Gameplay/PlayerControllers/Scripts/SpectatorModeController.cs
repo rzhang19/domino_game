@@ -61,7 +61,7 @@ namespace BH
         {
             GetInput();
             
-            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _cam.ScreenPointToRay(InputManager.GetCursorPos());
             RaycastHit hitInfo;
 
             if (_waitingForRelease)

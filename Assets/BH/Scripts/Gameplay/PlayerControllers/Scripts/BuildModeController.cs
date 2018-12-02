@@ -163,10 +163,18 @@ namespace BH
         {
             GetInput();
             
-            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _cam.ScreenPointToRay(InputManager.GetCursorPos());
             RaycastHit hitInfo;
 
             timer += Time.deltaTime;
+
+            if (_selectDown)
+            {
+                Debug.Log("cursor pos: "+InputManager.GetCursorPos());
+                List<Selectable> activeSels = SelectableManager.Instance.GetActiveSelectables();
+                Debug.Log("sel pos: "+activeSels[0]);
+                Debug.Log("detected hovering over selectable? :"+Physics.Raycast(ray, out hitInfo, _distance, _selectableMask));
+            }
 
             // Undo last action
             if (_undoDown)
@@ -269,7 +277,9 @@ namespace BH
                     pickedUpSelectable._selectable._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
                 }
             }
-            else if (HandleRectSelection()) { }
+            else if (HandleRectSelection()) {
+                Debug.Log("rect select condition");
+             }
             else if (_pickupDown && Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
                 // Get a reference to the Selectable that you hit with the raycast.
@@ -364,6 +374,7 @@ namespace BH
             //}
             else if (_selectDown && Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
+                Debug.Log("bingo");
                 Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
                 if (selectable.IsSelected()) // Already selected? Then deselect it.
                 {
@@ -558,7 +569,7 @@ namespace BH
         {
             List<Selectable> possibleSelectedUnits = _selectionRectController.AttemptMassSelection(
                 SelectableManager.Instance.GetActiveSelectables(),
-                Input.mousePosition,
+                InputManager.GetCursorPos(),
                 _selectDown,
                 _selectUp
             );

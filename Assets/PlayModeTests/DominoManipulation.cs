@@ -5,6 +5,7 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 using System.Linq;
+using System.Runtime.InteropServices;
 using BH;
 
 [TestFixture]
@@ -25,9 +26,9 @@ public class DominoManipulation
         //Object.Destroy(dominoManager);
     }
 
-    /// User should click a button to add a domino that's tracked by the SelectableManager class.
+    /// Unit test for SelectableManager class to programmatically add domino
     [UnityTest]
-    public IEnumerator _Adds_New_Domino()
+    public IEnumerator _Adds_New_Domino_Programmatically()
     {
         yield return new WaitForFixedUpdate();
 
@@ -35,25 +36,65 @@ public class DominoManipulation
         SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
 
-        ClickUIButton("ButtonAdd");
+        dominoManager.SpawnSelectable();
         
         // Check a new domino has been placed.
-        // (Not checking default position/rotation etc. since we'll let user change that later)
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 1);
     }
 
-    /// User should be able to select a single domino. Important for other tests!
-    /// Todo: switch selection from programmatic to mouse input
+    /// User should click "Toggle Spawnables" button, then click on screen to add a domino that's tracked by the SelectableManager class.
     [UnityTest]
-    public IEnumerator _Selects_Domino()
+    public IEnumerator _Adds_New_Domino_UI()
     {
         yield return new WaitForFixedUpdate();
 
+        // Check that scene started with no dominoes
+        SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+        Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
+
+        // Now add via simulated UI interactions
+        ClickUIButton("ButtonSpawn");
+        InputManager.SimulateCursorMoveTo(new Vector3(Screen.width/2f,Screen.height/2f,0));
+        InputManager.SimulateKeyDown("Attack1");
+        yield return new WaitForFixedUpdate();
+
+        Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 1);
+
+        StopInputSimulations();
+    }
+
+    /// Unit test for SelectableManager class to programmatically select domino
+    [UnityTest]
+    public IEnumerator _Selects_Domino_Programmatically()
+    {
+        yield return new WaitForFixedUpdate();
+
+        // Add a domino to test with
         BH.Selectable newDomino = ProgrammaticallyAddDomino();
+
         ProgrammaticallySelectDomino(newDomino);
         
         Assert.That(newDomino.IsSelected(), Is.True);
     }
+
+    /// User should be able to right-click on a domino to select it.
+    [UnityTest]
+    public IEnumerator _Selects_Domino_UI()
+    {
+        yield return new WaitForFixedUpdate();
+
+        // Add a domino to test with
+        BH.Selectable newDomino = ProgrammaticallyAddDomino();
+
+        // Simulate right clicking on the domino
+        InputManager.SimulateCursorMoveTo(newDomino.transform.position);
+        InputManager.SimulateKeyDown("Attack2");
+        
+        Assert.That(newDomino.IsSelected(), Is.True);
+
+        StopInputSimulations();
+    }
+
 
     /// User should click a button to delete all selected dominos.
     [UnityTest]
@@ -210,5 +251,17 @@ public class DominoManipulation
     private Color NormalizedColor(Color orig)
     {
         return new Color(orig.r/255.0f, orig.g/255.0f, orig.b/255.0f);
+    }
+
+    // Disable simulated UI
+    private void StopInputSimulations()
+    {
+        InputManager.DisableCursorSimulation();
+        InputManager.DisableKeypressSimulation();
+    }
+
+    public struct Point {
+        public float x;
+        public float y;
     }
 }
