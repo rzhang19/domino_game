@@ -7,13 +7,28 @@ using System.Collections;
 using System.Linq;
 using BH;
 
+[TestFixture]
 public class DominoManipulation 
 {
+    // Called before every test. Loads the scene
+    [SetUp]
+    public void Init()
+    { 
+        SceneManager.LoadScene("SpectatorMode");
+    }
+
+    // // Called after every test. Destroys the scene
+    [TearDown] 
+    public void Cleanup()
+    {
+        //SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+        //Object.Destroy(dominoManager);
+    }
+
     /// User should click a button to add a domino that's tracked by the SelectableManager class.
     [UnityTest]
     public IEnumerator _Adds_New_Domino()
     {
-        SceneManager.LoadScene("SpectatorMode");
         yield return new WaitForFixedUpdate();
 
         // Check that scene started with no dominoes
@@ -32,7 +47,6 @@ public class DominoManipulation
     [UnityTest]
     public IEnumerator _Selects_Domino()
     {
-        SceneManager.LoadScene("SpectatorMode");
         yield return new WaitForFixedUpdate();
 
         BH.Selectable newDomino = ProgrammaticallyAddDomino();
@@ -45,7 +59,6 @@ public class DominoManipulation
     [UnityTest]
     public IEnumerator _Deletes_Selected_Dominos()
     {
-        SceneManager.LoadScene("SpectatorMode");
         yield return new WaitForFixedUpdate();
 
         SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
@@ -73,7 +86,6 @@ public class DominoManipulation
     [UnityTest]
     public IEnumerator _Saves_Dominos()
     {
-        SceneManager.LoadScene("SpectatorMode");
         yield return new WaitForFixedUpdate();
 
         SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
@@ -113,7 +125,6 @@ public class DominoManipulation
     [UnityTest]
     public IEnumerator _Recolors_Selected_Dominos()
     {
-        SceneManager.LoadScene("SpectatorMode");
         yield return new WaitForFixedUpdate();
 
         // Create 2 selected dominos

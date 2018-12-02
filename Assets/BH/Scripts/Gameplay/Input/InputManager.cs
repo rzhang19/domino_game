@@ -10,6 +10,9 @@ namespace BH
     public static class InputManager
     {
         public static KeyCode _pauseKey = (Application.isEditor ? KeyCode.T : KeyCode.Escape);
+        // saves the last programmatically simulated key. Stays null for normal gaming; only for testing
+        public static string _simulatedKeyDown = null; 
+        public static string _simulatedKeyUp = null; 
         
         public static Dictionary<string, KeyCode[]> _keyDict = new Dictionary<string, KeyCode[]>()
         {
@@ -53,6 +56,12 @@ namespace BH
                 {
                     if (Input.GetKey(val))
                         return true;
+                    else if (_simulatedKeyDown == key && _simulatedKeyUp == null)
+                    {
+                        _simulatedKeyDown = null;
+                        _simulatedKeyUp = key;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -73,6 +82,12 @@ namespace BH
                 {
                     if (Input.GetKeyDown(val))
                         return true;
+                    else if (_simulatedKeyDown == key)
+                    {
+                        _simulatedKeyDown = null;
+                        _simulatedKeyUp = key;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -93,6 +108,12 @@ namespace BH
                 {
                     if (Input.GetKeyUp(val))
                         return true;
+                    else if (_simulatedKeyUp == key)
+                    {
+                        _simulatedKeyDown = null;
+                        _simulatedKeyUp = null;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -134,6 +155,15 @@ namespace BH
                 return;
 
             _keyDict[key][index] = val;
+        }
+
+        /// <summary>
+        /// Programmatically simulate a down keypress. 
+        /// Once simulated, the key will be pressed until one of the GetKeyDown methods requesting it is called.
+        /// </summary>
+        public static void SimulateKeyDown(string key)
+        {
+            _simulatedKeyDown = key;
         }
     }
 }
