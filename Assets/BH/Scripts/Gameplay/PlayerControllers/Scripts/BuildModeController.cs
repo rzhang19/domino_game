@@ -16,6 +16,7 @@ namespace BH
     public class BuildModeController : TakesInput
     {
         // Input state
+        bool _select = false;
         bool _selectDown = false;
         bool _selectUp = false;
         bool _pickupDown = false;
@@ -25,10 +26,6 @@ namespace BH
         bool _upOrSide = false;
         bool changeAxis = false;
         bool _undoDown = false;
-        bool _matChange = false;
-        bool _dragMouse = false;
-        bool _mouseholddown = false;
-        bool _dragMode = false;
         bool _copyDown = false;
         bool _pasteDown = false;
         bool _dragDown = false;
@@ -100,6 +97,7 @@ namespace BH
         {
             if (_locks.Count > 0)
             {
+                _select = false;
                 _selectDown = false;
                 _selectUp = true;
                 _pickupDown = false;
@@ -108,10 +106,6 @@ namespace BH
                 _spawnSelectableUp = true;
                 _upOrSide = false;
                 _undoDown = false;
-                _matChange = false;
-                _dragMouse = false;
-                _dragMode = false;
-                _mouseholddown = false;
                 _copyDown = false;
                 _pasteDown = false;
                 _dragDown = false;
@@ -123,23 +117,19 @@ namespace BH
                     selectable.Deselect();
                 _selected.RemoveAll(selected => true);
 
-                _spawningSelectable = false;
-
                 return;
             }
 
+            _select = InputManager.GetKey("Attack2");
             _selectDown = InputManager.GetKeyDown("Attack2") && !EventSystem.current.IsPointerOverGameObject();
             _selectUp = InputManager.GetKeyUp("Attack2");
             _pickupDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
             _pickupUp = InputManager.GetKeyUp("Attack1");
             _spawnSelectableDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
             _spawnSelectableUp = InputManager.GetKeyUp("Attack1");
-            _mouseholddown = InputManager.GetKey("Attack1");
             _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
             _undoDown = InputManager.GetKeyDown("Undo");
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
-            _matChange = InputManager.GetKeyDown("Change Material");
-            _dragMouse = InputManager.GetKeyDown("Toggle drag mouse");
             _copyDown = InputManager.GetKeyDown("Copy");
             _pasteDown = InputManager.GetKeyDown("Paste");
             _dragDown = InputManager.GetKeyDown("Drag");
@@ -255,17 +245,6 @@ namespace BH
             if (_upOrSide)
             {
                 changeAxis = !changeAxis;
-            }
-
-            if (_dragMouse)
-            {
-                _dragMode = !_dragMode;
-            }
-
-            //Changes material of dominoes
-            if (_matChange)
-            {
-                ChangeMaterial();
             }
 
             // If some Selectable is picked up, move its position accordingly.
@@ -411,54 +390,6 @@ namespace BH
                 }
                 SaveOldTransformsActionOf(toSave);
             }
-            //else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
-            //{
-
-            //    // Get a reference to the Selectable that you hit with the raycast.
-            //    Selectable sel = hitInfo.collider.GetComponentInChildren<Selectable>();
-            //    if (sel)
-            //    {
-            //        // Check if the player pressed the "pick up" input.
-            //        if (_pickupDown && sel._canBePickedUp)
-            //        {
-            //            // Save a reference to the picked-up selectable.
-            //            _pickedUp = sel;
-
-            //            // Save old transforms so we can undo this pick-up later.
-            //            SaveOldTransformsActionOf(new List<Selectable>(new Selectable[] { _pickedUp }));
-
-            //            // Unfreeze the position for movement. Set gravity off.
-            //            _pickedUp.UnfreezePosition();
-            //            _pickedUp._rigidbody.useGravity = false;
-
-            //            // Set offset base's value, offset's value.
-            //            CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _pickedUp._rigidbody.position, out _offsetBase);
-            //            _offset = _pickedUp._rigidbody.position - _offsetBase + _pickUpOffset;
-
-            //            //_closestColliderBelow = hitInfo.collider.GetComponent<ClosestColliderBelow>();
-            //            //if (_closestColliderBelow)
-            //            //    _closestColliderBelow.enabled = true;
-
-            //            MeshFilter pickedUpMeshFilter = hitInfo.collider.GetComponentInChildren<MeshFilter>();
-            //            if (pickedUpMeshFilter)
-            //                _detectColliderBelow.SetActiveMeshFilter(pickedUpMeshFilter, 1.2f, 2f);
-
-            //            //Debug.Log("Picked up " + hitInfo.collider.name + ". With offset " + _offset);
-            //        }
-            //        else if (_selectDown) // Else check if the player pressed the "select" input.
-            //        {
-            //            Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
-            //            if (selectable.IsSelected()) // Already selected? Then deselect it.
-            //            {
-            //                Deselect(selectable);
-            //            }
-            //            else
-            //            {
-            //                Select(selectable);
-            //            }
-            //        }
-            //    }
-            //}
             else if (_selectDown && Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
                 Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
@@ -471,7 +402,7 @@ namespace BH
                     Select(selectable);
                 }
             }
-            else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
+            else if (_spawningSelectable && _locks.Count <= 0 && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
             {
                 // "Spawning pastables" is a special case of "spawning selectable".
                 if (_spawningPastables) // Player wants to spawn (possibly) multiple selectables.
@@ -512,54 +443,8 @@ namespace BH
             if (_selected.Count > 0 && _pickedUpSelectables.Count <= 0)
                 HandleRotation();
 
-            if (_dragMode)
-            {
-                if ( _mouseholddown && timer >= timeBetweenDominoes && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
-                {
-                    // Spawn a selectable if the player requests.
-                    Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
-                    SaveAddActionOf(new List<Selectable>(new Selectable[] { newSel }));
-                    timer = 0;
-                }
-            }
-            
-            //if (_spawningPastables) {
-            //    // cancel ghost preview with right click
-            //    if (_selectDown) {
-            //         ClearPastedSelectablesPreview();
-            //    }
-
-            //    // show ghost preview of pasted dominos    
-            //    if (_ghostSelectablesToPaste.Count > 0 && _pickedUpSelectables.Count <= 0 && _locks.Count <= 0 
-            //        && !EventSystem.current.IsPointerOverGameObject()
-            //        // && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) <-- Removed for smoother hovering
-            //        && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
-            //    {
-            //        Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
-            //        Vector3 pastablesCenter = FindCenter(pastablesTransforms);
-            //        Vector3 pastablesOffset = hitInfo.point - pastablesCenter;
-
-            //        foreach (GhostSelectable gSel in _ghostSelectablesToPaste)
-            //        {
-            //            if (_justSpawnedPastables) 
-            //            {
-            //                gSel.AnimateFadeIn();
-            //            }
-            //            gSel.transform.position += pastablesOffset;
-            //        }
-
-            //        if (_scrollWheel != 0f)
-            //        {
-            //            float deg = _rotationPerTick * _scrollWheel;
-            //            RotateGameObjs(deg, _ghostSelectablesToPaste.Select(s => (GameObj)s).ToList());
-            //        }
-
-            //        _justSpawnedPastables = false;
-            //    }
-            //}
-            
             // The following conditional handles ghost preview logic.
-            if (_spawningSelectable && !_isDragging)
+            if (_spawningSelectable && _locks.Count <= 0 && !_isDragging && !_select) // Basically hardcoded !_select to get rid of weird behaviour while mass-selecting & placing dominoes
             {
                 // Either spawning a single selectable or a set of copied selectables.
                 if (_spawningPastables)
@@ -584,7 +469,7 @@ namespace BH
                             RotateGameObjs(deg, _ghostSelectablesToPaste.Select(s => (GameObj)s).ToList());
                         }
                     }
-                    
+
                     // If ghosts just "spawned", play the fade-in animation.
                     bool ghostsSpawnedThisFrame = _ghostCenterInTheMiddleOfNowhereLastFrame && newGhostCenter != _theMiddleOfNowhere;
                     if (ghostsSpawnedThisFrame)
@@ -627,6 +512,23 @@ namespace BH
                     _ghostSelectable.transform.position = newGhostPosition;
                     _ghostInTheMiddleOfNowhereLastFrame = _ghostSelectable.transform.position == _theMiddleOfNowhere;
                 }
+            }
+            else if (_spawningSelectable && _spawningPastables)
+            {
+                if (!_ghostInTheMiddleOfNowhereLastFrame)
+                {
+                    _ghostSelectable.transform.position = _theMiddleOfNowhere;
+                    _ghostInTheMiddleOfNowhereLastFrame = true;
+                }
+
+                Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
+                Vector3 currentGhostCenter = FindCenter(pastablesTransforms);
+
+                // "Normalize" the positions of the ghosts around the new ghost center.
+                foreach (GhostSelectable ghostSelectable in _ghostSelectablesToPaste)
+                    ghostSelectable.transform.position = ghostSelectable.transform.position - currentGhostCenter + _theMiddleOfNowhere;
+
+                _ghostCenterInTheMiddleOfNowhereLastFrame = true;
             }
             else // Not in the right mode to spawn selectables. Remove all ghost previews.
             {
@@ -712,19 +614,6 @@ namespace BH
 
             _selected.RemoveAll(selected => true);
         }
-        
-        ///// <summary>
-        ///// Rotates the selected game objects at a constant speed.
-        ///// </summary>
-        //public void RotateSelected()
-        //{
-        //    Vector3 center = FindCenter(_selectedTransforms.ToArray());
-
-        //    foreach (Selectable selectable in _selected)
-        //    {
-        //        selectable.RotateAround(center, Vector3.up, 30f * Time.deltaTime);
-        //    }
-        //}
 
         /// <summary>
         /// Rotates the given game objects a specified amount. 
@@ -754,19 +643,6 @@ namespace BH
 
             Vector3 center = FindCenter(selectedTransforms.ToArray());
 
-            //Debug.Log(_upOrSide);
-
-            //if (changeAxis)
-            //{
-            //    rotAxis = Vector3.left;
-            //    //Debug.Log("Rotating left");
-            //}
-            //else
-            //{
-            //    rotAxis = Vector3.up;
-            //    //Debug.Log("Rotating up");
-            //}
-
             if (changeAxis)
             {
                 foreach (Selectable selectable in _selected)
@@ -790,14 +666,6 @@ namespace BH
 
             if (tfs.Length == 1)
                 return tfs[0].position;
-
-            //Bounds bounds = new Bounds();
-            //foreach (Transform tf in tfs)
-            //{
-            //    bounds.Encapsulate(tf.position);
-            //}
-
-            //return bounds.center;
 
             float xSum = 0f, ySum = 0f, zSum = 0f;
 
@@ -990,14 +858,11 @@ namespace BH
         }
 
         /// <summary>
-        /// Toggles "spawn selectable" mode.
+        /// Sets "spawn selectable" mode.
         /// </summary>
-        public void ToggleSpawnSelectable()
+        public void SetSpawnSelectable(bool b)
         {
-            if (_spawningSelectable)
-                _spawningSelectable = false;
-            else
-                _spawningSelectable = true;
+            _spawningSelectable = b;
         }
 
         void ClearPastedSelectablesPreview()

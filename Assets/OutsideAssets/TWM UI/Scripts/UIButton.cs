@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace TWM.UI
 {
@@ -12,8 +13,18 @@ namespace TWM.UI
         [SerializeField] UnityEvent _onButtonUp;
         [SerializeField] UnityEvent _onButtonEnter;
         [SerializeField] UnityEvent _onButtonExit;
+        
+        [SerializeField] UnityEvent _onToggleOn;
+        [SerializeField] UnityEvent _onToggleOff;
+
+        [SerializeField] bool _isToggleable = false;
+        bool _toggleState = false;
+        [SerializeField] Sprite _toggleOnImage;
+        [SerializeField] Sprite _toggleOffImage;
+        [SerializeField] Image _toggleImage;
 
         bool _isPressed = false;
+        
 
         bool _enabled = true;
 
@@ -22,6 +33,16 @@ namespace TWM.UI
         void Awake()
         {
             _imageAnimator = GetComponentInChildren<UIElementAnimator>();
+
+            if (_isToggleable)
+            {
+                if (!_toggleImage)
+                    Debug.LogError("Button is toggleable, but there's no toggle image.");
+
+                _toggleState = false;
+                _toggleImage.sprite = _toggleOffImage;
+                _onToggleOff.Invoke();
+            }
         }
 
         void OnDisable()
@@ -70,6 +91,8 @@ namespace TWM.UI
                 //Unpress();
                 if (_onButtonUp != null)
                     _onButtonUp.Invoke();
+
+                ToggleState();
             }
         }
 
@@ -85,6 +108,25 @@ namespace TWM.UI
             _isPressed = false;
             if (_imageAnimator)
                 _imageAnimator.PushIn();
+        }
+
+        void ToggleState()
+        {
+            if (!_isToggleable)
+                return;
+
+            if (_toggleState)
+            {
+                _toggleState = false;
+                _toggleImage.sprite = _toggleOffImage;
+                _onToggleOff.Invoke();
+            }
+            else
+            {
+                _toggleState = true;
+                _toggleImage.sprite = _toggleOnImage;
+                _onToggleOn.Invoke();
+            }
         }
 
         public void Enable()

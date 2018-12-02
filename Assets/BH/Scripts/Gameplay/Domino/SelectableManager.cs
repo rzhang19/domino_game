@@ -23,6 +23,7 @@ namespace BH
 
         bool _freezeRotation = false;
         bool _freezePosition = false;
+        bool _randomColors = false;
 
         void Awake()
         {
@@ -90,6 +91,9 @@ namespace BH
             //sel.transform.rotation = rot;
             sel.SetVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
             sel.SetAngularVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
+
+            if (_randomColors)
+                sel.SetColor(new Color(Random.value, Random.value, Random.value));
 
             if (_freezeRotation)
                 sel.FreezeRotation();
@@ -260,6 +264,11 @@ namespace BH
         public Selectable GetSelectablePrefab()
         {
             return _selectablePrefab;
+        }
+
+        public void SetRandomColors(bool b)
+        {
+            _randomColors = b;
         }
     }
 }
