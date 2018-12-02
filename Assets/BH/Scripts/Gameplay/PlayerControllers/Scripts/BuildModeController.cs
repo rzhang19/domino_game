@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace BH
 {
@@ -121,13 +120,13 @@ namespace BH
             }
 
             _select = InputManager.GetKey("Attack2");
-            _selectDown = InputManager.GetKeyDown("Attack2") && !EventSystem.current.IsPointerOverGameObject();
+            _selectDown = InputManager.GetKeyDown("Attack2") && !InputManager.IsPointerOverGameObject();
             _selectUp = InputManager.GetKeyUp("Attack2");
-            _pickupDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
+            _pickupDown = InputManager.GetKeyDown("Attack1") && !InputManager.IsPointerOverGameObject();
             _pickupUp = InputManager.GetKeyUp("Attack1");
-            _spawnSelectableDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
+            _spawnSelectableDown = InputManager.GetKeyDown("Attack1") && !InputManager.IsPointerOverGameObject();
             _spawnSelectableUp = InputManager.GetKeyUp("Attack1");
-            _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
+            _scrollWheel = InputManager.GetScroll() * 10f;
             _undoDown = InputManager.GetKeyDown("Undo");
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
             _copyDown = InputManager.GetKeyDown("Copy");
@@ -169,7 +168,7 @@ namespace BH
         {
             GetInput();
             
-            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _cam.ScreenPointToRay(InputManager.GetCursorPos());
             RaycastHit hitInfo;
 
             timer += Time.deltaTime;
@@ -405,7 +404,7 @@ namespace BH
                     Select(selectable);
                 }
             }
-            else if (_spawningSelectable && _locks.Count <= 0 && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+            else if (_spawningSelectable && _locks.Count <= 0 && _spawnSelectableDown && _locks.Count <= 0 && !InputManager.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
             {
                 // "Spawning pastables" is a special case of "spawning selectable".
                 if (_spawningPastables) // Player wants to spawn (possibly) multiple selectables.
@@ -460,7 +459,7 @@ namespace BH
                     Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
                     Vector3 currentGhostCenter = FindCenter(pastablesTransforms);
 
-                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !InputManager.IsPointerOverGameObject()
                         && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
                         && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                     {
@@ -491,7 +490,7 @@ namespace BH
                 {
                     Vector3 newGhostPosition = _theMiddleOfNowhere;
 
-                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !InputManager.IsPointerOverGameObject()
                         && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
                         && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                     {
@@ -569,7 +568,7 @@ namespace BH
         {
             List<Selectable> possibleSelectedUnits = _selectionRectController.AttemptMassSelection(
                 SelectableManager.Instance.GetActiveSelectables(),
-                Input.mousePosition,
+                InputManager.GetCursorPos(),
                 _selectDown,
                 _selectUp
             );

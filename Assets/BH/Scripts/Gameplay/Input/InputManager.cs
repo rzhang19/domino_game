@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BH
 {
@@ -10,7 +11,17 @@ namespace BH
     public static class InputManager
     {
         public static KeyCode _pauseKey = (Application.isEditor ? KeyCode.T : KeyCode.Escape);
-
+        // saves the last programmatically simulated key. Stays null/false for normal gaming; only used for testing
+        static bool _isSimulatingKeyDown = false;
+        static string _simulatedKeyDown = null;
+        static bool _isSimulatingKeyUp = false;
+        static string _simulatedKeyUp = null; 
+        static bool _isSimulatingCursor = false;
+        static Vector3 _simulatedCursorPos;
+        static bool _isSimulatingScroll = false;
+        static float _simulatedScroll;
+        static bool _simulatePointerOverGameObject = false;
+        
         public static Dictionary<string, KeyCode[]> _keyDict = new Dictionary<string, KeyCode[]>()
         {
             {"Strafe Up",                   new KeyCode[] {KeyCode.W, KeyCode.None}},
@@ -55,6 +66,10 @@ namespace BH
                 {
                     if (Input.GetKey(val))
                         return true;
+                    else if (_isSimulatingKeyDown && _simulatedKeyDown == key)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -75,6 +90,10 @@ namespace BH
                 {
                     if (Input.GetKeyDown(val))
                         return true;
+                    else if (_isSimulatingKeyDown && _simulatedKeyDown == key)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -95,6 +114,10 @@ namespace BH
                 {
                     if (Input.GetKeyUp(val))
                         return true;
+                    else if (_isSimulatingKeyUp && _simulatedKeyUp == key)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -125,6 +148,42 @@ namespace BH
         }
 
         /// <summary>
+        /// Returns the current cursor position.
+        /// If the position is simulated, the simulation is wiped after.
+        /// </summary>
+        public static Vector3 GetCursorPos()
+        {
+            Vector3 pos;
+            if (_isSimulatingCursor)
+            {
+                pos = _simulatedCursorPos;
+            }
+            else
+            {
+                pos = Input.mousePosition;
+            }
+            return pos;
+        }
+
+        /// <summary>
+        /// Returns the current scroll position.
+        /// If the scroll is simulated, the simulation is wiped after.
+        /// </summary>
+        public static float GetScroll()
+        {
+            return _isSimulatingScroll? _simulatedScroll : Input.GetAxisRaw("Mouse ScrollWheel");
+        }
+
+        /// <summary>
+        /// Returns true if the pointer is over a game object.
+        /// If the pointer is simulated, it always returns false.
+        /// </summary>
+        public static bool IsPointerOverGameObject()
+        {
+            return _simulatePointerOverGameObject? false : EventSystem.current.IsPointerOverGameObject();
+        }
+
+        /// <summary>
         /// Overwrites the keybind for specified key, val, and index.
         /// </summary>
         /// <param name="key">The key.</param>
@@ -137,5 +196,89 @@ namespace BH
 
             _keyDict[key][index] = val;
         }
+
+        /// <summary>
+        /// Programmatically simulate a down keypress. 
+        /// </summary>
+        public static void SimulateKeyDown(string key)
+        {
+            _isSimulatingKeyDown = true;
+            _simulatedKeyDown = key;
+            _isSimulatingKeyUp = false;
+            _simulatedKeyUp = null;
+        }
+
+        /// <summary>
+        /// Programmatically simulate a down keypress. 
+        /// </summary>
+        public static void SimulateKeyUp(string key)
+        {
+            _isSimulatingKeyUp = true;
+            _simulatedKeyUp = key;
+            _isSimulatingKeyDown = false;
+            _simulatedKeyDown = null;
+        }
+
+        /// <summary>
+        /// Programmatically turns on cursor simulation and simulates cursor movement. 
+        /// Once simulated, the movement will stay until it has been retrieved by GetCursorPos
+        /// </summary>
+        public static void SimulateCursorMoveTo(Vector3 pos)
+        {
+            _isSimulatingCursor = true;
+            _simulatedCursorPos = pos;
+        }
+
+        /// <summary>
+        /// Programmatically turns on cursor simulation and simulates cursor movement. 
+        /// Once simulated, the movement will stay until it has been retrieved by GetCursorPos
+        /// </summary>
+        public static void SimulateScrollTo(float newScroll)
+        {
+            _isSimulatingScroll = true;
+            _simulatedScroll = newScroll;
+        }
+
+        /// <summary>
+        /// Programmatically turns on pointer over game object simulation
+        /// </summary>
+        public static void SimulatePointerOverGameObject()
+        {
+            _simulatePointerOverGameObject = true;
+        }  
+
+        /// <summary>
+        /// Programmatically turns off cursor simulation.
+        /// </summary>
+        public static void DisableCursorSimulation()
+        {
+            _isSimulatingCursor = false;
+        }
+
+        /// <summary>
+        /// Programmatically turns off keypress simulation
+        /// </summary>
+        public static void DisableKeypressSimulation()
+        {
+            _isSimulatingKeyDown = false;
+            _isSimulatingKeyUp = false;
+        }
+
+        /// <summary>
+        /// Programmatically turns off scrolling simulation
+        /// </summary>
+        public static void DisableScrollSimulation()
+        {
+            _isSimulatingScroll = false;
+        }
+
+        /// <summary>
+        /// Programmatically turns off pointer over game object detection
+        /// </summary>
+        public static void DisableSimulatePointerOverGameObject()
+        {
+            _simulatePointerOverGameObject = false;
+        }  
+
     }
 }
