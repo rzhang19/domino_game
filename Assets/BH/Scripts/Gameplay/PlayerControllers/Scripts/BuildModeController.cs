@@ -300,6 +300,7 @@ namespace BH
                         float distanceBetweenDominoes = 1f;
                         int numDominoes = Mathf.FloorToInt(estimatedLength / distanceBetweenDominoes);
 
+                        List<Selectable> newlyAddedSelectables = new List<Selectable>();
                         for (float i = 0f; i < estimatedLength; i += distanceBetweenDominoes)
                         {
                             float t = i / estimatedLength;
@@ -310,8 +311,10 @@ namespace BH
                             Quaternion spawnRotation = Quaternion.LookRotation(spawnDirection);
 
                             Selectable newlyAdded = SelectableManager.Instance.SpawnSelectable(spawnPoint, spawnRotation);
-                            SaveAddActionOf(new List<Selectable>(new Selectable[] { newlyAdded }));
+                            newlyAddedSelectables.Add(newlyAdded);
                         }
+
+                        SaveAddActionOf(newlyAddedSelectables);
                     }
 
                 }
