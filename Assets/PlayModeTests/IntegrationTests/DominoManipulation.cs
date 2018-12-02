@@ -119,27 +119,31 @@ public class DominoManipulation
         System.Collections.Generic.List<BH.Selectable> dominoRefs = new System.Collections.Generic.List<BH.Selectable>();
         System.Collections.Generic.List<Transform> savedTransforms = new System.Collections.Generic.List<Transform>();
 
-        // Create random domino transforms that we'll save
-        for (int i = 0; i < 10; i++)
+        // Programmatically create 2 dominos and save their associated transforms
+        yield return SimulateTogglingSpawnMode();
+        for (int i = 0; i < 2; i++)
         {
-            BH.Selectable newDomino = Utility.ProgrammaticallyAddDomino();
+            yield return SimulateUIToAddDominoAt(new Vector3(Screen.width/2f+i*50,Screen.height/2f,0));
+            BH.Selectable newDomino = requestedDomino;
             Utility.RandTransformChange(newDomino.transform);
             dominoRefs.Add(newDomino);
             savedTransforms.Add(newDomino.transform);
         }
 
+        // Simulate clicking the Save button
         ClickUIButton("ButtonSave");
 
-        // Change domino transforms
+        // Change domino transforms randomly
         foreach (BH.Selectable domino in dominoRefs)
         {
             Utility.RandTransformChange(domino.transform);
         }
 
+        // Programmatically reset
         dominoManager.ResetData();
 
-        // Check if original transforms were restored
-        for (int i = 0; i < 10; i++)
+        // Check if original transforms were restored in the domino instances
+        for (int i = 0; i < 2; i++)
         {
             BH.Selectable domino = dominoRefs[i];
             Transform expectedTransform = savedTransforms[i];
@@ -178,16 +182,8 @@ public class DominoManipulation
             newColor = new Color(Random.Range(0, 255), Random.Range(0, 255), Random.Range(0, 255));
         } while (newColor == oldColor1 || newColor == oldColor2);
 
-        // Simulate the user updating the RGB slider to the new color
-        Slider redSlider = GameObject.Find("RedSlider").GetComponent<Slider>();
-        redSlider.value = newColor.r;
-        Slider greenSlider = GameObject.Find("GreenSlider").GetComponent<Slider>();
-        greenSlider.value = newColor.g;
-        Slider blueSlider = GameObject.Find("BlueSlider").GetComponent<Slider>();
-        blueSlider.value = newColor.b;
-
-        // Simulate the user clicking the "Change color" button
-        ClickUIButton("ButtonChangeColor");
+        // Simulate the user updating the selected dominos' colors by adjusting the RGB slider and clicking "Change Color" button
+        yield return SimulateChangeSelectedToColor(newColor);
 
         // Selected dominos should have the updated color. Unselected domino should have its old color
         Assert.AreEqual(selectedDomino1.GetColor(), Utility.NormalizedColor(newColor));
@@ -280,35 +276,82 @@ public class DominoManipulation
     }
 
     /// User can undo the changes in color, rotation, position, addition, and deletion of a domino.
-    /// Order should be preserved.
+    /// Changes are stored as a stack.
+    /// Note that this function assumes all UI changes correctly change domino, which is covered in other integration tests.
     [UnityTest]
     public IEnumerator _Undo_UI()
     {
         yield return new WaitForFixedUpdate();
 
+        // Make sure we're starting with 0 dominos, so we can easily access the domino we'll add
+        SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+        Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
+
         // Turn on spawn mode
         yield return SimulateTogglingSpawnMode();
 
-        // Add a domino
-        yield return SimulateUIToAddDominoAt(new Vector3(Screen.width/2f,Screen.height/2f,0));
-        BH.Selectable selectedDomino1 = requestedDomino;
+        // Change 1: Add a domino via UI
+        Vector3 dominoPos = new Vector3(Screen.width/2f,Screen.height/2f,0);
+        yield return SimulateUIToAddDominoAt(dominoPos);
+        BH.Selectable selectedDomino = requestedDomino;
 
         // Select it
-        Utility.ProgrammaticallySelectDomino(selectedDomino1);
+        Utility.ProgrammaticallySelectDomino(selectedDomino);
 
-        // Change it to a new, random color
-        Color oldColor = selectedDomino1.GetColor();
+        // Change 2: Change it to a new, random color via UI
+        Color colorBeforeC2 = selectedDomino.GetColor();
         Color newColor;
         do {
             newColor = new Color(Random.Range(0, 255), Random.Range(0, 255), Random.Range(0, 255));
-        } while (newColor == oldColor);
-        yield return ChangeSelectedToColor(newColor);
+        } while (newColor == colorBeforeC2);
+        yield return SimulateChangeSelectedToColor(newColor);
 
-        // Simulate pressing undo key
+        // Change 3: Change its rotation via UI by simulating mouse scroll wheel
+        CustomTransform transformBeforeC3 = new CustomTransform(selectedDomino.transform);
+        float simulatedScrollAmt = 0.5f;
+        InputManager.SimulateScrollTo(simulatedScrollAmt);
+        yield return new WaitForEndOfFrame();
+
+        // Change 4: Change its position via UI by simulating a click and drag 50 units towards the +x-axis
+        CustomTransform transformBeforeC4 = new CustomTransform(selectedDomino.transform);
+        InputManager.SimulateCursorMoveTo(dominoPos);
+        yield return new WaitForEndOfFrame();
+        InputManager.SimulateKeyDown("Attack1");
+        yield return new WaitForEndOfFrame();
+        InputManager.SimulateCursorMoveTo(new Vector3(dominoPos.x+50, dominoPos.y, dominoPos.z));
+        yield return new WaitForEndOfFrame();
+        InputManager.SimulateKeyUp("Attack1");
+        yield return new WaitForEndOfFrame();
+
+        // Change 5: Delete it via UI by clicking the Delete button.
+        ClickUIButton("ButtonDelete");
+
+        // Time to undo changes by popping them off the history stack.
+
+        // Simulate undo press to undo change 5. Domino should now be present
         yield return SimulateKeyDown("Undo");
+        yield return SimulateKeyUp("Undo");
+        BH.Selectable restoredDomino = dominoManager.GetActiveSelectables()[0];
 
-        // Check that domino's old color was restored
-        Assert.AreEqual(selectedDomino1.GetColor(), oldColor);
+        // Simulate undo press to undo change 4. Domino should now have its old position
+        yield return SimulateKeyDown("Undo");
+        yield return SimulateKeyUp("Undo");
+        Assert.AreEqual(restoredDomino.transform.position, transformBeforeC4.position);
+
+        // Simulate undo press to undo change 3. Domino should have its old rotation
+        yield return SimulateKeyDown("Undo");
+        yield return SimulateKeyUp("Undo");
+        Assert.AreEqual(restoredDomino.transform.rotation, transformBeforeC3.rotation);
+        
+        // Simulate undo press to undo change 2. Domino should have its old color
+        yield return SimulateKeyDown("Undo");
+        yield return SimulateKeyUp("Undo");
+        Assert.AreEqual(restoredDomino.GetColor(), colorBeforeC2); 
+
+        // Simulate undo press to undo change 1. Domino should now be deleted (since Change 1 was to add it)
+        yield return SimulateKeyDown("Undo");
+        yield return SimulateKeyUp("Undo");
+        Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
     }
 
     //=======================================================
@@ -381,7 +424,7 @@ public class DominoManipulation
     }
 
     // Simulates changing selected dominos to the target color by adjusting the RGB slider and clicking the Change button. 
-    private IEnumerator ChangeSelectedToColor(Color newColor)
+    private IEnumerator SimulateChangeSelectedToColor(Color newColor)
     {
         // Simulate the user updating the RGB slider to the new color
         Slider redSlider = GameObject.Find("RedSlider").GetComponent<Slider>();
