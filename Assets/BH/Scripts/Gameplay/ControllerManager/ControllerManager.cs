@@ -136,8 +136,9 @@ namespace BH
             _buildModeCanvas.enabled = false;
             _spectatorModeCanvas.enabled = false;
             
-            SelectableManager.Instance.FreezeRotation();
-            SelectableManager.Instance.FreezePosition();
+            // I like it better w/o the following: -- Brandon
+            //SelectableManager.Instance.FreezeRotation();
+            //SelectableManager.Instance.FreezePosition();
         }
 
         void BuildMode()
@@ -151,10 +152,6 @@ namespace BH
             _buildModeCanvas.enabled = true;
             _spectatorModeCanvas.enabled = false;
             
-            ////////// Moved these calls to (what I think is) a better place in ToggleMode().
-            //SelectableManager.Instance.ResetLayout(); // Remove any messes from spectator mode
-            //((BuildModeController)_buildModeInputs[0]).SetActions(this.actions);
-
             SelectableManager.Instance.FreezeRotation();
             SelectableManager.Instance.FreezePosition();
         }

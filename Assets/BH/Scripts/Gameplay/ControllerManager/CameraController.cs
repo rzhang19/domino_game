@@ -64,7 +64,7 @@ namespace BH
 
         public void SetProjectionToOrthographic()
         {
-            if (_orthographic)
+            if (_orthographic || _firstPersonCamera._isBeingControlled)
                 return;
 
             _orthographic = true;
@@ -75,11 +75,13 @@ namespace BH
 
         public void SetProjectionToPerspective()
         {
-            if (!_orthographic)
+            if (!_orthographic || _firstPersonCamera._isBeingControlled)
                 return;
 
             _orthographic = false;
             BlendToMatrix(_perspectiveMatrix, _orthoToPerspectiveDuration, _orthoToPerspectiveCurve);
+            
+            _firstPersonCamera.LookRegular();
         }
 
         // Source: https://forum.unity.com/threads/smooth-transition-between-perspective-and-orthographic-modes.32765/

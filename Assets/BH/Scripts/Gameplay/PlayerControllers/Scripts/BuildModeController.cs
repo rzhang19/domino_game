@@ -516,23 +516,23 @@ namespace BH
                     _ghostInTheMiddleOfNowhereLastFrame = _ghostSelectable.transform.position == _theMiddleOfNowhere;
                 }
             }
-            else if (_spawningSelectable && _spawningPastables)
-            {
-                if (!_ghostInTheMiddleOfNowhereLastFrame)
-                {
-                    _ghostSelectable.transform.position = _theMiddleOfNowhere;
-                    _ghostInTheMiddleOfNowhereLastFrame = true;
-                }
+            //else if (_spawningSelectable && _spawningPastables)
+            //{
+            //    if (!_ghostInTheMiddleOfNowhereLastFrame)
+            //    {
+            //        _ghostSelectable.transform.position = _theMiddleOfNowhere;
+            //        _ghostInTheMiddleOfNowhereLastFrame = true;
+            //    }
 
-                Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
-                Vector3 currentGhostCenter = FindCenter(pastablesTransforms);
+            //    Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
+            //    Vector3 currentGhostCenter = FindCenter(pastablesTransforms);
 
-                // "Normalize" the positions of the ghosts around the new ghost center.
-                foreach (GhostSelectable ghostSelectable in _ghostSelectablesToPaste)
-                    ghostSelectable.transform.position = ghostSelectable.transform.position - currentGhostCenter + _theMiddleOfNowhere;
+            //    // "Normalize" the positions of the ghosts around the new ghost center.
+            //    foreach (GhostSelectable ghostSelectable in _ghostSelectablesToPaste)
+            //        ghostSelectable.transform.position = ghostSelectable.transform.position - currentGhostCenter + _theMiddleOfNowhere;
 
-                _ghostCenterInTheMiddleOfNowhereLastFrame = true;
-            }
+            //    _ghostCenterInTheMiddleOfNowhereLastFrame = true;
+            //}
             else // Not in the right mode to spawn selectables. Remove all ghost previews.
             {
                 if (!_ghostInTheMiddleOfNowhereLastFrame)
@@ -542,7 +542,10 @@ namespace BH
                 }
 
                 if (_ghostSelectablesToPaste.Count > 0)
+                {
+                    _spawningPastables = false;
                     ClearPastedSelectablesPreview();
+                }
             }
         }
 

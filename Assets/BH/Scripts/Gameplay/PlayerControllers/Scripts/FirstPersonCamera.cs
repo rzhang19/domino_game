@@ -24,6 +24,11 @@ namespace BH
             lockY
         }
 
+        float _oldXRot;
+        float _oldYRot;
+        bool _cachedOldRots = false;
+        public bool _isBeingControlled = false;
+
         // Constant member variables
         [SerializeField] Camera _cam; // Camera used to change FOV
         [SerializeField] float _minimumX = -90f;
@@ -66,8 +71,8 @@ namespace BH
             if (deltaXRot != 0f || deltaYRot != 0f)
             {
                 //StopAutomatedRotation();
-                _xRot -= Input.GetAxis("Mouse Y") * _sensitivity;
-                _yRot += Input.GetAxis("Mouse X") * _sensitivity;
+                _xRot -= deltaYRot * _sensitivity;
+                _yRot += deltaXRot * _sensitivity;
             }
         }
 
@@ -99,26 +104,38 @@ namespace BH
             transform.localRotation = Quaternion.Euler(_xRot, 0f, transform.localRotation.eulerAngles.z);
         }
 
-        public void LookDown()
+        public void LookRegular()
         {
-            StartCoroutine(AsyncLookDown(0.2f));
+            if (!_cachedOldRots)
+                return;
+
+            _cachedOldRots = false;
+            
+            StartCoroutine(AsyncRotateTowards(_oldXRot, _oldYRot, CameraControl.lockNone, 0.2f));
         }
 
-        public IEnumerator AsyncLookDown(float time, AnimationCurve motionCurve = null)
+        public void LookDown()
+        {
+            _oldXRot = _xRot;
+            _oldYRot = _yRot;
+            _cachedOldRots = true;
+            
+            StartCoroutine(AsyncRotateTowards(90f, _yRot, CameraControl.lockX, 0.2f));
+        }
+    
+        IEnumerator AsyncRotateTowards(float xRot, float yRot, CameraControl cameraControl, float time, AnimationCurve motionCurve = null)
         {
             if (motionCurve == null)
                 motionCurve = AnimationCurve.Linear(0, 0, 1, 1);
-
-            if (_camCtrl == CameraControl.lockNone)
-            {
-                _camCtrl = CameraControl.lockXY;
-                yield return StartCoroutine(AsyncLookDownHelper(time, motionCurve));
-                _camCtrl = CameraControl.lockX;
-            }
+            
+            _camCtrl = CameraControl.lockXY;
+            yield return StartCoroutine(AsyncRotateTowardsHelper(xRot, yRot, time, motionCurve));
+            _camCtrl = cameraControl;
         }
 
-        IEnumerator AsyncLookDownHelper(float time, AnimationCurve motionCurve = null)
+        IEnumerator AsyncRotateTowardsHelper(float xRot, float yRot, float time, AnimationCurve motionCurve = null)
         {
+            _isBeingControlled = true;
             if (motionCurve == null)
                 motionCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
@@ -133,15 +150,19 @@ namespace BH
             {
                 yield return null;
                 
-                float endXRot = Normalize(90f);
+                float endXRot = Normalize(xRot);
+                float endYRot = Normalize(yRot);
 
                 // Forces the interpolation to take the shortest path.
                 FixRotation(out endXRot, out startXRot, endXRot, startXRot);
+                FixRotation(out endYRot, out startYRot, endYRot, startYRot);
 
                 interpVal = motionCurve.Evaluate((Time.time - startTime) * speed);
                 _xRot = Mathf.Lerp(startXRot, endXRot, interpVal);
                 SetRotation();
             }
+            
+            _isBeingControlled = false;
         }
 
         //public void SetRotation(float newXRot, float newYRot)
