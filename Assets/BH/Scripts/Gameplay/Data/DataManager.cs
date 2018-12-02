@@ -19,6 +19,11 @@ namespace BH
     {
         protected DataManager() { }
 
+        void Awake()
+        {
+            DontDestroyOnLoad(gameObject); // Want the singleton instance to persist between scenes.
+        }
+
         void Start()
         {
             // ------ Example usage of DataManager ------- //
