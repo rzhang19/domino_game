@@ -10,23 +10,23 @@ namespace BH
     public static class InputManager
     {
         public static KeyCode _pauseKey = (Application.isEditor ? KeyCode.T : KeyCode.Escape);
-        
+
         public static Dictionary<string, KeyCode[]> _keyDict = new Dictionary<string, KeyCode[]>()
         {
             {"Strafe Up",                   new KeyCode[] {KeyCode.W, KeyCode.None}},
             {"Strafe Left",                 new KeyCode[] {KeyCode.A, KeyCode.None}},
             {"Strafe Down",                 new KeyCode[] {KeyCode.S, KeyCode.None}},
             {"Strafe Right",                new KeyCode[] {KeyCode.D, KeyCode.None}},
-            
+
             {"Float",                       new KeyCode[] {KeyCode.Space, KeyCode.None}},
             {"Sink",                        new KeyCode[] {KeyCode.LeftShift, KeyCode.None}},
 
             {"Attack1",                     new KeyCode[] {KeyCode.Mouse0, KeyCode.None}},
             {"Attack2",                     new KeyCode[] {KeyCode.Mouse1, KeyCode.None}},
-            
+
             {"Toggle Build/Spectate",       new KeyCode[] {KeyCode.T, KeyCode.None}},
             {"Toggle Free-fly",             new KeyCode[] {KeyCode.F, KeyCode.None}},
-            
+
             {"Toggle Rotation Axis",        new KeyCode[] {KeyCode.R, KeyCode.None}},
             {"Undo",                        new KeyCode[] {KeyCode.Z, KeyCode.None}},
 
@@ -35,7 +35,9 @@ namespace BH
             {"Toggle Projection",           new KeyCode[] {KeyCode.G, KeyCode.None}}, //was V, but Paste took V
 
             {"Copy",                        new KeyCode[] {KeyCode.C, KeyCode.None}},
-            {"Paste",                        new KeyCode[] {KeyCode.V, KeyCode.None}}
+            {"Paste",                       new KeyCode[] {KeyCode.V, KeyCode.None}},
+
+            {"Drag",                        new KeyCode[] {KeyCode.Q}}
         };
 
         /// <summary>

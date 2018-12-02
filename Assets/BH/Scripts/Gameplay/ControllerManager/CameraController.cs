@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace BH
 {
+    [RequireComponent(typeof(FirstPersonCamera))]
     public class CameraController : TakesInput
     {
         // Input state
@@ -18,6 +19,8 @@ namespace BH
         [SerializeField] AnimationCurve _orthoToPerspectiveCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
         [SerializeField] AnimationCurve _perspectiveToOrthoCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
+        FirstPersonCamera _firstPersonCamera;
+
         void Awake()
         {
             if (!_camera)
@@ -31,6 +34,8 @@ namespace BH
             _perspectiveMatrix = Matrix4x4.Perspective(_camera.fieldOfView, _camera.aspect, _camera.nearClipPlane, _camera.farClipPlane);
 
             _orthographic = _camera.orthographic;
+
+            _firstPersonCamera = GetComponent<FirstPersonCamera>();
         }
 
         void GetInput()
@@ -64,6 +69,8 @@ namespace BH
 
             _orthographic = true;
             BlendToMatrix(_orthoMatrix, _perspectiveToOrthoDuration, _perspectiveToOrthoCurve);
+
+            _firstPersonCamera.LookDown();
         }
 
         public void SetProjectionToPerspective()

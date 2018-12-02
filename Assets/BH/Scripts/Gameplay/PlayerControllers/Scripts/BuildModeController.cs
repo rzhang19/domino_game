@@ -12,6 +12,7 @@ namespace BH
     /// Most notably, this class provides the logic for game object selection and pickup.
     /// </summary>
     /// <seealso cref="BH.TakesInput" />
+    [RequireComponent(typeof(LineRenderer))]
     public class BuildModeController : TakesInput
     {
         // Input state
@@ -30,6 +31,8 @@ namespace BH
         bool _dragMode = false;
         bool _copyDown = false;
         bool _pasteDown = false;
+        bool _dragDown = false;
+        bool _dragUp = false;
         float _scrollWheel = 0f;
 
         float timeBetweenDominoes = 0.5f;
@@ -86,6 +89,13 @@ namespace BH
         Quaternion _spawnRotation = Quaternion.identity;
         [SerializeField] float _rotationPerTick = 10f;
 
+        // Drag-place dominoes
+        LineRenderer _lineRenderer;
+        Vector3 _lineRendererVertexOffset = Vector3.up * 0.1f;
+        [SerializeField] float _minimumDistanceBetweenDragVertices = 0.1f;
+        List<Vector3> _dragVertices = new List<Vector3>();
+        bool _isDragging = false;
+
         void GetInput()
         {
             if (_locks.Count > 0)
@@ -104,6 +114,8 @@ namespace BH
                 _mouseholddown = false;
                 _copyDown = false;
                 _pasteDown = false;
+                _dragDown = false;
+                _dragUp = true;
                 _scrollWheel = 0f;
 
                 // Unselect everything upon input lock.
@@ -130,6 +142,8 @@ namespace BH
             _dragMouse = InputManager.GetKeyDown("Toggle drag mouse");
             _copyDown = InputManager.GetKeyDown("Copy");
             _pasteDown = InputManager.GetKeyDown("Paste");
+            _dragDown = InputManager.GetKeyDown("Drag");
+            _dragUp = InputManager.GetKeyUp("Drag");
         }
 
         void Awake()
@@ -157,6 +171,8 @@ namespace BH
                 //_ghostSelectable = Instantiate(_ghostSelectablePrefab, _theMiddleOfNowhere, Quaternion.identity);
                 _ghostSelectable = _ghostSelectablePrefab.Get<GhostSelectable>(null, _theMiddleOfNowhere, Quaternion.identity);
             }
+
+            _lineRenderer = GetComponent<LineRenderer>();
         }
 
         void Update()
@@ -256,7 +272,7 @@ namespace BH
             if (_pickedUpSelectables.Count > 0)
             {
                 CalculateOffsetBase(ray, _distance, _selectableSurfaceMask, _offsetBase, out _offsetBase);
-                
+
                 //float closestColliderY = float.MinValue;
                 //if (_detectColliderBelow.enabled && _detectColliderBelow.GetClosestTransform())
                 //    closestColliderY = _detectColliderBelow.GetClosestTransform().position.y;
@@ -267,6 +283,20 @@ namespace BH
                     //desiredPos.y = Mathf.Max(desiredPos.y, closestColliderY + _bufferDistance);
                     Vector3 diff = desiredPos - pickedUpSelectable._selectable._rigidbody.position;
                     pickedUpSelectable._selectable._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
+                }
+            }
+            else if (_isDragging)
+            {
+                if (_dragUp)
+                {
+                    _isDragging = false;
+                    _dragVertices.Clear();
+                    SetLineRendererPositions(_dragVertices.ToArray());
+                }
+                else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask) && ((hitInfo.point - _dragVertices.Last()).magnitude > _minimumDistanceBetweenDragVertices))
+                {
+                    _dragVertices.Add(hitInfo.point);
+                    SetLineRendererPositions(_dragVertices.ToArray());
                 }
             }
             else if (HandleRectSelection()) { }
@@ -306,7 +336,7 @@ namespace BH
                         pickedUp._selectable._rigidbody.useGravity = false;
                     }
                 }
-                
+
                 List<Selectable> toSave = new List<Selectable>();
                 foreach (PickedUpSelectable pickedUpSelectable in _pickedUpSelectables)
                 {
@@ -382,7 +412,7 @@ namespace BH
                     // Spawn the pasted dominos in _pastables
                     List<Selectable> newlySpawned = new List<Selectable>();
                     foreach (GhostSelectable ghostSelectable in _ghostSelectablesToPaste)
-                    {  
+                    {
                         newlySpawned.Add(SelectableManager.Instance.SpawnSelectableFromGameObj(ghostSelectable));
                         //ghostSelectable.transform.position = _theMiddleOfNowhere;
                         ghostSelectable.Delete();
@@ -390,7 +420,7 @@ namespace BH
                     _spawningPastables = false;
                     //_justSpawnedPastables = false;
                     _ghostSelectablesToPaste.Clear();
-                
+
                     SaveAddActionOf(newlySpawned);
                 }
                 else // Player wants to spawn a single selectable.
@@ -404,6 +434,12 @@ namespace BH
             {
                 // Clicked on an area without any dominoes => deselect all!
                 DeselectAll();
+            }
+            else if (_dragDown && !_isDragging && Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask) && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
+            {
+                _isDragging = true;
+                _dragVertices.Add(hitInfo.point);
+                SetLineRendererPositions(_dragVertices.ToArray());
             }
 
             if (_selected.Count > 0 && _pickedUpSelectables.Count <= 0)
@@ -456,7 +492,7 @@ namespace BH
             //}
             
             // The following conditional handles ghost preview logic.
-            if (_spawningSelectable)
+            if (_spawningSelectable && !_isDragging)
             {
                 // Either spawning a single selectable or a set of copied selectables.
                 if (_spawningPastables)
@@ -903,6 +939,13 @@ namespace BH
                 gSel.Delete();
 
             _ghostSelectablesToPaste.Clear();
+        }
+
+        void SetLineRendererPositions(Vector3[] vertices)
+        {
+            Vector3[] offsetVertices = vertices.ToList().Select(v => v + _lineRendererVertexOffset).ToArray();
+            _lineRenderer.positionCount = offsetVertices.Length;
+            _lineRenderer.SetPositions(offsetVertices);
         }
     }
 

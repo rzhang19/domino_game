@@ -15,18 +15,19 @@ namespace BH
 
         // Inconstant member variables
         [SerializeField] Transform _playerTransform; // Transform used to rotate around y-axis
-        //CameraControl _camCtrl = CameraControl.playerControlled;
-        //enum CameraControl
-        //{
-        //    playerControlled,
-        //    scriptControlledStrong,
-        //    scriptControlledWeak
-        //}
-        
+        CameraControl _camCtrl = CameraControl.lockNone;
+        enum CameraControl
+        {
+            lockNone,
+            lockXY,
+            lockX,
+            lockY
+        }
+
         // Constant member variables
         [SerializeField] Camera _cam; // Camera used to change FOV
-        [SerializeField] float _minimumX = -89f;
-        [SerializeField] float _maximumX = 89f;
+        [SerializeField] float _minimumX = -90f;
+        [SerializeField] float _maximumX = 90f;
         [SerializeField] float _sensitivity = 1f;
         
         void Awake()
@@ -59,8 +60,8 @@ namespace BH
                 return;
 
             // Retrieve mouse input
-            float deltaYRot = Input.GetAxis("Mouse Y");
-            float deltaXRot = Input.GetAxis("Mouse X");
+            float deltaYRot = (_camCtrl == CameraControl.lockXY || _camCtrl == CameraControl.lockX) ? 0f: Input.GetAxis("Mouse Y");
+            float deltaXRot = (_camCtrl == CameraControl.lockXY || _camCtrl == CameraControl.lockY) ? 0f: Input.GetAxis("Mouse X");
 
             if (deltaXRot != 0f || deltaYRot != 0f)
             {
@@ -96,6 +97,51 @@ namespace BH
             // Set player rotation around the y-axis, camera rotation around the x-axis
             _playerTransform.localRotation = Quaternion.Euler(0f, _yRot, 0f);
             transform.localRotation = Quaternion.Euler(_xRot, 0f, transform.localRotation.eulerAngles.z);
+        }
+
+        public void LookDown()
+        {
+            StartCoroutine(AsyncLookDown(0.2f));
+        }
+
+        public IEnumerator AsyncLookDown(float time, AnimationCurve motionCurve = null)
+        {
+            if (motionCurve == null)
+                motionCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
+            if (_camCtrl == CameraControl.lockNone)
+            {
+                _camCtrl = CameraControl.lockXY;
+                yield return StartCoroutine(AsyncLookDownHelper(time, motionCurve));
+                _camCtrl = CameraControl.lockX;
+            }
+        }
+
+        IEnumerator AsyncLookDownHelper(float time, AnimationCurve motionCurve = null)
+        {
+            if (motionCurve == null)
+                motionCurve = AnimationCurve.Linear(0, 0, 1, 1);
+
+            float speed = 1 / time;
+
+            float interpVal = 0f;
+            float startTime = Time.time;
+            float startXRot = Normalize(transform.localRotation.eulerAngles.x);
+            float startYRot = Normalize(_playerTransform.localRotation.eulerAngles.y);
+
+            while (interpVal < 1f)
+            {
+                yield return null;
+                
+                float endXRot = Normalize(90f);
+
+                // Forces the interpolation to take the shortest path.
+                FixRotation(out endXRot, out startXRot, endXRot, startXRot);
+
+                interpVal = motionCurve.Evaluate((Time.time - startTime) * speed);
+                _xRot = Mathf.Lerp(startXRot, endXRot, interpVal);
+                SetRotation();
+            }
         }
 
         //public void SetRotation(float newXRot, float newYRot)
@@ -246,24 +292,24 @@ namespace BH
                 return f;
         }
 
-        //// Checks if the start and end values differ in sign.
-        //// If it would be a shorter path, change the negative value to its positive equivalent.
-        //void FixRotation(out float newEndRot, out float newStartRot, float endRot, float startRot)
-        //{
-        //    newEndRot = endRot;
-        //    newStartRot = startRot;
+        // Checks if the start and end values differ in sign.
+        // If it would be a shorter path, change the negative value to its positive equivalent.
+        void FixRotation(out float newEndRot, out float newStartRot, float endRot, float startRot)
+        {
+            newEndRot = endRot;
+            newStartRot = startRot;
 
-        //    if (endRot < 0f && startRot > 0f)
-        //    {
-        //        if (Mathf.Abs(endRot - startRot) > Mathf.Abs(startRot - (endRot + 360f)))
-        //            newEndRot = endRot + 360f;
-        //    }
-        //    else if (startRot < 0f && endRot > 0f)
-        //    {
-        //        if (Mathf.Abs(endRot - startRot) > Mathf.Abs((startRot + 360f) - endRot))
-        //            newStartRot = startRot + 360f;
-        //    }
-        //}
+            if (endRot < 0f && startRot > 0f)
+            {
+                if (Mathf.Abs(endRot - startRot) > Mathf.Abs(startRot - (endRot + 360f)))
+                    newEndRot = endRot + 360f;
+            }
+            else if (startRot < 0f && endRot > 0f)
+            {
+                if (Mathf.Abs(endRot - startRot) > Mathf.Abs((startRot + 360f) - endRot))
+                    newStartRot = startRot + 360f;
+            }
+        }
 
         //// Stops all coroutines running on this script, i.e. stops the script's control of the camera.
         //public void StopAutomatedRotation()
