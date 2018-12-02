@@ -11,8 +11,9 @@ Built with Unity 2018.2.14f1 (64-bit).
 Important folders & subfolders:
 - Assets: game's code and imported packages
     - BH: 99% of game code. Represents the BH namespace that our game is in
-        - Scripts: our C# game scripts, i.e. 99% of game code
+        - Scripts: our core C# game scripts
             - We arbitrarily created subfolders here for organization
+        - MainMenu: holds scripts for displaying the main menu (which pops up when the game starts).
         - Scenes: Unity game scenes. Our game just uses the SpectatorMode scene
     - Editor: stores the auto-doc Doxygen tool
     - PlayModeTests: our C# test scripts
