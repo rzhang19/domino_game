@@ -41,7 +41,7 @@ namespace BH
             string myPassword = "meowmeow";
             Data myData = new Data();
             
-            DataManager.Instance.RegisterUser(myUsername, myPassword, (err) => {
+            DataManager.Instance.SaveData(myUsername, myPassword, (err) => {
                 if (err != DataManagerStatusCodes.SUCCESS)
                     Debug.LogError("Couldn't register user!");
             });
