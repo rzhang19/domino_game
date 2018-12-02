@@ -26,40 +26,44 @@ Unimportant folders:
 ```
 
 ### Tests
-We tested using Unity's built-in Test Runner. All tests are located in the .cs files in the [Assets/PlayModeTests](Assets/PlayModeTests) folder. There are currently 2 .cs files with tests: [DominoManipulation.cs](Assets/PlayModeTests/DominoManipulation.cs) and [SceneInitCorrect.cs](Assets/PlayModeTests/SceneInitCorrect.cs).
+We tested using Unity's built-in Test Runner. All tests are located in the .cs files in 3 subfolders in the [Assets/PlayModeTests](Assets/PlayModeTests) folder. The 3 subfolders are: [IntegrationTests](Assets/PlayModeTests/IntegrationTests), [RenderingTests](Assets/PlayModeTests/RenderingTests), and [UnitTests](Assets/PlayModeTests/UnitTests). Each folder contains .cs files, where each .cs file is a class containing test cases. (Ignore the .meta files in the same folder.) The most complex tests are the domino manipulation tests in [DominoManipulation.cs](Assets/PlayModeTests/IntegrationTests/DominoManipulation.cs).
 
 #### Test Overview
 Each test loads the initial state of the simulator as a scene, with all important components already instantiated in the scene. The tests can access and manipulate these components to perform a test, usually in the form of an assert. Each test is a function marked with [UnityTest] before its declaration.
 
 #### Test example
-As requested, here's an in-depth explanation of one test. The comments describe each step. This test is located in [DominoManipulation.cs](Assets/PlayModeTests/DominoManipulation.cs).
+As requested, here's an in-depth explanation of one test (updated for Part C). The comments describe each step. This test is located in [DominoManipulation.cs](Assets/PlayModeTests/IntegrationTests/DominoManipulation.cs).
 ```
 /// Test goal: User should click a button to add a domino that's tracked by the SelectableManager class.
 [UnityTest]
-public IEnumerator _Adds_New_Domino()
+public IEnumerator _Adds_New_Domino_UI()
 {
-    // Load initial state of simulator, including component instantiations.
-    SceneManager.LoadScene("SpectatorMode");
-    // Loading completes on the next frame update, so wait until then.
+    // Wait for scene loading in the [SetUp] function to finish.
     yield return new WaitForFixedUpdate();
 
     // Time for the real test! 
     
     // First, check that the scene started with no dominos.
-    // We'll find and save the backend "domino manager" component that stores the dominos currently in the simulator. 
+    // We'll find and save the backend "domino manager" component that stores the dominos currently in the simulator.
     SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+
     // dominoManager is the class instance of the component we wanted. Check that dominoManager's list of dominos is empty.
     Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
 
-    // Calls a local helper function in the same file to simulate the user clicking the UI Add Button.
-    // (This helper finds the button component the same way we found dominoManager.)
-    ClickUIButton("ButtonAdd");
+    // Now add a domino by simulating a click on the Spawn button to enable spawning mode,
+    // and a click on the screen to place the domino.
+    // The simulations call helper functions in the same file.
+    // Note the yield statement, which gives time for game components to process the clicks.
+    Utility.ClickUIButton("ButtonSpawn");
+    yield return SimulateUIToAddDominoAt(new Vector3(Screen.width/2f,Screen.height/2f,0));
 
     // Check that a new domino has been inserted into dominoManager's list of dominos.
     Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 1);
 }
 ```
-To Shaghayegh: the Part B report has summaries of the other test cases!
+
+#### Running Tests
+Download the repository and open it in Unity. Open the Test Runner window by navigating to Window/General/Test Runner on the Unity toolbar. The window should automatically be linked to the existing tests. You can run them using the Test Runner's GUI.
 
 ### Documentation
 We generated documentation with a Unity Doxygen plugin. The home page of our documentation is [here](Docs/html/annotated.html). All the significant application code is under the BH namespace which is listed [here](Docs/html/namespace_b_h.html). All documentation is located in the [/Docs/html](Docs/html) folder.
@@ -82,4 +86,4 @@ int Foo (int param1)
 We used the same format for classes and functions.
 
 ### Notes
-We will primarily be using Unity Collab for version control, while backing up our work onto this Github repository occasionally.
+We were using Unity Collab, but stopped halfway through because there were some problems.
