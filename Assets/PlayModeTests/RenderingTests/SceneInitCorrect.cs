@@ -18,11 +18,11 @@ public class SceneInitCorrect
         Scene scene = SceneManager.GetActiveScene();
         Assert.AreEqual(scene.name, "SpectatorMode");
 
-        GameObject interactSurface1Obj = GameObject.Find("InteractSurface1");
-        Assert.That(interactSurface1Obj, Is.Not.Null);
+        GameObject ground = GameObject.Find("SelectableSurface");
+        Assert.That(ground, Is.Not.Null);
 
-        GameObject interactSurface2Obj = GameObject.Find("InteractSurface2");
-        Assert.That(interactSurface2Obj, Is.Not.Null);
+        GameObject massSelectRectManager = GameObject.Find("SelectionRectManager");
+        Assert.That(massSelectRectManager, Is.Not.Null);
 
         GameObject dominoManagerObj = GameObject.Find("SelectableManager");
         Assert.That(dominoManagerObj, Is.Not.Null);

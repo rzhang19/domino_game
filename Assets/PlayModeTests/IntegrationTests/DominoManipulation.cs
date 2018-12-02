@@ -25,11 +25,11 @@ public class DominoManipulation
         SceneManager.LoadScene("SpectatorMode");
     }
 
-    // // Called after every test. Destroys the scene
+    // Called after every test. Destroys the scene
     [TearDown] 
     public void Cleanup()
     {
-        StopInputSimulations();
+        Utility.StopInputSimulations();
         //SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
         //Object.Destroy(dominoManager);
     }
@@ -46,7 +46,7 @@ public class DominoManipulation
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
 
         // Now add by enabling spawn mode and simulating UI clicks on the screen
-        ClickUIButton("ButtonSpawn");
+        Utility.ClickUIButton("ButtonSpawn");
         yield return SimulateUIToAddDominoAt(new Vector3(Screen.width/2f,Screen.height/2f,0));
 
         // Check a domino has been created
@@ -61,14 +61,14 @@ public class DominoManipulation
 
         // Add a domino to test with
         Vector3 pos = new Vector3(Screen.width/2f,Screen.height/2f,0);
-        ClickUIButton("ButtonSpawn");
+        Utility.ClickUIButton("ButtonSpawn");
         yield return SimulateUIToAddDominoAt(pos);
         BH.Selectable newDomino = requestedDomino;
 
         // Simulate right clicking on the domino
         InputManager.SimulateCursorMoveTo(pos);
         yield return new WaitForEndOfFrame();
-        yield return SimulateKeyDown("Attack2");
+        yield return Utility.SimulateKeyDown("Attack2");
 
         // Check domino was internally selected
         Assert.That(newDomino.IsSelected(), Is.True);
@@ -99,7 +99,7 @@ public class DominoManipulation
         BH.Selectable unselectedDomino = requestedDomino;
         
         // Delete dominos by clicking button
-        ClickUIButton("ButtonDelete");
+        Utility.ClickUIButton("ButtonDelete");
 
         // Check that the only domino remaining is the unselected one
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 1);
@@ -131,7 +131,7 @@ public class DominoManipulation
         }
 
         // Simulate clicking the Save button
-        ClickUIButton("ButtonSave");
+        Utility.ClickUIButton("ButtonSave");
 
         // Change domino transforms randomly
         foreach (BH.Selectable domino in dominoRefs)
@@ -262,12 +262,10 @@ public class DominoManipulation
         Vector3 firstDominoPos = new Vector3(Screen.width/2f,Screen.height/2f,0);
         InputManager.SimulateCursorMoveTo(firstDominoPos);
         yield return new WaitForEndOfFrame();
-        InputManager.SimulateKeyDown("Attack1");
-        yield return new WaitForEndOfFrame();
+        yield return Utility.SimulateKeyDown("Attack1");
         InputManager.SimulateCursorMoveTo(new Vector3(firstDominoPos.x+50, firstDominoPos.y, firstDominoPos.z));
         yield return new WaitForEndOfFrame();
-        InputManager.SimulateKeyUp("Attack1");
-        yield return new WaitForEndOfFrame();
+        yield return Utility.SimulateKeyUp("Attack1");
 
         // Check all selected dominos' positions have changed. Unselected domino has old position.
         Assert.AreNotEqual(oldTransform1.position, selectedDomino1.transform.position);
@@ -316,47 +314,45 @@ public class DominoManipulation
         CustomTransform transformBeforeC4 = new CustomTransform(selectedDomino.transform);
         InputManager.SimulateCursorMoveTo(dominoPos);
         yield return new WaitForEndOfFrame();
-        InputManager.SimulateKeyDown("Attack1");
-        yield return new WaitForEndOfFrame();
+        yield return Utility.SimulateKeyDown("Attack1");
         InputManager.SimulateCursorMoveTo(new Vector3(dominoPos.x+50, dominoPos.y, dominoPos.z));
         yield return new WaitForEndOfFrame();
-        InputManager.SimulateKeyUp("Attack1");
+        yield return Utility.SimulateKeyUp("Attack1");
         yield return new WaitForEndOfFrame();
 
         // Change 5: Delete it via UI by clicking the Delete button.
-        ClickUIButton("ButtonDelete");
+        Utility.ClickUIButton("ButtonDelete");
 
         // Time to undo changes by popping them off the history stack.
 
         // Simulate undo press to undo change 5. Domino should now be present
-        yield return SimulateKeyDown("Undo");
-        yield return SimulateKeyUp("Undo");
+        yield return Utility.SimulateKeyDown("Undo");
+        yield return Utility.SimulateKeyUp("Undo");
         BH.Selectable restoredDomino = dominoManager.GetActiveSelectables()[0];
 
         // Simulate undo press to undo change 4. Domino should now have its old position
-        yield return SimulateKeyDown("Undo");
-        yield return SimulateKeyUp("Undo");
+        yield return Utility.SimulateKeyDown("Undo");
+        yield return Utility.SimulateKeyUp("Undo");
         Assert.AreEqual(restoredDomino.transform.position, transformBeforeC4.position);
 
         // Simulate undo press to undo change 3. Domino should have its old rotation
-        yield return SimulateKeyDown("Undo");
-        yield return SimulateKeyUp("Undo");
+        yield return Utility.SimulateKeyDown("Undo");
+        yield return Utility.SimulateKeyUp("Undo");
         Assert.AreEqual(restoredDomino.transform.rotation, transformBeforeC3.rotation);
         
         // Simulate undo press to undo change 2. Domino should have its old color
-        yield return SimulateKeyDown("Undo");
-        yield return SimulateKeyUp("Undo");
+        yield return Utility.SimulateKeyDown("Undo");
+        yield return Utility.SimulateKeyUp("Undo");
         Assert.AreEqual(restoredDomino.GetColor(), colorBeforeC2); 
 
         // Simulate undo press to undo change 1. Domino should now be deleted (since Change 1 was to add it)
-        yield return SimulateKeyDown("Undo");
-        yield return SimulateKeyUp("Undo");
+        yield return Utility.SimulateKeyDown("Undo");
+        yield return Utility.SimulateKeyUp("Undo");
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
     }
 
     /// User can copy and paste the selected dominos.
-    /// Pasted dominos can have different positions than the copied ones, 
-    /// and I can't compute these (since they're in world space and my mouse position coordinates are screen space),
+    /// Pasted dominos can have different positions than the copied ones if placed somewhere else, 
     /// so ignore positions. But colors and rotations should be the same.
     [UnityTest]
     public IEnumerator _Copy_Paste_UI()
@@ -384,18 +380,18 @@ public class DominoManipulation
             = new System.Collections.Generic.List<BH.Selectable>(dominoManager.GetActiveSelectables());
 
         // Simulate copying them by pressing the copy key
-        yield return SimulateKeyDown("Copy");
-        yield return SimulateKeyUp("Copy");
+        yield return Utility.SimulateKeyDown("Copy");
+        yield return Utility.SimulateKeyUp("Copy");
 
         // Simulate pasting them. This displays a ghost preview of the pasted dominos that moves with the cursor.
-        yield return SimulateKeyDown("Paste");
-        yield return SimulateKeyUp("Paste");
+        yield return Utility.SimulateKeyDown("Paste");
+        yield return Utility.SimulateKeyUp("Paste");
 
         // Move the cursor to move the preview, and click to place the pasted dominos at a new location (towards +y-axis)
         InputManager.SimulateCursorMoveTo(new Vector3(firstDominoPos.x, firstDominoPos.y+50, 0));
         yield return new WaitForEndOfFrame();
-        yield return SimulateKeyDown("Attack1");
-        yield return SimulateKeyUp("Attack1");
+        yield return Utility.SimulateKeyDown("Attack1");
+        yield return Utility.SimulateKeyUp("Attack1");
 
         // Check that 2 more dominos were added
         System.Collections.Generic.List<BH.Selectable> newList = dominoManager.GetActiveSelectables();
@@ -417,45 +413,53 @@ public class DominoManipulation
         Assert.AreEqual(allDominosCovered, true);
     }
 
-    /// User can right click and drag to create a selectable rectangle.
+    /// User can right click and drag to create a selectable rectangle that selects all dominos within it.
     [UnityTest]
     public IEnumerator _Mass_Select_UI()
     {
-        yield return null;
+        yield return new WaitForFixedUpdate();
+
+        // Make sure we're starting with 0 dominos, so we can keep track of how many dominos are in the world
+        SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+        Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
+
+        // Turn on spawn mode
+        yield return SimulateTogglingSpawnMode();
+
+        // Add 2 selected dominos near each other
+        Vector3 firstDominoPos = new Vector3(Screen.width/2f,Screen.height/2f,0);
+        yield return SimulateUIToAddDominoAt(firstDominoPos);
+        BH.Selectable domino1 = requestedDomino;
+        yield return SimulateUIToAddDominoAt(new Vector3(firstDominoPos.x+50,firstDominoPos.y,0));
+        BH.Selectable domino2 = requestedDomino;
+
+        // Simulate a right-click and drag across (almost) entire screen to create a rectangle
+        int xPos = 50;
+        int yPos = Screen.height-50;
+        InputManager.SimulateCursorMoveTo(new Vector3(xPos, yPos, 0)); //top right corner of screen
+        yield return new WaitForEndOfFrame();
+        yield return Utility.SimulateKeyDown("Attack2");
+        int numSteps = 50;
+        int stepX = (Screen.width-100)/numSteps;
+        int stepY = (Screen.height-100)/numSteps;
+        for (int i=0; i<numSteps; i+=1)
+        {
+            InputManager.SimulateCursorMoveTo(new Vector3(xPos+i*stepX, yPos-i*stepY, 0));
+            yield return new WaitForEndOfFrame();
+        }
+        yield return Utility.SimulateKeyUp("Attack2");
+
+        // Check that the earlier added dominos are now selected
+        Assert.AreEqual(domino1.IsSelected(), true);
+        Assert.AreEqual(domino2.IsSelected(), true);
     }
 
     //=======================================================
     // Private helpers for this test. Mainly to simulate user input
     //=======================================================
     
-    /// Simulates clicking a specified button in the UI.
-    /// Only call after SceneManager.LoadScene() is called!
-    private void ClickUIButton(string buttonName)
-    {
-        GameObject buttonObj = GameObject.Find(buttonName);
-        Assert.That(buttonObj, Is.Not.Null);
-        Button button = buttonObj.GetComponent<Button>();
-        button.onClick.Invoke();
-    }
-
-    /// Simulates pressing down the specified key. See InputManager for valid strings/names of keys.
-    /// Forces a delay until the end of the frame before continuing, so keypress can be processed properly
-    private IEnumerator SimulateKeyDown(string key)
-    {
-        InputManager.SimulateKeyDown(key);
-        yield return new WaitForEndOfFrame();
-    }
-
-    /// Simulates releasing the specified key. See InputManager for valid strings/names of keys.
-    /// Forces a delay until the end of the frame before continuing, so keypress can be processed properly
-    private IEnumerator SimulateKeyUp(string key)
-    {
-        InputManager.SimulateKeyUp(key);
-        yield return new WaitForEndOfFrame();
-    }
-
     // Sets this.requestedDomino to a new domino added by simulating UI.
-    // Assumes the user is in spawning mode (by clicking the button), call ClickUIButton("ButtonSpawn"); to ensure this.
+    // Assumes the user is in spawning mode (by clicking the button), call Utility.ClickUIButton("ButtonSpawn"); to ensure this.
     // This syncs the domino with every relevant game component
     private IEnumerator SimulateUIToAddDominoAt(Vector3 pos)
     {
@@ -466,28 +470,19 @@ public class DominoManipulation
         // Now add by simulating a complete UI click on the screen
         InputManager.SimulateCursorMoveTo(pos);
         yield return new WaitForEndOfFrame();
-        yield return SimulateKeyDown("Attack1");
-        yield return SimulateKeyUp("Attack1");
+        yield return Utility.SimulateKeyDown("Attack1");
+        yield return Utility.SimulateKeyUp("Attack1");
 
         // Look up the newly added domino
         System.Collections.Generic.List<BH.Selectable> newList = dominoManager.GetActiveSelectables();
         requestedDomino = newList.Except(oldList).ToList()[0];
     }
 
-    // Disable simulated UI
-    private void StopInputSimulations()
-    {
-        InputManager.DisableCursorSimulation();
-        InputManager.DisableKeypressSimulation();
-        InputManager.DisableScrollSimulation();
-        InputManager.DisableSimulatePointerOverGameObject();
-    }
-
     // Simulates toggling spawn mode by pressing the button.
     // (Note: when scene loads, spawn mode is FALSE.)
     private IEnumerator SimulateTogglingSpawnMode()
     {
-        ClickUIButton("ButtonSpawn");
+        Utility.ClickUIButton("ButtonSpawn");
         yield return new WaitForEndOfFrame();
         InputManager.SimulatePointerOverGameObject();
         yield return new WaitForEndOfFrame();
@@ -505,7 +500,7 @@ public class DominoManipulation
         blueSlider.value = newColor.b;
 
         // Simulate the user clicking the "Change color" button
-        ClickUIButton("ButtonChangeColor");
+        Utility.ClickUIButton("ButtonChangeColor");
         yield return new WaitForEndOfFrame();
     }
 }

@@ -202,6 +202,7 @@ namespace BH
         {
             _isSimulatingKeyDown = true;
             _simulatedKeyDown = key;
+            _isSimulatingKeyUp = false;
             _simulatedKeyUp = null;
         }
 
@@ -212,6 +213,7 @@ namespace BH
         {
             _isSimulatingKeyUp = true;
             _simulatedKeyUp = key;
+            _isSimulatingKeyDown = false;
             _simulatedKeyDown = null;
         }
 

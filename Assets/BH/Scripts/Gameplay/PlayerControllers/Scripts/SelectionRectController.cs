@@ -231,5 +231,14 @@ namespace BH
             //Finding 4 points means we created a rect
             hasCreatedRect = i == 4? true : false;
         }
+
+        /// <summary>
+        /// Returns true if a rectangle has been drawn.
+        /// </summary>
+        /// <returns> The value of this.hasCreatedRect </returns>
+        public bool HasCreatedRect()
+        {
+            return this.hasCreatedRect;
+        }
     }
 }
