@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using TWM.UI;
 
 namespace BH
 {
@@ -8,6 +10,17 @@ namespace BH
     {
         string _inputUsername = "";
         string _inputPassword = "";
+
+        [SerializeField] TextMeshProUGUI _loginStatusText;
+        UIElementAnimator _uiElementAnimator;
+
+        void Awake()
+        {
+            if (!_loginStatusText)
+                Debug.LogError("Login status text is not initialized.");
+
+            _uiElementAnimator = _loginStatusText.GetComponent<UIElementAnimator>();
+        }
 
         public void SetUsername(string username)
         {
@@ -23,7 +36,22 @@ namespace BH
         {
             DataManager.Instance.GetData(_inputUsername, _inputPassword, (data, err) =>
             {
-                Debug.Log(err);
+                switch (err)
+                {
+                    case DataManagerStatusCodes.SUCCESS:
+                        SetLoginStatusText("Successfully signed in as " + _inputUsername + "!");
+                        break;
+                    case DataManagerStatusCodes.DATABASE_ERROR:
+                        SetLoginStatusText("Database error occured!");
+                        break;
+                    default:
+                        SetLoginStatusText("Unknown error occured!");
+                        break;
+                }
+
+                if (_uiElementAnimator)
+                    _uiElementAnimator.ScalePop();
+
                 Debug.Log(data);
             });
         }
@@ -32,8 +60,30 @@ namespace BH
         {
             DataManager.Instance.RegisterUser(_inputUsername, _inputPassword, (err) =>
             {
-                Debug.Log(err);
+                switch (err)
+                {
+                    case DataManagerStatusCodes.SUCCESS:
+                        SetLoginStatusText("Successfully registered new user " + _inputUsername + "!");
+                        break;
+                    case DataManagerStatusCodes.DATABASE_ERROR:
+                        SetLoginStatusText("Database error occured!");
+                        break;
+                    case DataManagerStatusCodes.USERNAME_TAKEN:
+                        SetLoginStatusText("Username already taken!");
+                        break;
+                    default:
+                        SetLoginStatusText("Unknown error occured!");
+                        break;
+                }
+                
+                if (_uiElementAnimator)
+                    _uiElementAnimator.ScalePop();
             });
+        }
+
+        void SetLoginStatusText(string text)
+        {
+            _loginStatusText.SetText(text);
         }
     }
 }

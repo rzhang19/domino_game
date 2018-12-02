@@ -162,6 +162,11 @@ namespace TWM.UI
             _anim.Play("Scale1To0", -1, 0);
         }
 
+        public void ScalePop()
+        {
+            _anim.Play("ScalePop", -1, 0);
+        }
+
         public void Position0()
         {
             _anim.Play("Position0", -1, 0);
