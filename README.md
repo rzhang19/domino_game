@@ -16,7 +16,7 @@ Important folders & subfolders:
         - Scenes: Unity game scenes. Our game just uses the SpectatorMode scene
     - Editor: stores the auto-doc Doxygen tool
     - PlayModeTests: our C# test scripts
-    - Plugins: SQL database stuff. Not integrated with game yet
+    - Plugins: SQLite for database integration
     - LWRP, TextMesh Pro, Gizmos: imported packages to make game look nicer. Didn't use yet, as we explained in the Part B report
 - Blender: custom domino models. Currently not integrated with the game
 - Docs: our Doxygen-generated documentation
