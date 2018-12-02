@@ -9,10 +9,15 @@ using System.Runtime.InteropServices;
 using BH;
 
 /// Includes tests for domino manipulation triggered by the user.
-/// Integration tests between frontend UI and backend SelectableManager/Selectable classes.
+/// Integration tests between frontend UI, "middleman" BuildModeController, and backend SelectableManager/Selectable classes.
 [TestFixture]
 public class DominoManipulation 
 {
+    // Workaround; is an alternative return value for helper functions that need to yield for the game to process actions, 
+    // so their return type must be IEnumerator, not a Selectable.
+    // Helpers will set this variable to the useful value instead of returning the value.
+    private BH.Selectable requestedDomino;
+
     // Called before every test. Loads the scene
     [SetUp]
     public void Init()
@@ -35,19 +40,18 @@ public class DominoManipulation
     {
         yield return new WaitForFixedUpdate();
 
-        // Check that scene started with no dominoes
         SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+
+        // Check no dominos
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
 
-        // Now add by simulating UI clicks on the screen
+        // Now add by enabling spawn mode and simulating UI clicks on the screen
         ClickUIButton("ButtonSpawn");
-        InputManager.SimulateCursorMoveTo(new Vector3(Screen.width/2f,Screen.height/2f,0));
-        InputManager.SimulateKeyDown("Attack1");
         yield return new WaitForFixedUpdate();
+        yield return SimulateUIToAddDominoAt(new Vector3(Screen.width/2f,Screen.height/2f,0));
 
+        // Check a domino has been created
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 1);
-
-        StopInputSimulations();
     }
 
     /// User should be able to right-click on a domino on the screen to select it.
@@ -75,20 +79,27 @@ public class DominoManipulation
         yield return new WaitForFixedUpdate();
 
         SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+
+        // Starting with no dominos in the world
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
 
-        // Add an unselected domino
-        BH.Selectable unselectedDomino = Utility.ProgrammaticallyAddDomino();
-
-        // Programmatically create and select 10 dominos
-        for (int i = 0; i < 10; i++)
+        // Programmatically create and select 2 dominos
+        ClickUIButton("ButtonSpawn");
+        InputManager.SimulatePointerOverGameObject();
+        for (int i = 0; i < 2; i++)
         {
-            BH.Selectable newDomino = Utility.ProgrammaticallyAddDomino();
+            yield return SimulateUIToAddDominoAt(new Vector3(Screen.width/2f+i*50,Screen.height/2f,0));
+            BH.Selectable newDomino = requestedDomino;
             Utility.ProgrammaticallySelectDomino(newDomino);
         }
+
+        // Add an unselected domino
+        yield return SimulateUIToAddDominoAt(new Vector3(Screen.width/2f+100,Screen.height/2f,0));
+        BH.Selectable unselectedDomino = requestedDomino;
         
         ClickUIButton("ButtonDelete");
 
+        // Check that the only domino remaining is the unselected one
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 1);
         Assert.AreEqual(dominoManager.GetActiveSelectables()[0], unselectedDomino);
     }
@@ -136,6 +147,7 @@ public class DominoManipulation
     }
 
     /// User should change the colors of (programmatically) selected dominos by adjusting an RGB slider (UI).
+    /// Unselected dominos shouldn't change.
     [UnityTest]
     public IEnumerator _Recolors_Selected_Dominos_UI()
     {
@@ -175,6 +187,37 @@ public class DominoManipulation
         Assert.AreEqual(unselectedDomino.GetColor(), normalizedUnchangedColor);
     }
 
+    /// User can rotate the (programmatically) selected dominos by scrolling the mouse wheel.
+    /// Unselected dominos shouldn't change.
+    [UnityTest]
+    public IEnumerator _Rotates_Selected_Dominos_UI()
+    {
+        yield return new WaitForFixedUpdate();
+
+        // Create 2 selected dominos
+        BH.Selectable selectedDomino1 = Utility.ProgrammaticallyAddDomino();
+        Utility.ProgrammaticallySelectDomino(selectedDomino1);
+        BH.CustomTransform oldTransform1 = new BH.CustomTransform(selectedDomino1.transform);
+        BH.Selectable selectedDomino2 = Utility.ProgrammaticallyAddDomino();
+        Utility.ProgrammaticallySelectDomino(selectedDomino2);
+        BH.CustomTransform oldTransform2 = new BH.CustomTransform(selectedDomino2.transform);
+
+        // Create 1 unselected domino
+        BH.Selectable unselectedDomino = Utility.ProgrammaticallyAddDomino();
+        BH.CustomTransform oldTransform3 = new BH.CustomTransform(unselectedDomino.transform);
+
+        // Simulate mouse scroll wheel to rotate dominos
+        float simulatedScrollAmt = 0.5f;
+        InputManager.SimulateScrollTo(simulatedScrollAmt);
+
+        // Check selected dominos' rotations changed
+        Assert.AreNotEqual(oldTransform1.rotation, selectedDomino1.transform.rotation);
+        Assert.AreNotEqual(oldTransform2.rotation, selectedDomino2.transform.rotation);
+
+        // Check unselected domino's rotation is the same
+        Assert.AreEqual(oldTransform3.rotation, unselectedDomino.transform.rotation);
+    }
+
     //=======================================================
     // Private helpers for this test. Mainly to simulate user input
     //=======================================================
@@ -189,10 +232,36 @@ public class DominoManipulation
         button.onClick.Invoke();
     }
 
+    // Sets this.requestedDomino to a new domino added by simulating UI.
+    // Assumes the user is in spawning mode (by clicking the button), call ClickUIButton("ButtonSpawn"); to ensure this.
+    // This syncs the domino with every relevant game component
+    private IEnumerator SimulateUIToAddDominoAt(Vector3 pos)
+    {
+        // Set up future domino lookup
+        SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
+        System.Collections.Generic.List<BH.Selectable> oldList = new System.Collections.Generic.List<BH.Selectable>(dominoManager.GetActiveSelectables());
+
+        Debug.Log("old list size: "+oldList.Count);
+
+        // Now add by simulating a complete UI click on the screen
+        InputManager.SimulateCursorMoveTo(pos);
+        InputManager.SimulateKeyDown("Attack1");
+        yield return new WaitForFixedUpdate();
+        InputManager.SimulateKeyUp("Attack1");
+        yield return new WaitForFixedUpdate();
+
+        // Look up the newly added domino
+        System.Collections.Generic.List<BH.Selectable> newList = dominoManager.GetActiveSelectables();
+        Debug.Log("new list size: "+newList.Count);
+        requestedDomino = newList.Except(oldList).ToList()[0];
+    }
+
     // Disable simulated UI
     private void StopInputSimulations()
     {
         InputManager.DisableCursorSimulation();
         InputManager.DisableKeypressSimulation();
+        InputManager.DisableScrollSimulation();
+        InputManager.DisableSimulatePointerOverGameObject();
     }
 }

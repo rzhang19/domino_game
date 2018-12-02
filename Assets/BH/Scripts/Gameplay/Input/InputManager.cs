@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BH
 {
@@ -17,6 +18,9 @@ namespace BH
         static string _simulatedKeyUp = null; 
         static bool _isSimulatingCursor = false;
         static Vector3 _simulatedCursorPos;
+        static bool _isSimulatingScroll = false;
+        static float _simulatedScroll;
+        static bool _simulatePointerOverGameObject = false;
         
         public static Dictionary<string, KeyCode[]> _keyDict = new Dictionary<string, KeyCode[]>()
         {
@@ -160,6 +164,24 @@ namespace BH
         }
 
         /// <summary>
+        /// Returns the current scroll position.
+        /// If the scroll is simulated, the simulation is wiped after.
+        /// </summary>
+        public static float GetScroll()
+        {
+            return _isSimulatingScroll? _simulatedScroll : Input.GetAxisRaw("Mouse ScrollWheel");
+        }
+
+        /// <summary>
+        /// Returns true if the pointer is over a game object.
+        /// If the pointer is simulated, it always returns false.
+        /// </summary>
+        public static bool IsPointerOverGameObject()
+        {
+            return _simulatePointerOverGameObject? false : EventSystem.current.IsPointerOverGameObject();
+        }
+
+        /// <summary>
         /// Overwrites the keybind for specified key, val, and index.
         /// </summary>
         /// <param name="key">The key.</param>
@@ -180,6 +202,7 @@ namespace BH
         {
             _isSimulatingKeyDown = true;
             _simulatedKeyDown = key;
+            _simulatedKeyUp = null;
         }
 
         /// <summary>
@@ -189,6 +212,7 @@ namespace BH
         {
             _isSimulatingKeyUp = true;
             _simulatedKeyUp = key;
+            _simulatedKeyDown = null;
         }
 
         /// <summary>
@@ -200,6 +224,24 @@ namespace BH
             _isSimulatingCursor = true;
             _simulatedCursorPos = pos;
         }
+
+        /// <summary>
+        /// Programmatically turns on cursor simulation and simulates cursor movement. 
+        /// Once simulated, the movement will stay until it has been retrieved by GetCursorPos
+        /// </summary>
+        public static void SimulateScrollTo(float newScroll)
+        {
+            _isSimulatingScroll = true;
+            _simulatedScroll = newScroll;
+        }
+
+        /// <summary>
+        /// Programmatically turns on pointer over game object simulation
+        /// </summary>
+        public static void SimulatePointerOverGameObject()
+        {
+            _simulatePointerOverGameObject = true;
+        }  
 
         /// <summary>
         /// Programmatically turns off cursor simulation.
@@ -217,5 +259,22 @@ namespace BH
             _isSimulatingKeyDown = false;
             _isSimulatingKeyUp = false;
         }
+
+        /// <summary>
+        /// Programmatically turns off scrolling simulation
+        /// </summary>
+        public static void DisableScrollSimulation()
+        {
+            _isSimulatingScroll = false;
+        }
+
+        /// <summary>
+        /// Programmatically turns off pointer over game object detection
+        /// </summary>
+        public static void DisableSimulatePointerOverGameObject()
+        {
+            _simulatePointerOverGameObject = false;
+        }  
+
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace BH
 {
@@ -116,14 +115,14 @@ namespace BH
                 return;
             }
 
-            _selectDown = InputManager.GetKeyDown("Attack2") && !EventSystem.current.IsPointerOverGameObject();
+            _selectDown = InputManager.GetKeyDown("Attack2") && !InputManager.IsPointerOverGameObject();
             _selectUp = InputManager.GetKeyUp("Attack2");
-            _pickupDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
+            _pickupDown = InputManager.GetKeyDown("Attack1") && !InputManager.IsPointerOverGameObject();
             _pickupUp = InputManager.GetKeyUp("Attack1");
-            _spawnSelectableDown = InputManager.GetKeyDown("Attack1") && !EventSystem.current.IsPointerOverGameObject();
+            _spawnSelectableDown = InputManager.GetKeyDown("Attack1") && !InputManager.IsPointerOverGameObject();
             _spawnSelectableUp = InputManager.GetKeyUp("Attack1");
             _mouseholddown = InputManager.GetKey("Attack1");
-            _scrollWheel = Input.GetAxisRaw("Mouse ScrollWheel") * 10f;
+            _scrollWheel = InputManager.GetScroll() * 10f;
             _undoDown = InputManager.GetKeyDown("Undo");
             _upOrSide = InputManager.GetKeyDown("Toggle Rotation Axis");
             _matChange = InputManager.GetKeyDown("Change Material");
@@ -167,14 +166,6 @@ namespace BH
             RaycastHit hitInfo;
 
             timer += Time.deltaTime;
-
-            if (_selectDown)
-            {
-                Debug.Log("cursor pos: "+InputManager.GetCursorPos());
-                List<Selectable> activeSels = SelectableManager.Instance.GetActiveSelectables();
-                Debug.Log("sel pos: "+activeSels[0]);
-                Debug.Log("detected hovering over selectable? :"+Physics.Raycast(ray, out hitInfo, _distance, _selectableMask));
-            }
 
             // Undo last action
             if (_undoDown)
@@ -277,9 +268,7 @@ namespace BH
                     pickedUpSelectable._selectable._rigidbody.velocity = diff.normalized * _velocityCurve.Evaluate(diff.magnitude / _maxVelocityDistance) * _maxVelocity;
                 }
             }
-            else if (HandleRectSelection()) {
-                Debug.Log("rect select condition");
-             }
+            else if (HandleRectSelection()) {}
             else if (_pickupDown && Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
                 // Get a reference to the Selectable that you hit with the raycast.
@@ -374,7 +363,6 @@ namespace BH
             //}
             else if (_selectDown && Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
             {
-                Debug.Log("bingo");
                 Selectable selectable = hitInfo.collider.GetComponentInChildren<Selectable>();
                 if (selectable.IsSelected()) // Already selected? Then deselect it.
                 {
@@ -385,7 +373,7 @@ namespace BH
                     Select(selectable);
                 }
             }
-            else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
+            else if (_spawningSelectable && _spawnSelectableDown && _locks.Count <= 0 && !InputManager.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask) && !_dragMode)
             {
                 // "Spawning pastables" is a special case of "spawning selectable".
                 if (_spawningPastables) // Player wants to spawn (possibly) multiple selectables.
@@ -422,7 +410,7 @@ namespace BH
 
             if (_dragMode)
             {
-                if ( _mouseholddown && timer >= timeBetweenDominoes && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
+                if ( _mouseholddown && timer >= timeBetweenDominoes && _locks.Count <= 0 && !InputManager.IsPointerOverGameObject() && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                 {
                     // Spawn a selectable if the player requests.
                     Selectable newSel = SelectableManager.Instance.SpawnSelectable(hitInfo.point, _spawnRotation);
@@ -439,7 +427,7 @@ namespace BH
 
             //    // show ghost preview of pasted dominos    
             //    if (_ghostSelectablesToPaste.Count > 0 && _pickedUpSelectables.Count <= 0 && _locks.Count <= 0 
-            //        && !EventSystem.current.IsPointerOverGameObject()
+            //        && !InputManager.IsPointerOverGameObject()
             //        // && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) <-- Removed for smoother hovering
             //        && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
             //    {
@@ -480,7 +468,7 @@ namespace BH
                     Transform[] pastablesTransforms = _ghostSelectablesToPaste.Select(p => p.transform).ToArray();
                     Vector3 currentGhostCenter = FindCenter(pastablesTransforms);
 
-                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !InputManager.IsPointerOverGameObject()
                         && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
                         && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                     {
@@ -511,7 +499,7 @@ namespace BH
                 {
                     Vector3 newGhostPosition = _theMiddleOfNowhere;
 
-                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !EventSystem.current.IsPointerOverGameObject()
+                    if (_pickedUpSelectables.Count <= 0 && _locks.Count <= 0 && !InputManager.IsPointerOverGameObject()
                         && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask)
                         && Physics.Raycast(ray, out hitInfo, _distance, _spawnableSurfaceMask))
                     {
