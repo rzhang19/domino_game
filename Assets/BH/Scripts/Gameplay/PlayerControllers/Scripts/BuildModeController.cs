@@ -289,14 +289,81 @@ namespace BH
             {
                 if (_dragUp)
                 {
+                    List<Vector3> vertices = new List<Vector3>(_dragVertices);
+
                     _isDragging = false;
                     _dragVertices.Clear();
                     SetLineRendererPositions(_dragVertices.ToArray());
+
+                    // Guy released curve.
+                    if (vertices.Count >= 4)
+                    {
+                        int fourth = Mathf.FloorToInt(vertices.Count / 3f);
+                        int firstIndex = 0;
+                        int secondIndex = firstIndex + fourth;
+                        int thirdIndex = secondIndex + fourth;
+                        int fourthIndex = vertices.Count - 1;
+
+                        Vector3 firstPoint = vertices[firstIndex];
+                        Vector3 secondPoint = vertices[secondIndex];
+                        Vector3 thirdPoint = vertices[thirdIndex];
+                        Vector3 fourthPoint = vertices[fourthIndex];
+
+                        BezierCurve cubicBezier = new BezierCurve(firstPoint, secondPoint, thirdPoint, fourthPoint);
+
+                        float estimatedLength = 0f;
+                        int numSteps = 20; // Brute force arc length.
+                        for (int i = 0; i < numSteps; i++)
+                        {
+                            estimatedLength += (cubicBezier.ValueAt((i + 1) / numSteps) - cubicBezier.ValueAt(i / numSteps)).magnitude;
+                        }
+
+                        float distanceBetweenDominoes = 1f;
+                        int numDominoes = Mathf.FloorToInt(estimatedLength / distanceBetweenDominoes);
+
+                        for (float i = 0f; i < estimatedLength; i += distanceBetweenDominoes)
+                        {
+                            float t = i / estimatedLength;
+                            Vector3 spawnPoint = cubicBezier.ValueAt(t);
+                            Vector3 spawnDirection = cubicBezier.TangentAt(t);
+                            Debug.DrawRay(spawnPoint, spawnDirection, Color.white, 1f, false);
+
+                            Quaternion spawnRotation = Quaternion.LookRotation(spawnDirection);
+
+                            Selectable newlyAdded = SelectableManager.Instance.SpawnSelectable(spawnPoint, spawnRotation);
+                            SaveAddActionOf(new List<Selectable>(new Selectable[] { newlyAdded }));
+                        }
+                    }
+
                 }
                 else if (Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask) && ((hitInfo.point - _dragVertices.Last()).magnitude > _minimumDistanceBetweenDragVertices))
                 {
                     _dragVertices.Add(hitInfo.point);
-                    SetLineRendererPositions(_dragVertices.ToArray());
+
+                    List<Vector3> bezierVertices = new List<Vector3>();
+                    if (_dragVertices.Count >= 4)
+                    {
+                        int fourth = Mathf.FloorToInt(_dragVertices.Count / 3f);
+                        int firstIndex = 0;
+                        int secondIndex = firstIndex + fourth;
+                        int thirdIndex = secondIndex + fourth;
+                        int fourthIndex = _dragVertices.Count - 1;
+
+                        Vector3 firstPoint = _dragVertices[firstIndex];
+                        Vector3 secondPoint = _dragVertices[secondIndex];
+                        Vector3 thirdPoint = _dragVertices[thirdIndex];
+                        Vector3 fourthPoint = _dragVertices[fourthIndex];
+
+                        BezierCurve cubicBezier = new BezierCurve(firstPoint, secondPoint, thirdPoint, fourthPoint);
+                        
+                        int numSteps = 20;
+                        for (int i = 0; i <= numSteps; i++)
+                        {
+                            bezierVertices.Add(cubicBezier.ValueAt((float)i / numSteps));
+                        }
+                    }
+                    
+                    SetLineRendererPositions(bezierVertices.ToArray());
                 }
             }
             else if (HandleRectSelection()) { }
@@ -435,7 +502,7 @@ namespace BH
                 // Clicked on an area without any dominoes => deselect all!
                 DeselectAll();
             }
-            else if (_dragDown && !_isDragging && Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask) && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask))
+            else if (_dragDown && !_isDragging && !Physics.Raycast(ray, out hitInfo, _distance, _selectableMask) && Physics.Raycast(ray, out hitInfo, _distance, _selectableSurfaceMask))
             {
                 _isDragging = true;
                 _dragVertices.Add(hitInfo.point);

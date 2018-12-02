@@ -86,7 +86,8 @@ namespace BH
         public Selectable SpawnSelectable(Vector3 pos, Quaternion rot)
         {
             Selectable sel = _selectablePrefab.Get<Selectable>(null, pos, rot);
-            sel.transform.position = pos;
+            //sel.transform.position = pos;
+            //sel.transform.rotation = rot;
             sel.SetVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
             sel.SetAngularVelocity(Vector3.zero); // Need to reset velocity because we're using object pooling.
 
