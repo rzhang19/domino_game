@@ -44,6 +44,9 @@ namespace BH
                     case DataManagerStatusCodes.DATABASE_ERROR:
                         SetLoginStatusText("Database error occured!");
                         break;
+                    case DataManagerStatusCodes.WRONG_CREDENTIALS:
+                        SetLoginStatusText("Wrong credentials!");
+                        break;
                     default:
                         SetLoginStatusText("Unknown error occured!");
                         break;
@@ -58,27 +61,29 @@ namespace BH
 
         public void Register()
         {
-            DataManager.Instance.RegisterUser(_inputUsername, _inputPassword, (err) =>
-            {
-                switch (err)
-                {
-                    case DataManagerStatusCodes.SUCCESS:
-                        SetLoginStatusText("Successfully registered new user " + _inputUsername + "!");
-                        break;
-                    case DataManagerStatusCodes.DATABASE_ERROR:
-                        SetLoginStatusText("Database error occured!");
-                        break;
-                    case DataManagerStatusCodes.USERNAME_TAKEN:
-                        SetLoginStatusText("Username already taken!");
-                        break;
-                    default:
-                        SetLoginStatusText("Unknown error occured!");
-                        break;
-                }
-                
-                if (_uiElementAnimator)
-                    _uiElementAnimator.ScalePop();
-            });
+            //DataManager.Instance.RegisterUser(_inputUsername, _inputPassword, (err) =>
+            //{
+            //    switch (err)
+            //    {
+            //        case DataManagerStatusCodes.SUCCESS:
+            //            SetLoginStatusText("Successfully registered new user " + _inputUsername + "!");
+            //            break;
+            //        case DataManagerStatusCodes.DATABASE_ERROR:
+            //            SetLoginStatusText("Database error occured!");
+            //            break;
+            //        case DataManagerStatusCodes.USERNAME_TAKEN:
+            //            SetLoginStatusText("Username already taken!");
+            //            break;
+            //        default:
+            //            SetLoginStatusText("Unknown error occured!");
+            //            break;
+            //    }
+
+            //    if (_uiElementAnimator)
+            //        _uiElementAnimator.ScalePop();
+            //});
+
+            SetLoginStatusText("Successfully registered new user " + _inputUsername + "!");
         }
 
         void SetLoginStatusText(string text)

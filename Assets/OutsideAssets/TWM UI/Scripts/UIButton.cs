@@ -149,5 +149,36 @@ namespace TWM.UI
             else
                 Enable();
         }
+
+        // Invoke functions for tests.
+        public void OnButtonDownInvoke()
+        {
+            _onButtonDown.Invoke();
+        }
+
+        public void OnButtonUpInvoke()
+        {
+            _onButtonUp.Invoke();
+        }
+
+        public void OnButtonEnterInvoke()
+        {
+            _onButtonEnter.Invoke();
+        }
+
+        public void OnButtonExitInvoke()
+        {
+            _onButtonExit.Invoke();
+        }
+
+        public void OnToggleOnInvoke()
+        {
+            _onToggleOn.Invoke();
+        }
+
+        public void OnToggleOffInvoke()
+        {
+            _onToggleOff.Invoke();
+        }
     }
 }

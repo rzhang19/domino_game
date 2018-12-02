@@ -14,7 +14,8 @@ namespace BH
     {
         SUCCESS,
         DATABASE_ERROR,
-        USERNAME_TAKEN
+        USERNAME_TAKEN,
+        WRONG_CREDENTIALS
     }
     
     public delegate void DataReturnStatusDelegate(Data data, DataManagerStatusCodes err);
@@ -36,30 +37,30 @@ namespace BH
         {
             connectionString = "URI=file:" + Application.dataPath + "/DominoesDB.sqlite";
             
-            // ------ Example usage of DataManager ------- //
-            string myUsername = "BobbyJoe2003";
-            string myPassword = "meowmeow";
-            Data myData = new Data();
+            //// ------ Example usage of DataManager ------- //
+            //string myUsername = "BobbyJoe2003";
+            //string myPassword = "meowmeow";
+            //Data myData = new Data();
             
-            DataManager.Instance.SaveData(myUsername, myPassword, (err) => {
-                if (err != DataManagerStatusCodes.SUCCESS)
-                    Debug.LogError("Couldn't register user!");
-            });
+            //DataManager.Instance.SaveData(myUsername, myPassword, (err) => {
+            //    if (err != DataManagerStatusCodes.SUCCESS)
+            //        Debug.LogError("Couldn't register user!");
+            //});
             
-            DataManager.Instance.SaveData(myUsername, myPassword, myData, (err) => {
-                if (err != DataManagerStatusCodes.SUCCESS)
-                    Debug.LogError("Couldn't save data!");
-            });
+            //DataManager.Instance.SaveData(myUsername, myPassword, myData, (err) => {
+            //    if (err != DataManagerStatusCodes.SUCCESS)
+            //        Debug.LogError("Couldn't save data!");
+            //});
             
-            DataManager.Instance.GetData(myUsername, myPassword, (data, err) => {
-                if (err != DataManagerStatusCodes.SUCCESS)
-                    Debug.LogError("Couldn't retrieve data!");
-                else
-                    Debug.Log("Retrieved data: " + data);
-            });
+            //DataManager.Instance.GetData(myUsername, myPassword, (data, err) => {
+            //    if (err != DataManagerStatusCodes.SUCCESS)
+            //        Debug.LogError("Couldn't retrieve data!");
+            //    else
+            //        Debug.Log("Retrieved data: " + data);
+            //});
 
-            DataManager.Instance.DeleteUser(myUsername);
-            // ------------------------------------------- //
+            //DataManager.Instance.DeleteUser(myUsername);
+            //// ------------------------------------------- //
         }
 
         // The only public function with direct access to database
@@ -92,14 +93,16 @@ namespace BH
         {
             Debug.Log("GetData");
 
-            if(password != GetUserPassword(username))
+            if (password != GetUserPassword(username))
             {
                 Debug.Log("Entered password is incorrect!");
+                callback(null, DataManagerStatusCodes.WRONG_CREDENTIALS);
                 return;
             }
 
             // Get JSON representing save data from database.
-            string jsonData = GetSaveState(username, password); // Getting data will probably be asynchronous, unlike this line of code.
+            //string jsonData = GetSaveState(username, password); // Getting data will probably be asynchronous, unlike this line of code.
+            string jsonData = GetSaveState(username);
 
             // Convert JSON into a data object.
             Data data = JsonUtility.FromJson<Data>(jsonData);
@@ -259,11 +262,11 @@ namespace BH
             return s;
         }
 
-    // Adds new data to existing user or creates new one
-        private void AddOrUpdateUser(string id, string pw, string save_state)
+        // Adds new data to existing user or creates new one
+        public void AddOrUpdateUser(string id, string pw, string save_state)
         {
             // TODO: Test if this function properly updates existing users
-            if(IsUser(id)) && (pw = GetUserPassword(id))
+            if(IsUser(id) && pw == GetUserPassword(id))
             {
                 Debug.Log("Updating existing user");
                 using (IDbConnection dbConnection = new SqliteConnection(connectionString))

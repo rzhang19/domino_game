@@ -45,13 +45,12 @@ namespace BH
 
             //_renderer.sharedMaterial = materials[0];
             _originalColor = _renderer.material.GetColor("_AlbedoColor");
-            _color = GetRandomColor();
         }
 
         void OnEnable()
         {
             Deselect();
-            SetColor(_color); //ResetColor();
+            //SetColor(_color); //ResetColor();
             ResetVelocities();
         }
 
@@ -198,10 +197,10 @@ namespace BH
             //_renderer.sharedMaterial = materials[Mathf.Abs(matNumber) % materials.Length];
         }
 
-        /// Returns a random color
-        Color GetRandomColor()
-        {
-            return new Color(Random.value, Random.value, Random.value);
-        }
+        ///// Returns a random color
+        //Color GetRandomColor()
+        //{
+        //    return new Color(Random.value, Random.value, Random.value);
+        //}
     }
 }
