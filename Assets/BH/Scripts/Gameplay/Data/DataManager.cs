@@ -153,12 +153,16 @@ namespace BH
         }
 
         /// <summary>Wrapper for GetData that uses the currently loaded user.</summary>
-        /// <param name="callback">The callback that takes the data as an argument.</param>
+        /// <param name="callback">The callback that takes an error code as an argument.</param>
         public void SaveData(Data data, ReturnStatusDelegate callback)
         {
             SaveData(_currentUsername, _currentPassword, data, callback);
         }
 
+        /// <summary>Asynchronous function to register a user in the database.</summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="callback">The callback that takes an error code as an argument.</param>
         public void RegisterUser(string username, string password, ReturnStatusDelegate callback)
         {
             // Make a user with fresh data.
