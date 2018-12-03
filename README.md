@@ -87,4 +87,9 @@ int Foo (int param1)
 We used the same format for classes and functions.
 
 ### Notes
-We were using Unity Collab, but stopped halfway through because there were some problems.
+We were using Unity Collab, but stopped halfway through because there were some problems. All source control is now done completely in this Github repository.
+
+### Set up
+To set up your environment using Unity, download Unity. We are working on Version 2018.2.14f1.
+
+Download the ZIP folder and unzip. When opening up Unity, you'll see your current projects. To find this project, click on the "Open" button in the upper right. Navigate to the location where you unzipped your files, and click on the folder "domino_game-master". Do not go into the folder, just click the fodler and click "Select Folder". The project should now open.
