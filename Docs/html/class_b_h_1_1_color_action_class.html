@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>domino-simulator: BH.ColorActionClass Class Reference</title>
+<title>Domino Simulator: BH.ColorActionClass Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,8 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">domino-simulator
+   <div id="projectname">Domino Simulator
+   &#160;<span id="projectnumber">0.0.1</span>
    </div>
+   <div id="projectbrief">A sandbox game where you play with dominoes.</div>
   </td>
  </tr>
  </tbody>
@@ -86,6 +88,7 @@ $(document).ready(function(){initNavTree('class_b_h_1_1_color_action_class.html'
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="class_b_h_1_1_color_action_class-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -101,7 +104,7 @@ Inheritance diagram for BH.ColorActionClass:</div>
  <div class="center">
   <img src="class_b_h_1_1_color_action_class.png" usemap="#BH.ColorActionClass_map" alt=""/>
   <map id="BH.ColorActionClass_map" name="BH.ColorActionClass_map">
-<area href="class_b_h_1_1_action_class.html" title="Represents an action that can be performed on targets, e.g. " alt="BH.ActionClass" shape="rect" coords="0,0,131,24"/>
+<area href="interface_b_h_1_1_action_interface.html" title="Represents an action that can be performed on targets, e.g. " alt="BH.ActionInterface" shape="rect" coords="0,0,131,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -110,15 +113,43 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6daa2a4f0245da537496469020682090"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_color_action_class.html#a6daa2a4f0245da537496469020682090">Init</a> (List&lt; <a class="el" href="class_b_h_1_1_selectable.html">Selectable</a> &gt; targets, List&lt; Color &gt; oldProperties)</td></tr>
 <tr class="memdesc:a6daa2a4f0245da537496469020682090"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a 1-to-1 mapping between targets and their to-be-saved colors.  <a href="#a6daa2a4f0245da537496469020682090">More...</a><br /></td></tr>
 <tr class="separator:a6daa2a4f0245da537496469020682090"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6a38cc1b1b83d74abfa70593ccefc8d"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_color_action_class.html#aa6a38cc1b1b83d74abfa70593ccefc8d">Undo</a> ()</td></tr>
-<tr class="memdesc:aa6a38cc1b1b83d74abfa70593ccefc8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores each target to their mapped color.  <a href="#aa6a38cc1b1b83d74abfa70593ccefc8d">More...</a><br /></td></tr>
-<tr class="separator:aa6a38cc1b1b83d74abfa70593ccefc8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff56d43e9d7a69d4962cf2667270e4a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_color_action_class.html#aff56d43e9d7a69d4962cf2667270e4a1">Undo</a> ()</td></tr>
+<tr class="memdesc:aff56d43e9d7a69d4962cf2667270e4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores each target to their mapped color.  <a href="#aff56d43e9d7a69d4962cf2667270e4a1">More...</a><br /></td></tr>
+<tr class="separator:aff56d43e9d7a69d4962cf2667270e4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2f670570d4e7aeeb36c86f34ba6595b"><td class="memItemLeft" align="right" valign="top">List&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_color_action_class.html#ad2f670570d4e7aeeb36c86f34ba6595b">GetTargetIDs</a> ()</td></tr>
+<tr class="memdesc:ad2f670570d4e7aeeb36c86f34ba6595b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the list containing the instance IDs of the Selectables targeted by this action.  <a href="#ad2f670570d4e7aeeb36c86f34ba6595b">More...</a><br /></td></tr>
+<tr class="separator:ad2f670570d4e7aeeb36c86f34ba6595b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e975431ccd48425f18426fb9337e676"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_color_action_class.html#a6e975431ccd48425f18426fb9337e676">UpdateInstance</a> (int oldID, <a class="el" href="class_b_h_1_1_selectable.html">Selectable</a> newInstance)</td></tr>
+<tr class="memdesc:a6e975431ccd48425f18426fb9337e676"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the requested <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a>'s instance if relevant to this action.  <a href="#a6e975431ccd48425f18426fb9337e676">More...</a><br /></td></tr>
+<tr class="separator:a6e975431ccd48425f18426fb9337e676"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents the action of coloring one or more targets. </p>
 <p>Used to save and revert to a specific domino coloring. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_b_h_1_1_action_class.html" title="Represents an action that can be performed on targets, e.g. ">BH.ActionClass</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd>BH.ActionClass</dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad2f670570d4e7aeeb36c86f34ba6595b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2f670570d4e7aeeb36c86f34ba6595b">&#9670;&nbsp;</a></span>GetTargetIDs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;int&gt; BH.ColorActionClass.GetTargetIDs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Getter for the list containing the instance IDs of the Selectables targeted by this action. </p>
+<dl class="section return"><dt>Returns</dt><dd>A <code>List&lt;int&gt;</code> of the targets' instance IDs. </dd></dl>
+
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#a1dbbe3420379a36767906ef04bff14fc">BH.ActionInterface</a>.</p>
+
+</div>
+</div>
 <a id="a6daa2a4f0245da537496469020682090"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6daa2a4f0245da537496469020682090">&#9670;&nbsp;</a></span>Init()</h2>
 
@@ -157,38 +188,69 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa6a38cc1b1b83d74abfa70593ccefc8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6a38cc1b1b83d74abfa70593ccefc8d">&#9670;&nbsp;</a></span>Undo()</h2>
+<a id="aff56d43e9d7a69d4962cf2667270e4a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff56d43e9d7a69d4962cf2667270e4a1">&#9670;&nbsp;</a></span>Undo()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">override void BH.ColorActionClass.Undo </td>
+          <td class="memname">void BH.ColorActionClass.Undo </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Restores each target to their mapped color. </p>
 <p>Cannot reverse once executed. </p>
 
-<p>Implements <a class="el" href="class_b_h_1_1_action_class.html#afdcc0b293cc74b258a982925eee38532">BH.ActionClass</a>.</p>
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#ae481079f61e3811c6d965e514e443ef6">BH.ActionInterface</a>.</p>
+
+</div>
+</div>
+<a id="a6e975431ccd48425f18426fb9337e676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e975431ccd48425f18426fb9337e676">&#9670;&nbsp;</a></span>UpdateInstance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BH.ColorActionClass.UpdateInstance </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>oldID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_b_h_1_1_selectable.html">Selectable</a>&#160;</td>
+          <td class="paramname"><em>newInstance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates the requested <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a>'s instance if relevant to this action. </p>
+<p>Useful if instance changes. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">oldID</td><td>ID of the old <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a> instance, as returned by Unity's Object.GetInstanceID(). </td></tr>
+    <tr><td class="paramname">newInstance</td><td>New <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a> instance to update to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#a81a772859cc098421d039ac1feb17569">BH.ActionInterface</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/Gladys/UCLA/f'18/cs130/domino-simulator/Assets/BH/Scripts/Gameplay/ActionClass/<a class="el" href="_color_action_class_8cs.html">ColorActionClass.cs</a></li>
+<li>C:/Users/huabr/Documents/GitHub/domino_game/Assets/BH/Scripts/Gameplay/ActionHistory/<a class="el" href="_color_action_class_8cs.html">ColorActionClass.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -196,7 +258,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_b_h.html">BH</a></li><li class="navelem"><a class="el" href="class_b_h_1_1_color_action_class.html">ColorActionClass</a></li>
-    <li class="footer">Generated on Thu Nov 15 2018 23:15:23 for domino-simulator by
+    <li class="footer">Generated on Mon Dec 3 2018 02:36:07 for Domino Simulator by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['delete',['Delete',['../class_b_h_1_1_selectable.html#a97a9f156962ccb9ef976fc576dc0b230',1,'BH.Selectable.Delete()'],['../class_b_h_1_1_select_controller.html#a8f252a870d0c1d308125126157b31143',1,'BH.SelectController.Delete()']]],
-  ['deselect',['Deselect',['../class_b_h_1_1_selectable.html#a78c12861cfd23cbe52ca1d54b7899c9c',1,'BH::Selectable']]],
-  ['despawnallselectable',['DespawnAllSelectable',['../class_b_h_1_1_selectable_manager.html#afe561ca2621d0c77689c4a0504ce805f',1,'BH::SelectableManager']]],
-  ['despawnselectable',['DespawnSelectable',['../class_b_h_1_1_selectable_manager.html#a397fb65833292644232b71da680cc1c0',1,'BH::SelectableManager']]],
-  ['despawnselected',['DespawnSelected',['../class_b_h_1_1_build_mode_controller.html#ae084546942c08ae590f2b9b48cfc38df',1,'BH::BuildModeController']]],
-  ['doxyrunner',['DoxyRunner',['../class_doxy_runner.html#aed7742f6732027e7427393d727898eba',1,'DoxyRunner']]]
+  ['changecolor',['ChangeColor',['../class_b_h_1_1_build_mode_controller.html#a6e92ee002537d0e1fa6fe533ea5364a7',1,'BH.BuildModeController.ChangeColor()'],['../class_b_h_1_1_select_controller.html#a6214835826fadfce02424ddb4f6116a9',1,'BH.SelectController.ChangeColor()'],['../class_b_h_1_1_build_mode_u_i.html#acb048bf00bbb583608cf8d0f43ce60f4',1,'BH.BuildModeUI.ChangeColor()']]],
+  ['changematerial',['ChangeMaterial',['../class_b_h_1_1_build_mode_controller.html#a29515f868001e38fbcb50c2621c7eec3',1,'BH::BuildModeController']]],
+  ['changeskybox',['ChangeSkybox',['../class_skybox_changer.html#abe4f2425fe2c91293b6700c43cceb40b',1,'SkyboxChanger']]],
+  ['clampangle',['ClampAngle',['../class_smooth_mouse_look.html#a5b3f10a87328753fd50b88abc647ff94',1,'SmoothMouseLook']]],
+  ['cleanup',['Cleanup',['../class_domino_manipulation.html#a8868e0e863cf49e0332a1a28aa8d9813',1,'DominoManipulation.Cleanup()'],['../class_login.html#ad9c9fa829911a28c2dbc4608504a462d',1,'Login.Cleanup()'],['../class_spectator_mode_u_i.html#ad711601e03dbc44c4dc9e93c78480cf7',1,'SpectatorModeUI.Cleanup()'],['../class_switching_modes_u_i.html#acd544742843bb8cef90d2c04355c6616',1,'SwitchingModesUI.Cleanup()'],['../class_domino_renders.html#ab6f8535cdc8dcc3af52ed56f76937c16',1,'DominoRenders.Cleanup()'],['../class_main_menu_renders.html#a1a83edcc065e2fcdbab5c70e32f320dd',1,'MainMenuRenders.Cleanup()'],['../class_mass_selection_rect_renders.html#ab847464c225481149b97f02401ed7ac8',1,'MassSelectionRectRenders.Cleanup()'],['../class_switching_modes.html#a79505f59981cfe95ab78fcfda4a3e41f',1,'SwitchingModes.Cleanup()'],['../class_selectable.html#a9f6432a9feabb88bf9b7e34597ff912f',1,'Selectable.Cleanup()'],['../class_selectable_manager_class.html#aa91c4c366fc2ab074fb1d242c103a954',1,'SelectableManagerClass.Cleanup()']]],
+  ['clickuibutton',['ClickUIButton',['../class_utility.html#a735c874a6430b62ec6c354b76387eefd',1,'Utility']]],
+  ['customtransform',['CustomTransform',['../struct_b_h_1_1_custom_transform.html#a7061246e0ceb1d46493f8e2698795c41',1,'BH::CustomTransform']]]
 ];

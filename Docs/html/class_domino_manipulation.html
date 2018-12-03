@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>domino-simulator: DominoManipulation Class Reference</title>
+<title>Domino Simulator: DominoManipulation Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,8 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">domino-simulator
+   <div id="projectname">Domino Simulator
+   &#160;<span id="projectnumber">0.0.1</span>
    </div>
+   <div id="projectbrief">A sandbox game where you play with dominoes.</div>
   </td>
  </tr>
  </tbody>
@@ -92,34 +94,59 @@ $(document).ready(function(){initNavTree('class_domino_manipulation.html','');})
 <div class="title">DominoManipulation Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Includes tests for domino manipulation triggered by the user.  
+ <a href="class_domino_manipulation.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab30b7400e5242941a21cf4ca8a7de8a8"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#ab30b7400e5242941a21cf4ca8a7de8a8">_Adds_New_Domino</a> ()</td></tr>
-<tr class="memdesc:ab30b7400e5242941a21cf4ca8a7de8a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should click a button to add a domino that's tracked by the SelectableManager class.  <a href="#ab30b7400e5242941a21cf4ca8a7de8a8">More...</a><br /></td></tr>
-<tr class="separator:ab30b7400e5242941a21cf4ca8a7de8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a690bc58f3ef1e030bd23a6603107bcff"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a690bc58f3ef1e030bd23a6603107bcff">_Selects_Domino</a> ()</td></tr>
-<tr class="memdesc:a690bc58f3ef1e030bd23a6603107bcff"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should be able to select a single domino.  <a href="#a690bc58f3ef1e030bd23a6603107bcff">More...</a><br /></td></tr>
-<tr class="separator:a690bc58f3ef1e030bd23a6603107bcff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abeb3b800c77810ec01c0736a070fa7cd"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#abeb3b800c77810ec01c0736a070fa7cd">_Deletes_Selected_Dominos</a> ()</td></tr>
-<tr class="memdesc:abeb3b800c77810ec01c0736a070fa7cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should click a button to delete all selected dominos.  <a href="#abeb3b800c77810ec01c0736a070fa7cd">More...</a><br /></td></tr>
-<tr class="separator:abeb3b800c77810ec01c0736a070fa7cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a539a60b45c5ae57ae07c8b9d4c44dca4"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a539a60b45c5ae57ae07c8b9d4c44dca4">_Saves_Dominos</a> ()</td></tr>
-<tr class="memdesc:a539a60b45c5ae57ae07c8b9d4c44dca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should click a button to save all dominos' current transforms (i.e.  <a href="#a539a60b45c5ae57ae07c8b9d4c44dca4">More...</a><br /></td></tr>
-<tr class="separator:a539a60b45c5ae57ae07c8b9d4c44dca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a081977c6dffb7a624bb36ed67169e058"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a081977c6dffb7a624bb36ed67169e058">_Recolors_Selected_Dominos</a> ()</td></tr>
-<tr class="memdesc:a081977c6dffb7a624bb36ed67169e058"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should change the colors of selected dominos by adjusting an RGB slider.  <a href="#a081977c6dffb7a624bb36ed67169e058">More...</a><br /></td></tr>
-<tr class="separator:a081977c6dffb7a624bb36ed67169e058"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19302c93b46f49fc2d485768c55b231c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a19302c93b46f49fc2d485768c55b231c">Init</a> ()</td></tr>
+<tr class="separator:a19302c93b46f49fc2d485768c55b231c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8868e0e863cf49e0332a1a28aa8d9813"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a8868e0e863cf49e0332a1a28aa8d9813">Cleanup</a> ()</td></tr>
+<tr class="separator:a8868e0e863cf49e0332a1a28aa8d9813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeee8643bb2432cdcb704b997ede096c"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#abeee8643bb2432cdcb704b997ede096c">_Adds_New_Domino_UI</a> ()</td></tr>
+<tr class="memdesc:abeee8643bb2432cdcb704b997ede096c"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should click "Toggle Spawnables" button, then click on screen to add a domino that's tracked by the SelectableManager class.  <a href="#abeee8643bb2432cdcb704b997ede096c">More...</a><br /></td></tr>
+<tr class="separator:abeee8643bb2432cdcb704b997ede096c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2311a01817d3a544931699206e708a43"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a2311a01817d3a544931699206e708a43">_Selects_Domino_UI</a> ()</td></tr>
+<tr class="memdesc:a2311a01817d3a544931699206e708a43"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should be able to right-click on a domino on the screen to select it.  <a href="#a2311a01817d3a544931699206e708a43">More...</a><br /></td></tr>
+<tr class="separator:a2311a01817d3a544931699206e708a43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5269f5f6795c540220011ba9573a8d18"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a5269f5f6795c540220011ba9573a8d18">_Deletes_Selected_Dominos_UI</a> ()</td></tr>
+<tr class="memdesc:a5269f5f6795c540220011ba9573a8d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should click a button to delete all selected dominos.  <a href="#a5269f5f6795c540220011ba9573a8d18">More...</a><br /></td></tr>
+<tr class="separator:a5269f5f6795c540220011ba9573a8d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf323fa1f15d9e4645fe397ac5740214"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#abf323fa1f15d9e4645fe397ac5740214">_Saves_Dominos_UI</a> ()</td></tr>
+<tr class="memdesc:abf323fa1f15d9e4645fe397ac5740214"><td class="mdescLeft">&#160;</td><td class="mdescRight">User should click a button to save all dominos' current transforms (i.e.  <a href="#abf323fa1f15d9e4645fe397ac5740214">More...</a><br /></td></tr>
+<tr class="separator:abf323fa1f15d9e4645fe397ac5740214"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a556280d35cc1db74b3ca69b9edee1d5f"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a556280d35cc1db74b3ca69b9edee1d5f">_Recolors_Selected_Dominos_UI</a> ()</td></tr>
+<tr class="memdesc:a556280d35cc1db74b3ca69b9edee1d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">User can change the colors of (programmatically) selected dominos by adjusting an RGB slider (UI).  <a href="#a556280d35cc1db74b3ca69b9edee1d5f">More...</a><br /></td></tr>
+<tr class="separator:a556280d35cc1db74b3ca69b9edee1d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a4d7dc14a78f01889f18de7a9648b4f"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a5a4d7dc14a78f01889f18de7a9648b4f">_Rotates_Selected_Dominos_UI</a> ()</td></tr>
+<tr class="memdesc:a5a4d7dc14a78f01889f18de7a9648b4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">User can rotate the (programmatically) selected dominos by scrolling the mouse wheel.  <a href="#a5a4d7dc14a78f01889f18de7a9648b4f">More...</a><br /></td></tr>
+<tr class="separator:a5a4d7dc14a78f01889f18de7a9648b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a709df4a95db0c9092a2560ffb7ea81e0"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a709df4a95db0c9092a2560ffb7ea81e0">_Click_And_Drag_Selected_Dominos_UI</a> ()</td></tr>
+<tr class="memdesc:a709df4a95db0c9092a2560ffb7ea81e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">User can click and drag selected dominos to change their positions.  <a href="#a709df4a95db0c9092a2560ffb7ea81e0">More...</a><br /></td></tr>
+<tr class="separator:a709df4a95db0c9092a2560ffb7ea81e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a665d2e2460f1dd1932091b7c6bcf4f5f"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a665d2e2460f1dd1932091b7c6bcf4f5f">_Undo_UI</a> ()</td></tr>
+<tr class="memdesc:a665d2e2460f1dd1932091b7c6bcf4f5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">User can undo the changes in color, rotation, position, addition, and deletion of a domino.  <a href="#a665d2e2460f1dd1932091b7c6bcf4f5f">More...</a><br /></td></tr>
+<tr class="separator:a665d2e2460f1dd1932091b7c6bcf4f5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35bd63daba57e02cd64e1432953569b2"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#a35bd63daba57e02cd64e1432953569b2">_Copy_Paste_UI</a> ()</td></tr>
+<tr class="memdesc:a35bd63daba57e02cd64e1432953569b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">User can copy and paste the selected dominos.  <a href="#a35bd63daba57e02cd64e1432953569b2">More...</a><br /></td></tr>
+<tr class="separator:a35bd63daba57e02cd64e1432953569b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8cdcb453be90a82cc2929e263b31c3f"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_domino_manipulation.html#ae8cdcb453be90a82cc2929e263b31c3f">_Mass_Select_UI</a> ()</td></tr>
+<tr class="memdesc:ae8cdcb453be90a82cc2929e263b31c3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">User can right click and drag to create a selectable rectangle that selects all dominos within it.  <a href="#ae8cdcb453be90a82cc2929e263b31c3f">More...</a><br /></td></tr>
+<tr class="separator:ae8cdcb453be90a82cc2929e263b31c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab30b7400e5242941a21cf4ca8a7de8a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab30b7400e5242941a21cf4ca8a7de8a8">&#9670;&nbsp;</a></span>_Adds_New_Domino()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Includes tests for domino manipulation triggered by the user. </p>
+<p>Integration tests between frontend UI, "middleman" BuildModeController, and backend SelectableManager/Selectable classes. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="abeee8643bb2432cdcb704b997ede096c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abeee8643bb2432cdcb704b997ede096c">&#9670;&nbsp;</a></span>_Adds_New_Domino_UI()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">IEnumerator DominoManipulation._Adds_New_Domino </td>
+          <td class="memname">IEnumerator DominoManipulation._Adds_New_Domino_UI </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -127,18 +154,58 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>User should click a button to add a domino that's tracked by the SelectableManager class. </p>
+<p>User should click "Toggle Spawnables" button, then click on screen to add a domino that's tracked by the SelectableManager class. </p>
 
 </div>
 </div>
-<a id="abeb3b800c77810ec01c0736a070fa7cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abeb3b800c77810ec01c0736a070fa7cd">&#9670;&nbsp;</a></span>_Deletes_Selected_Dominos()</h2>
+<a id="a709df4a95db0c9092a2560ffb7ea81e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a709df4a95db0c9092a2560ffb7ea81e0">&#9670;&nbsp;</a></span>_Click_And_Drag_Selected_Dominos_UI()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">IEnumerator DominoManipulation._Deletes_Selected_Dominos </td>
+          <td class="memname">IEnumerator DominoManipulation._Click_And_Drag_Selected_Dominos_UI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>User can click and drag selected dominos to change their positions. </p>
+<p>Unselected dominos shouldn't change. </p>
+
+</div>
+</div>
+<a id="a35bd63daba57e02cd64e1432953569b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35bd63daba57e02cd64e1432953569b2">&#9670;&nbsp;</a></span>_Copy_Paste_UI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerator DominoManipulation._Copy_Paste_UI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>User can copy and paste the selected dominos. </p>
+<p>Pasted dominos can have different positions than the copied ones if placed somewhere else, so ignore positions. But colors and rotations should be the same. </p>
+
+</div>
+</div>
+<a id="a5269f5f6795c540220011ba9573a8d18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5269f5f6795c540220011ba9573a8d18">&#9670;&nbsp;</a></span>_Deletes_Selected_Dominos_UI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerator DominoManipulation._Deletes_Selected_Dominos_UI </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -150,14 +217,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a081977c6dffb7a624bb36ed67169e058"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a081977c6dffb7a624bb36ed67169e058">&#9670;&nbsp;</a></span>_Recolors_Selected_Dominos()</h2>
+<a id="ae8cdcb453be90a82cc2929e263b31c3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8cdcb453be90a82cc2929e263b31c3f">&#9670;&nbsp;</a></span>_Mass_Select_UI()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">IEnumerator DominoManipulation._Recolors_Selected_Dominos </td>
+          <td class="memname">IEnumerator DominoManipulation._Mass_Select_UI </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -165,18 +232,58 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>User should change the colors of selected dominos by adjusting an RGB slider. </p>
+<p>User can right click and drag to create a selectable rectangle that selects all dominos within it. </p>
 
 </div>
 </div>
-<a id="a539a60b45c5ae57ae07c8b9d4c44dca4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a539a60b45c5ae57ae07c8b9d4c44dca4">&#9670;&nbsp;</a></span>_Saves_Dominos()</h2>
+<a id="a556280d35cc1db74b3ca69b9edee1d5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a556280d35cc1db74b3ca69b9edee1d5f">&#9670;&nbsp;</a></span>_Recolors_Selected_Dominos_UI()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">IEnumerator DominoManipulation._Saves_Dominos </td>
+          <td class="memname">IEnumerator DominoManipulation._Recolors_Selected_Dominos_UI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>User can change the colors of (programmatically) selected dominos by adjusting an RGB slider (UI). </p>
+<p>Unselected dominos shouldn't change. </p>
+
+</div>
+</div>
+<a id="a5a4d7dc14a78f01889f18de7a9648b4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a4d7dc14a78f01889f18de7a9648b4f">&#9670;&nbsp;</a></span>_Rotates_Selected_Dominos_UI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerator DominoManipulation._Rotates_Selected_Dominos_UI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>User can rotate the (programmatically) selected dominos by scrolling the mouse wheel. </p>
+<p>Unselected dominos shouldn't change. </p>
+
+</div>
+</div>
+<a id="abf323fa1f15d9e4645fe397ac5740214"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf323fa1f15d9e4645fe397ac5740214">&#9670;&nbsp;</a></span>_Saves_Dominos_UI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerator DominoManipulation._Saves_Dominos_UI </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -185,18 +292,18 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>User should click a button to save all dominos' current transforms (i.e. </p>
-<p>position, rotation, etc). These transforms are restored when the domino layout resets. Todo: trigger layout reset thru keypress input, e.g. switching to spectator mode and back </p>
+<p>position, rotation, etc). These transforms are restored when the domino layout (programmatically) resets. </p>
 
 </div>
 </div>
-<a id="a690bc58f3ef1e030bd23a6603107bcff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a690bc58f3ef1e030bd23a6603107bcff">&#9670;&nbsp;</a></span>_Selects_Domino()</h2>
+<a id="a2311a01817d3a544931699206e708a43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2311a01817d3a544931699206e708a43">&#9670;&nbsp;</a></span>_Selects_Domino_UI()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">IEnumerator DominoManipulation._Selects_Domino </td>
+          <td class="memname">IEnumerator DominoManipulation._Selects_Domino_UI </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -204,13 +311,66 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>User should be able to select a single domino. </p>
-<p>Important for other tests! Todo: switch selection from programmatic to mouse input </p>
+<p>User should be able to right-click on a domino on the screen to select it. </p>
+
+</div>
+</div>
+<a id="a665d2e2460f1dd1932091b7c6bcf4f5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a665d2e2460f1dd1932091b7c6bcf4f5f">&#9670;&nbsp;</a></span>_Undo_UI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">IEnumerator DominoManipulation._Undo_UI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>User can undo the changes in color, rotation, position, addition, and deletion of a domino. </p>
+<p>Changes are stored as a stack. Note that this function assumes all UI changes correctly change domino, which is covered in other integration tests. </p>
+
+</div>
+</div>
+<a id="a8868e0e863cf49e0332a1a28aa8d9813"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8868e0e863cf49e0332a1a28aa8d9813">&#9670;&nbsp;</a></span>Cleanup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DominoManipulation.Cleanup </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a19302c93b46f49fc2d485768c55b231c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19302c93b46f49fc2d485768c55b231c">&#9670;&nbsp;</a></span>Init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DominoManipulation.Init </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/Gladys/UCLA/f'18/cs130/domino-simulator/Assets/PlayModeTests/<a class="el" href="_domino_manipulation_8cs.html">DominoManipulation.cs</a></li>
+<li>C:/Users/huabr/Documents/GitHub/domino_game/Assets/PlayModeTests/IntegrationTests/<a class="el" href="_domino_manipulation_8cs.html">DominoManipulation.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -218,7 +378,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_domino_manipulation.html">DominoManipulation</a></li>
-    <li class="footer">Generated on Thu Nov 15 2018 23:15:23 for domino-simulator by
+    <li class="footer">Generated on Mon Dec 3 2018 02:36:04 for Domino Simulator by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

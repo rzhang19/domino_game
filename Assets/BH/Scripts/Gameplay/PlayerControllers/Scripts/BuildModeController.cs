@@ -886,6 +886,9 @@ namespace BH
         }
     }
 
+    /// <summary>
+    /// Tuple containing a selectable and a positional offset.
+    /// </summary>
     class PickedUpSelectable
     {
         public PickedUpSelectable(Selectable selectable, Vector3 offset)
@@ -898,14 +901,14 @@ namespace BH
         public Vector3 _offset;
     }
 
-    class SelectableInfo
-    {
-        public SerializableTransform transform;
-        public Color color;
-        public SelectableInfo(SerializableTransform transform, Color color)
-        {
-            this.transform = transform;
-            this.color = color;
-        }
-    }
+    //class SelectableInfo
+    //{
+    //    public SerializableTransform transform;
+    //    public Color color;
+    //    public SelectableInfo(SerializableTransform transform, Color color)
+    //    {
+    //        this.transform = transform;
+    //        this.color = color;
+    //    }
+    //}
 }

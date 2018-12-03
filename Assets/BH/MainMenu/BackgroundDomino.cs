@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// Class for orchestrating main menu background domino behavior.
+    /// </summary>
+    /// <seealso cref="UnityEngine.MonoBehaviour" />
     [RequireComponent(typeof(Animator))]
     public class BackgroundDomino : MonoBehaviour
     {

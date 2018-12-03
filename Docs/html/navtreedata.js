@@ -23,17 +23,22 @@ for the JavaScript code in this file
 */
 var NAVTREE =
 [
-  [ "domino-simulator", "index.html", [
+  [ "Domino Simulator", "index.html", [
     [ "Packages", "namespaces.html", [
-      [ "Packages", "namespaces.html", "namespaces_dup" ]
+      [ "Packages", "namespaces.html", "namespaces_dup" ],
+      [ "Package Functions", "namespacemembers.html", [
+        [ "All", "namespacemembers.html", null ],
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Enumerations", "namespacemembers_enum.html", null ]
+      ] ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
-        [ "Functions", "functions_func.html", null ],
+        [ "All", "functions.html", "functions_dup" ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Properties", "functions_prop.html", null ],
@@ -48,8 +53,9 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_action_class_8cs.html",
-"dir_796094610810582ffb0e7b5d5082639d.html"
+"_action_history_8cs.html",
+"class_b_h_1_1_select_controller.html#a6214835826fadfce02424ddb4f6116a9",
+"class_t_w_m_1_1_u_i_1_1_u_i_element_animator.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

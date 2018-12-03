@@ -6,6 +6,10 @@ using TWM.UI;
 
 namespace BH
 {
+    /// <summary>
+    /// Contains methods to be called in the login menu.
+    /// </summary>
+    /// <seealso cref="UnityEngine.MonoBehaviour" />
     public class LoginMenu : MonoBehaviour
     {
         string _inputUsername = "";
@@ -22,16 +26,21 @@ namespace BH
             _uiElementAnimator = _loginStatusText.GetComponent<UIElementAnimator>();
         }
 
+        /// <summary>Sets the input username.</summary>
+        /// <param name="username"></param>
         public void SetUsername(string username)
         {
             _inputUsername = username;
         }
 
+        /// <summary>Sets the input password.</summary>
+        /// <param name="password"></param>
         public void SetPassword(string password)
         {
             _inputPassword = password;
         }
 
+        /// <summary>Attempts to sign in with the input username and input password.</summary>
         public void SignIn()
         {
             DataManager.Instance.GetData(_inputUsername, _inputPassword, (data, err) =>
@@ -58,7 +67,8 @@ namespace BH
                 Debug.Log(data);
             });
         }
-
+        
+        /// <summary>Attempts to register a new user with the input username and input password.</summary>
         public void Register()
         {
             DataManager.Instance.RegisterUser(_inputUsername, _inputPassword, (err) =>

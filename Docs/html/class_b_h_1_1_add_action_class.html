@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>domino-simulator: BH.AddActionClass Class Reference</title>
+<title>Domino Simulator: BH.AddActionClass Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,8 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">domino-simulator
+   <div id="projectname">Domino Simulator
+   &#160;<span id="projectnumber">0.0.1</span>
    </div>
+   <div id="projectbrief">A sandbox game where you play with dominoes.</div>
   </td>
  </tr>
  </tbody>
@@ -101,7 +103,7 @@ Inheritance diagram for BH.AddActionClass:</div>
  <div class="center">
   <img src="class_b_h_1_1_add_action_class.png" usemap="#BH.AddActionClass_map" alt=""/>
   <map id="BH.AddActionClass_map" name="BH.AddActionClass_map">
-<area href="class_b_h_1_1_action_class.html" title="Represents an action that can be performed on targets, e.g. " alt="BH.ActionClass" shape="rect" coords="0,0,123,24"/>
+<area href="interface_b_h_1_1_action_interface.html" title="Represents an action that can be performed on targets, e.g. " alt="BH.ActionInterface" shape="rect" coords="0,0,123,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -110,15 +112,43 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae3be76cc087732987079936d7a8f3864"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_add_action_class.html#ae3be76cc087732987079936d7a8f3864">Init</a> (List&lt; <a class="el" href="class_b_h_1_1_selectable.html">Selectable</a> &gt; targets)</td></tr>
 <tr class="memdesc:ae3be76cc087732987079936d7a8f3864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the created targets.  <a href="#ae3be76cc087732987079936d7a8f3864">More...</a><br /></td></tr>
 <tr class="separator:ae3be76cc087732987079936d7a8f3864"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32054fd186bb453ddacdb311da37968c"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_add_action_class.html#a32054fd186bb453ddacdb311da37968c">Undo</a> ()</td></tr>
-<tr class="memdesc:a32054fd186bb453ddacdb311da37968c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes the saved target.  <a href="#a32054fd186bb453ddacdb311da37968c">More...</a><br /></td></tr>
-<tr class="separator:a32054fd186bb453ddacdb311da37968c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a184075f792feb4f4ada06f5a4fc3724b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_add_action_class.html#a184075f792feb4f4ada06f5a4fc3724b">Undo</a> ()</td></tr>
+<tr class="memdesc:a184075f792feb4f4ada06f5a4fc3724b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes the saved target.  <a href="#a184075f792feb4f4ada06f5a4fc3724b">More...</a><br /></td></tr>
+<tr class="separator:a184075f792feb4f4ada06f5a4fc3724b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7fe1580517ec3f28634b14f86050c04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_add_action_class.html#ad7fe1580517ec3f28634b14f86050c04">UpdateInstance</a> (int oldID, <a class="el" href="class_b_h_1_1_selectable.html">Selectable</a> newInstance)</td></tr>
+<tr class="memdesc:ad7fe1580517ec3f28634b14f86050c04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the requested <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a>'s instance if relevant to this action.  <a href="#ad7fe1580517ec3f28634b14f86050c04">More...</a><br /></td></tr>
+<tr class="separator:ad7fe1580517ec3f28634b14f86050c04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b5463a9e5cdf36794350f1b0ea40d9c"><td class="memItemLeft" align="right" valign="top">List&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_add_action_class.html#a3b5463a9e5cdf36794350f1b0ea40d9c">GetTargetIDs</a> ()</td></tr>
+<tr class="memdesc:a3b5463a9e5cdf36794350f1b0ea40d9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the list containing the instance IDs of the Selectables targeted by this action.  <a href="#a3b5463a9e5cdf36794350f1b0ea40d9c">More...</a><br /></td></tr>
+<tr class="separator:a3b5463a9e5cdf36794350f1b0ea40d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents the action of creating target(s). </p>
 <p>Used to undo domino creation. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_b_h_1_1_action_class.html" title="Represents an action that can be performed on targets, e.g. ">BH.ActionClass</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd>BH.ActionClass</dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3b5463a9e5cdf36794350f1b0ea40d9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b5463a9e5cdf36794350f1b0ea40d9c">&#9670;&nbsp;</a></span>GetTargetIDs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;int&gt; BH.AddActionClass.GetTargetIDs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Getter for the list containing the instance IDs of the Selectables targeted by this action. </p>
+<dl class="section return"><dt>Returns</dt><dd>A <code>List&lt;int&gt;</code> of the targets' instance IDs. </dd></dl>
+
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#a1dbbe3420379a36767906ef04bff14fc">BH.ActionInterface</a>.</p>
+
+</div>
+</div>
 <a id="ae3be76cc087732987079936d7a8f3864"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae3be76cc087732987079936d7a8f3864">&#9670;&nbsp;</a></span>Init()</h2>
 
@@ -146,37 +176,68 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a32054fd186bb453ddacdb311da37968c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32054fd186bb453ddacdb311da37968c">&#9670;&nbsp;</a></span>Undo()</h2>
+<a id="a184075f792feb4f4ada06f5a4fc3724b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a184075f792feb4f4ada06f5a4fc3724b">&#9670;&nbsp;</a></span>Undo()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">override void BH.AddActionClass.Undo </td>
+          <td class="memname">void BH.AddActionClass.Undo </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Deletes the saved target. </p>
 
-<p>Implements <a class="el" href="class_b_h_1_1_action_class.html#afdcc0b293cc74b258a982925eee38532">BH.ActionClass</a>.</p>
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#ae481079f61e3811c6d965e514e443ef6">BH.ActionInterface</a>.</p>
+
+</div>
+</div>
+<a id="ad7fe1580517ec3f28634b14f86050c04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7fe1580517ec3f28634b14f86050c04">&#9670;&nbsp;</a></span>UpdateInstance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BH.AddActionClass.UpdateInstance </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>oldID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_b_h_1_1_selectable.html">Selectable</a>&#160;</td>
+          <td class="paramname"><em>newInstance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates the requested <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a>'s instance if relevant to this action. </p>
+<p>Useful if instance changes. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">oldID</td><td>ID of the old <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a> instance, as returned by Unity's Object.GetInstanceID(). </td></tr>
+    <tr><td class="paramname">newInstance</td><td>New <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a> instance to update to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#a81a772859cc098421d039ac1feb17569">BH.ActionInterface</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/Gladys/UCLA/f'18/cs130/domino-simulator/Assets/BH/Scripts/Gameplay/ActionClass/<a class="el" href="_add_action_class_8cs.html">AddActionClass.cs</a></li>
+<li>C:/Users/huabr/Documents/GitHub/domino_game/Assets/BH/Scripts/Gameplay/ActionHistory/<a class="el" href="_add_action_class_8cs.html">AddActionClass.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -184,7 +245,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_b_h.html">BH</a></li><li class="navelem"><a class="el" href="class_b_h_1_1_add_action_class.html">AddActionClass</a></li>
-    <li class="footer">Generated on Thu Nov 15 2018 23:15:23 for domino-simulator by
+    <li class="footer">Generated on Mon Dec 3 2018 02:36:06 for Domino Simulator by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

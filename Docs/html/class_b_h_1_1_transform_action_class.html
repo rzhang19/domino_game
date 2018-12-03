@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>domino-simulator: BH.TransformActionClass Class Reference</title>
+<title>Domino Simulator: BH.TransformActionClass Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,8 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">domino-simulator
+   <div id="projectname">Domino Simulator
+   &#160;<span id="projectnumber">0.0.1</span>
    </div>
+   <div id="projectbrief">A sandbox game where you play with dominoes.</div>
   </td>
  </tr>
  </tbody>
@@ -86,6 +88,7 @@ $(document).ready(function(){initNavTree('class_b_h_1_1_transform_action_class.h
 
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="class_b_h_1_1_transform_action_class-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -101,26 +104,54 @@ Inheritance diagram for BH.TransformActionClass:</div>
  <div class="center">
   <img src="class_b_h_1_1_transform_action_class.png" usemap="#BH.TransformActionClass_map" alt=""/>
   <map id="BH.TransformActionClass_map" name="BH.TransformActionClass_map">
-<area href="class_b_h_1_1_action_class.html" title="Represents an action that can be performed on targets, e.g. " alt="BH.ActionClass" shape="rect" coords="0,0,157,24"/>
+<area href="interface_b_h_1_1_action_interface.html" title="Represents an action that can be performed on targets, e.g. " alt="BH.ActionInterface" shape="rect" coords="0,0,157,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a31ca5ca611cb394822aca091e26b9e8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_transform_action_class.html#a31ca5ca611cb394822aca091e26b9e8f">Init</a> (List&lt; Component &gt; targets, List&lt; <a class="el" href="struct_b_h_1_1_custom_transform.html">CustomTransform</a> &gt; oldProperties)</td></tr>
-<tr class="memdesc:a31ca5ca611cb394822aca091e26b9e8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a 1-to-1 mapping between targets and their to-be-saved transforms.  <a href="#a31ca5ca611cb394822aca091e26b9e8f">More...</a><br /></td></tr>
-<tr class="separator:a31ca5ca611cb394822aca091e26b9e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0f9d3d270dfd5e37b4186b4d30f5ae6"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_transform_action_class.html#ab0f9d3d270dfd5e37b4186b4d30f5ae6">Undo</a> ()</td></tr>
-<tr class="memdesc:ab0f9d3d270dfd5e37b4186b4d30f5ae6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores each target to their mapped transform.  <a href="#ab0f9d3d270dfd5e37b4186b4d30f5ae6">More...</a><br /></td></tr>
-<tr class="separator:ab0f9d3d270dfd5e37b4186b4d30f5ae6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab97b0f10bc719c466200e7ea9f9ee92e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_transform_action_class.html#ab97b0f10bc719c466200e7ea9f9ee92e">Init</a> (List&lt; <a class="el" href="class_b_h_1_1_selectable.html">Selectable</a> &gt; targets, List&lt; <a class="el" href="struct_b_h_1_1_custom_transform.html">CustomTransform</a> &gt; oldProperties)</td></tr>
+<tr class="memdesc:ab97b0f10bc719c466200e7ea9f9ee92e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves a 1-to-1 mapping between targets and their to-be-saved transforms.  <a href="#ab97b0f10bc719c466200e7ea9f9ee92e">More...</a><br /></td></tr>
+<tr class="separator:ab97b0f10bc719c466200e7ea9f9ee92e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87a25359abdfbe3f19dc01239dcce4c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_transform_action_class.html#a87a25359abdfbe3f19dc01239dcce4c7">Undo</a> ()</td></tr>
+<tr class="memdesc:a87a25359abdfbe3f19dc01239dcce4c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restores each target to their mapped transform.  <a href="#a87a25359abdfbe3f19dc01239dcce4c7">More...</a><br /></td></tr>
+<tr class="separator:a87a25359abdfbe3f19dc01239dcce4c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae224c03d7a1b51635d19e1714dd32ac8"><td class="memItemLeft" align="right" valign="top">List&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_transform_action_class.html#ae224c03d7a1b51635d19e1714dd32ac8">GetTargetIDs</a> ()</td></tr>
+<tr class="memdesc:ae224c03d7a1b51635d19e1714dd32ac8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the list containing the instance IDs of the Selectables targeted by this action.  <a href="#ae224c03d7a1b51635d19e1714dd32ac8">More...</a><br /></td></tr>
+<tr class="separator:ae224c03d7a1b51635d19e1714dd32ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf20b5fce4b497f40d0ed0562b5b812f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_transform_action_class.html#adf20b5fce4b497f40d0ed0562b5b812f">UpdateInstance</a> (int oldID, <a class="el" href="class_b_h_1_1_selectable.html">Selectable</a> newInstance)</td></tr>
+<tr class="memdesc:adf20b5fce4b497f40d0ed0562b5b812f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the requested <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a>'s instance if relevant to this action.  <a href="#adf20b5fce4b497f40d0ed0562b5b812f">More...</a><br /></td></tr>
+<tr class="separator:adf20b5fce4b497f40d0ed0562b5b812f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents the action of transforming one or more targets. </p>
 <p>Used to save and revert to specific domino transforms. Transforms must be of our custom type <a class="el" href="struct_b_h_1_1_custom_transform.html" title="A simple imitation of Unity&#39;s built-in Transform. ">CustomTransform</a> because Unity restricts Transform instantiation. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_b_h_1_1_action_class.html" title="Represents an action that can be performed on targets, e.g. ">BH.ActionClass</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd>BH.ActionClass</dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a31ca5ca611cb394822aca091e26b9e8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31ca5ca611cb394822aca091e26b9e8f">&#9670;&nbsp;</a></span>Init()</h2>
+<a id="ae224c03d7a1b51635d19e1714dd32ac8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae224c03d7a1b51635d19e1714dd32ac8">&#9670;&nbsp;</a></span>GetTargetIDs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;int&gt; BH.TransformActionClass.GetTargetIDs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Getter for the list containing the instance IDs of the Selectables targeted by this action. </p>
+<dl class="section return"><dt>Returns</dt><dd>A <code>List&lt;int&gt;</code> of the targets' instance IDs. </dd></dl>
+
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#a1dbbe3420379a36767906ef04bff14fc">BH.ActionInterface</a>.</p>
+
+</div>
+</div>
+<a id="ab97b0f10bc719c466200e7ea9f9ee92e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab97b0f10bc719c466200e7ea9f9ee92e">&#9670;&nbsp;</a></span>Init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -128,7 +159,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void BH.TransformActionClass.Init </td>
           <td>(</td>
-          <td class="paramtype">List&lt; Component &gt;&#160;</td>
+          <td class="paramtype">List&lt; <a class="el" href="class_b_h_1_1_selectable.html">Selectable</a> &gt;&#160;</td>
           <td class="paramname"><em>targets</em>, </td>
         </tr>
         <tr>
@@ -157,38 +188,69 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab0f9d3d270dfd5e37b4186b4d30f5ae6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0f9d3d270dfd5e37b4186b4d30f5ae6">&#9670;&nbsp;</a></span>Undo()</h2>
+<a id="a87a25359abdfbe3f19dc01239dcce4c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87a25359abdfbe3f19dc01239dcce4c7">&#9670;&nbsp;</a></span>Undo()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">override void BH.TransformActionClass.Undo </td>
+          <td class="memname">void BH.TransformActionClass.Undo </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Restores each target to their mapped transform. </p>
 <p>Cannot reverse once executed. </p>
 
-<p>Implements <a class="el" href="class_b_h_1_1_action_class.html#afdcc0b293cc74b258a982925eee38532">BH.ActionClass</a>.</p>
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#ae481079f61e3811c6d965e514e443ef6">BH.ActionInterface</a>.</p>
+
+</div>
+</div>
+<a id="adf20b5fce4b497f40d0ed0562b5b812f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf20b5fce4b497f40d0ed0562b5b812f">&#9670;&nbsp;</a></span>UpdateInstance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BH.TransformActionClass.UpdateInstance </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>oldID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_b_h_1_1_selectable.html">Selectable</a>&#160;</td>
+          <td class="paramname"><em>newInstance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates the requested <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a>'s instance if relevant to this action. </p>
+<p>Useful if instance changes. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">oldID</td><td>ID of the old <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a> instance, as returned by Unity's Object.GetInstanceID(). </td></tr>
+    <tr><td class="paramname">newInstance</td><td>New <a class="el" href="class_b_h_1_1_selectable.html" title="Contains the functionality of being interacted with by the player. ">Selectable</a> instance to update to. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="interface_b_h_1_1_action_interface.html#a81a772859cc098421d039ac1feb17569">BH.ActionInterface</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/Gladys/UCLA/f'18/cs130/domino-simulator/Assets/BH/Scripts/Gameplay/ActionClass/<a class="el" href="_transform_action_class_8cs.html">TransformActionClass.cs</a></li>
+<li>C:/Users/huabr/Documents/GitHub/domino_game/Assets/BH/Scripts/Gameplay/ActionHistory/<a class="el" href="_transform_action_class_8cs.html">TransformActionClass.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -196,7 +258,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_b_h.html">BH</a></li><li class="navelem"><a class="el" href="class_b_h_1_1_transform_action_class.html">TransformActionClass</a></li>
-    <li class="footer">Generated on Thu Nov 15 2018 23:15:23 for domino-simulator by
+    <li class="footer">Generated on Mon Dec 3 2018 02:36:09 for Domino Simulator by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

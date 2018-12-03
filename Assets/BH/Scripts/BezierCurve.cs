@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// A cubic Bezier curve implementation.
+    /// </summary>
     public class BezierCurve
     {
         Vector3 p0;
@@ -11,6 +14,13 @@ namespace BH
         Vector3 p2;
         Vector3 p3;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BezierCurve"/> class.
+        /// </summary>
+        /// <param name="point1">The first point.</param>
+        /// <param name="point2">The second point.</param>
+        /// <param name="point3">The third point.</param>
+        /// <param name="point4">The fourth point.</param>
         public BezierCurve(Vector3 point1, Vector3 point2, Vector3 point3, Vector3 point4)
         {
             p0 = point1;
@@ -19,6 +29,11 @@ namespace BH
             p3 = point4;
         }
 
+        /// <summary>
+        /// Returns the value of the Bezier curve evaluated at t.
+        /// </summary>
+        /// <param name="t">The value to evaluate at.</param>
+        /// <returns></returns>
         public Vector3 ValueAt(float t)
         {
             Vector3 val = Mathf.Pow(1 - t, 3) * p0
@@ -28,6 +43,11 @@ namespace BH
             return val;
         }
 
+        /// <summary>
+        /// Returns the tangent vector of the Bezier curve evaluated at t.
+        /// </summary>
+        /// <param name="t">The value to evaluate at.</param>
+        /// <returns></returns>
         public Vector3 TangentAt(float t)
         {
             float oneMinusT = 1 - t;

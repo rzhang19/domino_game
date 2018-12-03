@@ -1,5 +1,8 @@
 var class_b_h_1_1_delete_action_class =
 [
-    [ "Init", "class_b_h_1_1_delete_action_class.html#a0e3e0c19168dbbcb3b56b82c141e30c9", null ],
-    [ "Undo", "class_b_h_1_1_delete_action_class.html#a2676ea4f1d227bb5dd90d6fee4b9378e", null ]
+    [ "GetTargetIDs", "class_b_h_1_1_delete_action_class.html#a880db987fa927fbca2b751b0e0330e66", null ],
+    [ "GetUpdatedInstances", "class_b_h_1_1_delete_action_class.html#aee866ce19fec8be8247f71506b6f0ee6", null ],
+    [ "Init", "class_b_h_1_1_delete_action_class.html#a3f22db97a5b72b571a8aad8fcdd04bed", null ],
+    [ "Undo", "class_b_h_1_1_delete_action_class.html#a3b526c774a0d6bfeab615520d2626108", null ],
+    [ "UpdateInstance", "class_b_h_1_1_delete_action_class.html#ae7807f922cdbfada27f3a894ab6da250", null ]
 ];

@@ -104,6 +104,7 @@ namespace BH
             transform.localRotation = Quaternion.Euler(_xRot, 0f, transform.localRotation.eulerAngles.z);
         }
 
+        /// <summary>Starts a coroutine that sets camera rotation to last known rotation.</summary>
         public void LookRegular()
         {
             if (!_cachedOldRots)
@@ -114,6 +115,7 @@ namespace BH
             StartCoroutine(AsyncRotateTowards(_oldXRot, _oldYRot, CameraControl.lockNone, 0.2f));
         }
 
+        /// <summary>Starts a coroutine that sets camera rotation to look down (x-axis rotation = 90f).</summary>
         public void LookDown()
         {
             _oldXRot = _xRot;

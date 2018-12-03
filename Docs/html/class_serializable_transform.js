@@ -1,5 +1,6 @@
 var class_serializable_transform =
 [
+    [ "SerializableTransform", "class_serializable_transform.html#aa3d2c7f95355b40b2ceade2cf3faae2c", null ],
     [ "SerializableTransform", "class_serializable_transform.html#a49fbe7422e148135690437c07cba3a2c", null ],
     [ "ToString", "class_serializable_transform.html#acaa8021952074a73c617527b0ad19448", null ],
     [ "_position", "class_serializable_transform.html#aad2371ff67245a7facfd0ec248cc655a", null ],

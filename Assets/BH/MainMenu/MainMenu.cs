@@ -18,6 +18,7 @@ public class MainMenu : MonoBehaviour
     }
 
     // Source: https://www.youtube.com/watch?v=rXnZE8MwK-E
+    /// <summary>Loads the gameplay scene.</summary>
     public void LoadGame()
     {
         StartCoroutine(AsyncLoadGame());
@@ -40,6 +41,7 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    /// <summary>Exits the game.</summary>
     public void Exit()
     {
         Application.Quit();

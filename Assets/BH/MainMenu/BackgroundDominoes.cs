@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace BH
 {
+    /// <summary>
+    /// Class for orchestrating the behavior of main menu background dominoes as a whole.
+    /// </summary>
+    /// <seealso cref="UnityEngine.MonoBehaviour" />
     public class BackgroundDominoes : MonoBehaviour
     {
         List<BackgroundDomino> _backgroundDominoes;
