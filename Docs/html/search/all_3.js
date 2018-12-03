@@ -1,6 +1,13 @@
 var searchData=
 [
-  ['changecolor',['ChangeColor',['../class_b_h_1_1_selectable.html#a20e73d198ad3857f1ea216dd70eee59f',1,'BH.Selectable.ChangeColor()'],['../class_b_h_1_1_build_mode_controller.html#a6e92ee002537d0e1fa6fe533ea5364a7',1,'BH.BuildModeController.ChangeColor()'],['../class_b_h_1_1_select_controller.html#a6214835826fadfce02424ddb4f6116a9',1,'BH.SelectController.ChangeColor()'],['../class_b_h_1_1_build_mode_u_i.html#acb048bf00bbb583608cf8d0f43ce60f4',1,'BH.BuildModeUI.ChangeColor()']]],
+  ['cameracontroller',['CameraController',['../class_b_h_1_1_camera_controller.html',1,'BH']]],
+  ['cameracontroller_2ecs',['CameraController.cs',['../_camera_controller_8cs.html',1,'']]],
+  ['changecolor',['ChangeColor',['../class_b_h_1_1_build_mode_controller.html#a6e92ee002537d0e1fa6fe533ea5364a7',1,'BH.BuildModeController.ChangeColor()'],['../class_b_h_1_1_select_controller.html#a6214835826fadfce02424ddb4f6116a9',1,'BH.SelectController.ChangeColor()'],['../class_b_h_1_1_build_mode_u_i.html#acb048bf00bbb583608cf8d0f43ce60f4',1,'BH.BuildModeUI.ChangeColor()']]],
+  ['changematerial',['ChangeMaterial',['../class_b_h_1_1_build_mode_controller.html#a29515f868001e38fbcb50c2621c7eec3',1,'BH::BuildModeController']]],
+  ['changeskybox',['ChangeSkybox',['../class_skybox_changer.html#abe4f2425fe2c91293b6700c43cceb40b',1,'SkyboxChanger']]],
+  ['clampangle',['ClampAngle',['../class_smooth_mouse_look.html#a5b3f10a87328753fd50b88abc647ff94',1,'SmoothMouseLook']]],
+  ['cleanup',['Cleanup',['../class_domino_manipulation.html#a8868e0e863cf49e0332a1a28aa8d9813',1,'DominoManipulation.Cleanup()'],['../class_login.html#ad9c9fa829911a28c2dbc4608504a462d',1,'Login.Cleanup()'],['../class_spectator_mode_u_i.html#ad711601e03dbc44c4dc9e93c78480cf7',1,'SpectatorModeUI.Cleanup()'],['../class_switching_modes_u_i.html#acd544742843bb8cef90d2c04355c6616',1,'SwitchingModesUI.Cleanup()'],['../class_domino_renders.html#ab6f8535cdc8dcc3af52ed56f76937c16',1,'DominoRenders.Cleanup()'],['../class_main_menu_renders.html#a1a83edcc065e2fcdbab5c70e32f320dd',1,'MainMenuRenders.Cleanup()'],['../class_mass_selection_rect_renders.html#ab847464c225481149b97f02401ed7ac8',1,'MassSelectionRectRenders.Cleanup()'],['../class_switching_modes.html#a79505f59981cfe95ab78fcfda4a3e41f',1,'SwitchingModes.Cleanup()'],['../class_selectable.html#a9f6432a9feabb88bf9b7e34597ff912f',1,'Selectable.Cleanup()'],['../class_selectable_manager_class.html#aa91c4c366fc2ab074fb1d242c103a954',1,'SelectableManagerClass.Cleanup()']]],
+  ['clickuibutton',['ClickUIButton',['../class_utility.html#a735c874a6430b62ec6c354b76387eefd',1,'Utility']]],
   ['clip',['clip',['../class_domino.html#a167cac8a0d71634dfcaf2972546d1dd7',1,'Domino']]],
   ['closestcolliderbelow',['ClosestColliderBelow',['../class_b_h_1_1_closest_collider_below.html',1,'BH']]],
   ['closestcolliderbelow_2ecs',['ClosestColliderBelow.cs',['../_closest_collider_below_8cs.html',1,'']]],
@@ -12,6 +19,7 @@ var searchData=
   ['curentoutput',['CurentOutput',['../class_doxygen_window.html#a82b41ae2e3c44b050acc7603031ccd55',1,'DoxygenWindow']]],
   ['cursorcontroller',['CursorController',['../class_b_h_1_1_cursor_controller.html',1,'BH']]],
   ['cursorcontroller_2ecs',['CursorController.cs',['../_cursor_controller_8cs.html',1,'']]],
+  ['customoffset',['customOffset',['../class_texture_atlas_slicer.html#a44c4036c8cb741943a03ac0b19b9f3b7',1,'TextureAtlasSlicer']]],
   ['customtransform',['CustomTransform',['../struct_b_h_1_1_custom_transform.html',1,'BH.CustomTransform'],['../struct_b_h_1_1_custom_transform.html#a7061246e0ceb1d46493f8e2698795c41',1,'BH.CustomTransform.CustomTransform()']]],
   ['customtransform_2ecs',['CustomTransform.cs',['../_custom_transform_8cs.html',1,'']]]
 ];

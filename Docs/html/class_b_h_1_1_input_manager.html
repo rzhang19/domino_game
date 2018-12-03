@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.14"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>domino-simulator: BH.InputManager Class Reference</title>
+<title>Domino Simulator: BH.InputManager Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,8 +29,10 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">domino-simulator
+   <div id="projectname">Domino Simulator
+   &#160;<span id="projectnumber">0.0.1</span>
    </div>
+   <div id="projectbrief">A sandbox game where you play with dominoes.</div>
   </td>
  </tr>
  </tbody>
@@ -114,9 +116,45 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a34a90fd41035f3d16caae7e68b947c4c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#a34a90fd41035f3d16caae7e68b947c4c">GetPauseKeyDown</a> ()</td></tr>
 <tr class="memdesc:a34a90fd41035f3d16caae7e68b947c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the pause-keypress-down status.  <a href="#a34a90fd41035f3d16caae7e68b947c4c">More...</a><br /></td></tr>
 <tr class="separator:a34a90fd41035f3d16caae7e68b947c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acea789f33a300d5dd24b181412eea58b"><td class="memItemLeft" align="right" valign="top">static Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#acea789f33a300d5dd24b181412eea58b">GetCursorPos</a> ()</td></tr>
+<tr class="memdesc:acea789f33a300d5dd24b181412eea58b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current cursor position.  <a href="#acea789f33a300d5dd24b181412eea58b">More...</a><br /></td></tr>
+<tr class="separator:acea789f33a300d5dd24b181412eea58b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6c2d2806da07f7dacdaa57912a7b0e8"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#ae6c2d2806da07f7dacdaa57912a7b0e8">GetScroll</a> ()</td></tr>
+<tr class="memdesc:ae6c2d2806da07f7dacdaa57912a7b0e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current scroll position.  <a href="#ae6c2d2806da07f7dacdaa57912a7b0e8">More...</a><br /></td></tr>
+<tr class="separator:ae6c2d2806da07f7dacdaa57912a7b0e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89f49199eac1f537694904ff68c9800c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#a89f49199eac1f537694904ff68c9800c">IsPointerOverGameObject</a> ()</td></tr>
+<tr class="memdesc:a89f49199eac1f537694904ff68c9800c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the pointer is over a game object.  <a href="#a89f49199eac1f537694904ff68c9800c">More...</a><br /></td></tr>
+<tr class="separator:a89f49199eac1f537694904ff68c9800c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad27e615816371c9bdaf08699030f09d4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#ad27e615816371c9bdaf08699030f09d4">OverwriteKeybind</a> (string key, KeyCode val, int index)</td></tr>
 <tr class="memdesc:ad27e615816371c9bdaf08699030f09d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overwrites the keybind for specified key, val, and index.  <a href="#ad27e615816371c9bdaf08699030f09d4">More...</a><br /></td></tr>
 <tr class="separator:ad27e615816371c9bdaf08699030f09d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af43499a7558e827b116821d2c0bb96af"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#af43499a7558e827b116821d2c0bb96af">SimulateKeyDown</a> (string key)</td></tr>
+<tr class="memdesc:af43499a7558e827b116821d2c0bb96af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically simulate a down keypress.  <a href="#af43499a7558e827b116821d2c0bb96af">More...</a><br /></td></tr>
+<tr class="separator:af43499a7558e827b116821d2c0bb96af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2ece11a86ad3b70597dbd7343fbc1f2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#ad2ece11a86ad3b70597dbd7343fbc1f2">SimulateKeyUp</a> (string key)</td></tr>
+<tr class="memdesc:ad2ece11a86ad3b70597dbd7343fbc1f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically simulate a down keypress.  <a href="#ad2ece11a86ad3b70597dbd7343fbc1f2">More...</a><br /></td></tr>
+<tr class="separator:ad2ece11a86ad3b70597dbd7343fbc1f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58bccfff584342733fba2aab92ea0668"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#a58bccfff584342733fba2aab92ea0668">SimulateCursorMoveTo</a> (Vector3 pos)</td></tr>
+<tr class="memdesc:a58bccfff584342733fba2aab92ea0668"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically turns on cursor simulation and simulates cursor movement.  <a href="#a58bccfff584342733fba2aab92ea0668">More...</a><br /></td></tr>
+<tr class="separator:a58bccfff584342733fba2aab92ea0668"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a654f665aff82b2e78eea5b0a895a87f5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#a654f665aff82b2e78eea5b0a895a87f5">SimulateScrollTo</a> (float newScroll)</td></tr>
+<tr class="memdesc:a654f665aff82b2e78eea5b0a895a87f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically turns on cursor simulation and simulates cursor movement.  <a href="#a654f665aff82b2e78eea5b0a895a87f5">More...</a><br /></td></tr>
+<tr class="separator:a654f665aff82b2e78eea5b0a895a87f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aa9265a9137e79193b3ddf5850992f2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#a7aa9265a9137e79193b3ddf5850992f2">SimulatePointerOverGameObject</a> ()</td></tr>
+<tr class="memdesc:a7aa9265a9137e79193b3ddf5850992f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically turns on pointer over game object simulation  <a href="#a7aa9265a9137e79193b3ddf5850992f2">More...</a><br /></td></tr>
+<tr class="separator:a7aa9265a9137e79193b3ddf5850992f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f697cdd169c0a3bcd1135d57cb58f51"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#a2f697cdd169c0a3bcd1135d57cb58f51">DisableCursorSimulation</a> ()</td></tr>
+<tr class="memdesc:a2f697cdd169c0a3bcd1135d57cb58f51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically turns off cursor simulation.  <a href="#a2f697cdd169c0a3bcd1135d57cb58f51">More...</a><br /></td></tr>
+<tr class="separator:a2f697cdd169c0a3bcd1135d57cb58f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2f287ae68b07bd44cca282163e16b2e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#ab2f287ae68b07bd44cca282163e16b2e">DisableKeypressSimulation</a> ()</td></tr>
+<tr class="memdesc:ab2f287ae68b07bd44cca282163e16b2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically turns off keypress simulation  <a href="#ab2f287ae68b07bd44cca282163e16b2e">More...</a><br /></td></tr>
+<tr class="separator:ab2f287ae68b07bd44cca282163e16b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3fdf560bba7f16a70887053c14f5041"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#ad3fdf560bba7f16a70887053c14f5041">DisableScrollSimulation</a> ()</td></tr>
+<tr class="memdesc:ad3fdf560bba7f16a70887053c14f5041"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically turns off scrolling simulation  <a href="#ad3fdf560bba7f16a70887053c14f5041">More...</a><br /></td></tr>
+<tr class="separator:ad3fdf560bba7f16a70887053c14f5041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42ee39d00de463823633754daa898e99"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_b_h_1_1_input_manager.html#a42ee39d00de463823633754daa898e99">DisableSimulatePointerOverGameObject</a> ()</td></tr>
+<tr class="memdesc:a42ee39d00de463823633754daa898e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Programmatically turns off pointer over game object detection  <a href="#a42ee39d00de463823633754daa898e99">More...</a><br /></td></tr>
+<tr class="separator:a42ee39d00de463823633754daa898e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -129,6 +167,142 @@ Static Public Attributes</h2></td></tr>
 <div class="textblock"><p>An interface for Unity's input system. </p>
 <p>This class creates a mapping of strings to KeyCodes to aid in the readability of inputs. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2f697cdd169c0a3bcd1135d57cb58f51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f697cdd169c0a3bcd1135d57cb58f51">&#9670;&nbsp;</a></span>DisableCursorSimulation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.DisableCursorSimulation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically turns off cursor simulation. </p>
+
+</div>
+</div>
+<a id="ab2f287ae68b07bd44cca282163e16b2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2f287ae68b07bd44cca282163e16b2e">&#9670;&nbsp;</a></span>DisableKeypressSimulation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.DisableKeypressSimulation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically turns off keypress simulation </p>
+
+</div>
+</div>
+<a id="ad3fdf560bba7f16a70887053c14f5041"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3fdf560bba7f16a70887053c14f5041">&#9670;&nbsp;</a></span>DisableScrollSimulation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.DisableScrollSimulation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically turns off scrolling simulation </p>
+
+</div>
+</div>
+<a id="a42ee39d00de463823633754daa898e99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42ee39d00de463823633754daa898e99">&#9670;&nbsp;</a></span>DisableSimulatePointerOverGameObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.DisableSimulatePointerOverGameObject </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically turns off pointer over game object detection </p>
+
+</div>
+</div>
+<a id="acea789f33a300d5dd24b181412eea58b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acea789f33a300d5dd24b181412eea58b">&#9670;&nbsp;</a></span>GetCursorPos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static Vector3 BH.InputManager.GetCursorPos </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current cursor position. </p>
+<p>If the position is simulated, the simulation is wiped after. </p>
+
+</div>
+</div>
 <a id="aafb43083cdb8c0843c14e56f42a8806b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aafb43083cdb8c0843c14e56f42a8806b">&#9670;&nbsp;</a></span>GetFirstKeyCode()</h2>
 
@@ -297,6 +471,62 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae6c2d2806da07f7dacdaa57912a7b0e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6c2d2806da07f7dacdaa57912a7b0e8">&#9670;&nbsp;</a></span>GetScroll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static float BH.InputManager.GetScroll </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the current scroll position. </p>
+<p>If the scroll is simulated, the simulation is wiped after. </p>
+
+</div>
+</div>
+<a id="a89f49199eac1f537694904ff68c9800c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89f49199eac1f537694904ff68c9800c">&#9670;&nbsp;</a></span>IsPointerOverGameObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool BH.InputManager.IsPointerOverGameObject </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns true if the pointer is over a game object. </p>
+<p>If the pointer is simulated, it always returns false. </p>
+
+</div>
+</div>
 <a id="ad27e615816371c9bdaf08699030f09d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad27e615816371c9bdaf08699030f09d4">&#9670;&nbsp;</a></span>OverwriteKeybind()</h2>
 
@@ -349,6 +579,147 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a58bccfff584342733fba2aab92ea0668"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58bccfff584342733fba2aab92ea0668">&#9670;&nbsp;</a></span>SimulateCursorMoveTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.SimulateCursorMoveTo </td>
+          <td>(</td>
+          <td class="paramtype">Vector3&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically turns on cursor simulation and simulates cursor movement. </p>
+<p>Once simulated, the movement will stay until it has been retrieved by GetCursorPos </p>
+
+</div>
+</div>
+<a id="af43499a7558e827b116821d2c0bb96af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af43499a7558e827b116821d2c0bb96af">&#9670;&nbsp;</a></span>SimulateKeyDown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.SimulateKeyDown </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically simulate a down keypress. </p>
+
+</div>
+</div>
+<a id="ad2ece11a86ad3b70597dbd7343fbc1f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2ece11a86ad3b70597dbd7343fbc1f2">&#9670;&nbsp;</a></span>SimulateKeyUp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.SimulateKeyUp </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically simulate a down keypress. </p>
+
+</div>
+</div>
+<a id="a7aa9265a9137e79193b3ddf5850992f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7aa9265a9137e79193b3ddf5850992f2">&#9670;&nbsp;</a></span>SimulatePointerOverGameObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.SimulatePointerOverGameObject </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically turns on pointer over game object simulation </p>
+
+</div>
+</div>
+<a id="a654f665aff82b2e78eea5b0a895a87f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a654f665aff82b2e78eea5b0a895a87f5">&#9670;&nbsp;</a></span>SimulateScrollTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void BH.InputManager.SimulateScrollTo </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>newScroll</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Programmatically turns on cursor simulation and simulates cursor movement. </p>
+<p>Once simulated, the movement will stay until it has been retrieved by GetCursorPos </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a9c2ac68a3c3ee2c71b30e9f309786a80"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9c2ac68a3c3ee2c71b30e9f309786a80">&#9670;&nbsp;</a></span>_keyDict</h2>
@@ -369,7 +740,7 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">new</span> Dictionary&lt;string, KeyCode[]&gt;()</div><div class="line">        {</div><div class="line">            {<span class="stringliteral">&quot;Strafe Up&quot;</span>,                   <span class="keyword">new</span> KeyCode[] {KeyCode.W, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Strafe Left&quot;</span>,                 <span class="keyword">new</span> KeyCode[] {KeyCode.A, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Strafe Down&quot;</span>,                 <span class="keyword">new</span> KeyCode[] {KeyCode.S, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Strafe Right&quot;</span>,                <span class="keyword">new</span> KeyCode[] {KeyCode.D, KeyCode.None}},</div><div class="line">            </div><div class="line">            {<span class="stringliteral">&quot;Float&quot;</span>,                       <span class="keyword">new</span> KeyCode[] {KeyCode.Space, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Sink&quot;</span>,                        <span class="keyword">new</span> KeyCode[] {KeyCode.LeftShift, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Attack1&quot;</span>,                     <span class="keyword">new</span> KeyCode[] {KeyCode.Mouse0, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Attack2&quot;</span>,                     <span class="keyword">new</span> KeyCode[] {KeyCode.Mouse1, KeyCode.None}},</div><div class="line">            </div><div class="line">            {<span class="stringliteral">&quot;Toggle Build/Spectate&quot;</span>,       <span class="keyword">new</span> KeyCode[] {KeyCode.T, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Toggle Free-fly&quot;</span>,             <span class="keyword">new</span> KeyCode[] {KeyCode.F, KeyCode.None}},</div><div class="line">            </div><div class="line">            {<span class="stringliteral">&quot;Toggle Rotation Axis&quot;</span>,        <span class="keyword">new</span> KeyCode[] {KeyCode.R, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Undo&quot;</span>,                        <span class="keyword">new</span> KeyCode[] {KeyCode.Z, KeyCode.None}}</div><div class="line">        }</div></div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line">= <span class="keyword">new</span> Dictionary&lt;string, KeyCode[]&gt;()</div><div class="line">        {</div><div class="line">            {<span class="stringliteral">&quot;Strafe Up&quot;</span>,                   <span class="keyword">new</span> KeyCode[] {KeyCode.W, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Strafe Left&quot;</span>,                 <span class="keyword">new</span> KeyCode[] {KeyCode.A, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Strafe Down&quot;</span>,                 <span class="keyword">new</span> KeyCode[] {KeyCode.S, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Strafe Right&quot;</span>,                <span class="keyword">new</span> KeyCode[] {KeyCode.D, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Float&quot;</span>,                       <span class="keyword">new</span> KeyCode[] {KeyCode.Space, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Sink&quot;</span>,                        <span class="keyword">new</span> KeyCode[] {KeyCode.LeftShift, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Attack1&quot;</span>,                     <span class="keyword">new</span> KeyCode[] {KeyCode.Mouse0, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Attack2&quot;</span>,                     <span class="keyword">new</span> KeyCode[] {KeyCode.Mouse1, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Toggle Build/Spectate&quot;</span>,       <span class="keyword">new</span> KeyCode[] {KeyCode.T, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Toggle Free-fly&quot;</span>,             <span class="keyword">new</span> KeyCode[] {KeyCode.F, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Toggle Rotation Axis&quot;</span>,        <span class="keyword">new</span> KeyCode[] {KeyCode.R, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Undo&quot;</span>,                        <span class="keyword">new</span> KeyCode[] {KeyCode.Z, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Toggle drag mouse&quot;</span>,           <span class="keyword">new</span> KeyCode[] {KeyCode.M, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Toggle Projection&quot;</span>,           <span class="keyword">new</span> KeyCode[] {KeyCode.G, KeyCode.None}}, </div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Copy&quot;</span>,                        <span class="keyword">new</span> KeyCode[] {KeyCode.C, KeyCode.None}},</div><div class="line">            {<span class="stringliteral">&quot;Paste&quot;</span>,                       <span class="keyword">new</span> KeyCode[] {KeyCode.V, KeyCode.None}},</div><div class="line"></div><div class="line">            {<span class="stringliteral">&quot;Drag&quot;</span>,                        <span class="keyword">new</span> KeyCode[] {KeyCode.Q}}</div><div class="line">        }</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a80e02692bb594fd3fb9d8c2d62ac1e95"></a>
@@ -395,7 +766,7 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/Users/Gladys/UCLA/f'18/cs130/domino-simulator/Assets/BH/Scripts/Gameplay/Input/<a class="el" href="_input_manager_8cs.html">InputManager.cs</a></li>
+<li>C:/Users/huabr/Documents/GitHub/domino_game/Assets/BH/Scripts/Gameplay/Input/<a class="el" href="_input_manager_8cs.html">InputManager.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -403,7 +774,7 @@ Static Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_b_h.html">BH</a></li><li class="navelem"><a class="el" href="class_b_h_1_1_input_manager.html">InputManager</a></li>
-    <li class="footer">Generated on Thu Nov 15 2018 23:15:23 for domino-simulator by
+    <li class="footer">Generated on Mon Dec 3 2018 02:36:08 for Domino Simulator by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

@@ -1,9 +1,21 @@
 var searchData=
 [
-  ['_5fadds_5fnew_5fdomino',['_Adds_New_Domino',['../class_domino_manipulation.html#ab30b7400e5242941a21cf4ca8a7de8a8',1,'DominoManipulation']]],
-  ['_5fdeletes_5fselected_5fdominos',['_Deletes_Selected_Dominos',['../class_domino_manipulation.html#abeb3b800c77810ec01c0736a070fa7cd',1,'DominoManipulation']]],
+  ['_5fadds_5fnew_5fdomino_5fprogrammatically',['_Adds_New_Domino_Programmatically',['../class_selectable_manager_class.html#ac363cf2a88e84d246a58ca43e7d987d9',1,'SelectableManagerClass']]],
+  ['_5fadds_5fnew_5fdomino_5fui',['_Adds_New_Domino_UI',['../class_domino_manipulation.html#abeee8643bb2432cdcb704b997ede096c',1,'DominoManipulation']]],
+  ['_5fclick_5fand_5fdrag_5fselected_5fdominos_5fui',['_Click_And_Drag_Selected_Dominos_UI',['../class_domino_manipulation.html#a709df4a95db0c9092a2560ffb7ea81e0',1,'DominoManipulation']]],
+  ['_5fcopy_5fpaste_5fui',['_Copy_Paste_UI',['../class_domino_manipulation.html#a35bd63daba57e02cd64e1432953569b2',1,'DominoManipulation']]],
+  ['_5fdeletes_5fdomino_5fprogrammatically',['_Deletes_Domino_Programmatically',['../class_selectable_manager_class.html#a4c46f3ecd2b88c534237b9469e304a83',1,'SelectableManagerClass']]],
+  ['_5fdeletes_5fselected_5fdominos_5fui',['_Deletes_Selected_Dominos_UI',['../class_domino_manipulation.html#a5269f5f6795c540220011ba9573a8d18',1,'DominoManipulation']]],
+  ['_5fmass_5fselect_5fui',['_Mass_Select_UI',['../class_domino_manipulation.html#ae8cdcb453be90a82cc2929e263b31c3f',1,'DominoManipulation']]],
+  ['_5fmenu_5fproperly_5finitializes',['_Menu_Properly_Initializes',['../class_main_menu_renders.html#a713c5c88b7eecf30e6aeb12270e9a343',1,'MainMenuRenders']]],
+  ['_5fnew_5fdomino_5frenders',['_New_Domino_Renders',['../class_domino_renders.html#a6a6b37e1a4831cf1b3fc759e9ca0c5f5',1,'DominoRenders']]],
   ['_5fnew_5fscene_5fproperly_5finitializes',['_New_Scene_Properly_Initializes',['../class_scene_init_correct.html#a0e4e058ec2c5960dafdda225bd1825ef',1,'SceneInitCorrect']]],
-  ['_5frecolors_5fselected_5fdominos',['_Recolors_Selected_Dominos',['../class_domino_manipulation.html#a081977c6dffb7a624bb36ed67169e058',1,'DominoManipulation']]],
-  ['_5fsaves_5fdominos',['_Saves_Dominos',['../class_domino_manipulation.html#a539a60b45c5ae57ae07c8b9d4c44dca4',1,'DominoManipulation']]],
-  ['_5fselects_5fdomino',['_Selects_Domino',['../class_domino_manipulation.html#a690bc58f3ef1e030bd23a6603107bcff',1,'DominoManipulation']]]
+  ['_5frecolors_5fselected_5fdominos_5fui',['_Recolors_Selected_Dominos_UI',['../class_domino_manipulation.html#a556280d35cc1db74b3ca69b9edee1d5f',1,'DominoManipulation']]],
+  ['_5frotates_5fselected_5fdominos_5fui',['_Rotates_Selected_Dominos_UI',['../class_domino_manipulation.html#a5a4d7dc14a78f01889f18de7a9648b4f',1,'DominoManipulation']]],
+  ['_5fsaves_5fdominos_5fprogrammatically',['_Saves_Dominos_Programmatically',['../class_selectable_manager_class.html#a27d100b847136b5c0df26b43210c7edb',1,'SelectableManagerClass']]],
+  ['_5fsaves_5fdominos_5fui',['_Saves_Dominos_UI',['../class_domino_manipulation.html#abf323fa1f15d9e4645fe397ac5740214',1,'DominoManipulation']]],
+  ['_5fselects_5fdomino_5fprogrammatically',['_Selects_Domino_Programmatically',['../class_selectable_manager_class.html#a401b2c8fdb9cb2207401ebd6d4771425',1,'SelectableManagerClass']]],
+  ['_5fselects_5fdomino_5fui',['_Selects_Domino_UI',['../class_domino_manipulation.html#a2311a01817d3a544931699206e708a43',1,'DominoManipulation']]],
+  ['_5ftoggles_5fdomino_5fselection',['_Toggles_Domino_Selection',['../class_selectable.html#ad7a14041e19d78b7a35069e9e7b21f07',1,'Selectable']]],
+  ['_5fundo_5fui',['_Undo_UI',['../class_domino_manipulation.html#a665d2e2460f1dd1932091b7c6bcf4f5f',1,'DominoManipulation']]]
 ];
