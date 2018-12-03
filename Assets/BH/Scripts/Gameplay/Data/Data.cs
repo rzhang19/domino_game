@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace BH
 {
+    /// <summary>
+    /// Serializable data that represents game saves, i.e. in-game domino layouts.
+    /// </summary>
     [System.Serializable]
     public class Data
     {

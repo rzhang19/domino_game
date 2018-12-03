@@ -6,6 +6,10 @@ using TWM.UI;
 
 namespace BH
 {
+    /// <summary>
+    /// Contains methods to be called in the login menu.
+    /// </summary>
+    /// <seealso cref="UnityEngine.MonoBehaviour" />
     public class LoginMenu : MonoBehaviour
     {
         string _inputUsername = "";

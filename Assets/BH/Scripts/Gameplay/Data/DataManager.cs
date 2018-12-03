@@ -22,6 +22,10 @@ namespace BH
     public delegate void DataReturnStatusDelegate(Data data, DataManagerStatusCodes err);
     public delegate void ReturnStatusDelegate(DataManagerStatusCodes success);
 
+    /// <summary>
+    /// Interacts directly with the SQLite database to store/retrieve users' saves.
+    /// </summary>
+    /// <seealso cref="BH.DesignPatterns.Singleton{BH.DataManager}" />
     public class DataManager : Singleton<DataManager>
     {
         protected DataManager() { }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// A cubic Bezier curve implementation.
+    /// </summary>
     public class BezierCurve
     {
         Vector3 p0;

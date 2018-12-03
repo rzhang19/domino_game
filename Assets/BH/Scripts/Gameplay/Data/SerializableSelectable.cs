@@ -43,6 +43,9 @@ namespace BH
         }
     }
 
+    /// <summary>
+    /// Serializable list of <see cref="SerializableSelectable"/> objects.
+    /// </summary>
     [System.Serializable]
     public class SerializableSelectables
     {
