@@ -66,8 +66,12 @@ namespace BH
             //DataManager.Instance.DeleteUser(myUsername);
             //// ------------------------------------------- //
         }
-
-        // The only public function with direct access to database
+        
+        /// <summary>
+        /// Deletes the user with given id.
+        /// </summary>
+        /// <param name="id">The identifier of the user.</param>
+        /// <param name="callback">The callback that takes the data as an argument.</param>
         public void DeleteUser(string id, ReturnStatusDelegate callback)
         {
             if (!IsUser(id))

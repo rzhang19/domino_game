@@ -172,7 +172,7 @@ namespace BH
         }
 
         /// <summary>
-        /// Loads the data of spawned selectables from persistent memory (not implemented).
+        /// Loads the data of spawned selectables from persistent memory.
         /// </summary>
         public void LoadData()
         {
@@ -292,6 +292,8 @@ namespace BH
             return _selectablePrefab;
         }
 
+        /// <summary>Sets whether or not to spawn selectables with random colors.</summary>
+        /// <param name="b">Value to set as.</param>
         public void SetRandomColors(bool b)
         {
             _randomColors = b;

@@ -8,17 +8,19 @@ namespace BH
     [System.Serializable]
     public class Data
     {
+        /// <summary>Initializes a new instance of the <see cref="Data"/> class.</summary>
         public Data()
         {
             _serializableSelectables = new SerializableSelectables();
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Data"/> class.</summary>
+        /// <param name="selectables">The selectables to be contained in this instance.</param>
         public Data(Selectable[] selectables)
         {
             _serializableSelectables = new SerializableSelectables(selectables);
         }
-
-        // Data only contains a list of selectables for now.
+        
         public SerializableSelectables _serializableSelectables;
 
         public override string ToString()

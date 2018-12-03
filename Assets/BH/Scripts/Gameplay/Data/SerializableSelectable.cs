@@ -4,9 +4,15 @@ using UnityEngine;
 
 namespace BH
 {
+    /// <summary>
+    /// Serializable version of the <see cref="Selectable"/> class.
+    /// </summary>
     [System.Serializable]
     public class SerializableSelectable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializableSelectable"/> class.
+        /// </summary>
         public SerializableSelectable()
         {
             _type = "haha placeholder!";
@@ -14,6 +20,10 @@ namespace BH
             _color = new Color();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializableSelectable"/> class.
+        /// </summary>
+        /// <param name="selectable">The selectable to copy from.</param>
         public SerializableSelectable(Selectable selectable)
         {
             _type = "haha placeholder!";
