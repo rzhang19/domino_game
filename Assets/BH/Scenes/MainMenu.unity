@@ -8920,6 +8920,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf1c05acdbe17294496ae014657ef123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentUsername: 
+  _currentPassword: 
 --- !u!4 &1834859003
 Transform:
   m_ObjectHideFlags: 0
@@ -9248,7 +9250,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Not Logged In
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 37093f403424bf14c8fe447df0f317af, type: 2}
   m_sharedMaterial: {fileID: 21707094798380668, guid: 37093f403424bf14c8fe447df0f317af,
