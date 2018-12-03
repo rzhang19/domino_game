@@ -52,6 +52,11 @@ namespace BH.DesignPatterns
             }
         }
 
+        void OnDestroy()
+        {
+            pools = new Dictionary<PooledMonobehaviour, Pool>();
+        }
+
         private void Update()
         {
             MakeDisabledObjectsChildren();

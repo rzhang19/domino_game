@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 namespace BH.DesignPatterns
 {
@@ -79,6 +81,12 @@ namespace BH.DesignPatterns
         public void OnDestroy()
         {
             applicationIsQuitting = true;
+            SceneManager.sceneLoaded += SetApplicationIsQuittingFalse;
+        }
+        
+        void SetApplicationIsQuittingFalse(Scene scene, LoadSceneMode mode)
+        {
+            applicationIsQuitting = false;
         }
     }
 }

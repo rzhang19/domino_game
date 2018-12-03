@@ -15,6 +15,7 @@ namespace BH
         SUCCESS,
         DATABASE_ERROR,
         USERNAME_TAKEN,
+        USERNAME_NOT_FOUND,
         WRONG_CREDENTIALS
     }
     
@@ -23,10 +24,13 @@ namespace BH
 
     public class DataManager : Singleton<DataManager>
     {
+        protected DataManager() { }
+        
         // Used for SQLite plugin (for database location)
         private string connectionString;
-        
-        protected DataManager() { }
+
+        public string _currentUsername = "";
+        public string _currentPassword = "";
 
         void Awake()
         {
@@ -36,7 +40,7 @@ namespace BH
         void Start()
         {
             connectionString = "URI=file:" + Application.dataPath + "/DominoesDB.sqlite";
-            
+
             //// ------ Example usage of DataManager ------- //
             //string myUsername = "BobbyJoe2003";
             //string myPassword = "meowmeow";
@@ -64,11 +68,11 @@ namespace BH
         }
 
         // The only public function with direct access to database
-        public void DeleteUser(string id)
+        public void DeleteUser(string id, ReturnStatusDelegate callback)
         {
             if (!IsUser(id))
             {
-                Debug.Log("ERROR: Username not found!");
+                callback(DataManagerStatusCodes.USERNAME_NOT_FOUND);
                 return;
             }
 
@@ -91,64 +95,85 @@ namespace BH
         // Asynchronous function to retrieve data from the database.
         public void GetData(string username, string password, DataReturnStatusDelegate callback)
         {
-            Debug.Log("GetData");
-
-            if (password != GetUserPassword(username))
+            // Check credentials.
+            if (!IsUser(username) || password != GetUserPassword(username))
             {
                 Debug.Log("Entered password is incorrect!");
                 callback(null, DataManagerStatusCodes.WRONG_CREDENTIALS);
                 return;
             }
-
-            // Get JSON representing save data from database.
-            //string jsonData = GetSaveState(username, password); // Getting data will probably be asynchronous, unlike this line of code.
+            
             string jsonData = GetSaveState(username);
-
-            // Convert JSON into a data object.
             Data data = JsonUtility.FromJson<Data>(jsonData);
 
-            // Call the callback function with the data.
-            callback(data, DataManagerStatusCodes.SUCCESS);
+            if (data != null)
+            {
+                _currentUsername = username;
+                _currentPassword = password;
+                callback(data, DataManagerStatusCodes.SUCCESS);
+            }
+            else
+            {
+                // Corrupted data. Rewrite with new data. (might not be the best thing to do here, but w/e)
+                Data freshData = new Data();
+                string freshJsonData = JsonUtility.ToJson(freshData);
+                UpdateUser(username, password, freshJsonData);
+                callback(data, DataManagerStatusCodes.DATABASE_ERROR);
+            }
+        }
+
+        // Wrapper for ease-of-use.
+        public void GetData(DataReturnStatusDelegate callback)
+        {
+            GetData(_currentUsername, _currentPassword, callback);
         }
 
         // Asynchronous function to save data from the database.
-        // Also creates new user if one 
         public void SaveData(string username, string password, Data data, ReturnStatusDelegate callback)
         {
-            Debug.Log("SaveData");
-
             // Check if username/password entry exists in database.
-            if(!IsUser(username))
+            if (!IsUser(username) || password != GetUserPassword(username))
             {
-                Debug.Log("Creating new user with this username");
-            }
-            else if(password != GetUserPassword(username))
-            {
-                Debug.Log("Entered password is incorrect!");
+                callback(DataManagerStatusCodes.WRONG_CREDENTIALS);
                 return;
             }
 
             // Save saveData to the database if the entry exists.
-            string jsonData = JsonUtility.ToJson(data); // Convert data to JSON.
-            AddOrUpdateUser(username, password, jsonData); // Database access will probably be asynchronous, unlike this line of code.
-
-            // Call the callback function with the return status.
+            string jsonData = JsonUtility.ToJson(data);
+            UpdateUser(username, password, jsonData);
             callback(DataManagerStatusCodes.SUCCESS);
         }
-        
+
+        // Wrapper for ease-of-use.
+        public void SaveData(Data data, ReturnStatusDelegate callback)
+        {
+            SaveData(_currentUsername, _currentPassword, data, callback);
+        }
+
+        public void RegisterUser(string username, string password, ReturnStatusDelegate callback)
+        {
+            // Make a user with fresh data.
+            Data freshData = new Data();
+            string jsonData = JsonUtility.ToJson(freshData);
+            if (AddUser(username, password, jsonData))
+            {
+                callback(DataManagerStatusCodes.SUCCESS);
+            }
+            else
+            {
+                callback(DataManagerStatusCodes.USERNAME_TAKEN);
+            }
+        }
 
         // ---------------------------------- //
         // -------- SQLite FUNCTIONS -------- //
         // ---------------------------------- //
         // Private helper functions to send/retrieve info from database in Assets folder
         
-    // Returns true if user with given username id exists, false otherwise
-        private bool IsUser(string id)
+        // Returns true if user with given username id exists, false otherwise
+        bool IsUser(string userId)
         {
-            //IDbConnection dbConnection;
-            //dbConnection.Dispose();
-
-            bool r = false;
+            bool ret = false;
 
             using (IDbConnection dbConnection = new SqliteConnection(connectionString))
             {
@@ -163,11 +188,8 @@ namespace BH
                     {
                         while (reader.Read())
                         {
-                            //Debug.Log(reader.GetString(1));
-                            if(reader.GetString(1) == id)
-                            {
-                                r = true;
-                            }
+                            if(reader.GetString(1) == userId)
+                                ret = true;
                         }
 
                         dbConnection.Close();
@@ -176,35 +198,36 @@ namespace BH
                 }
             }
 
-            return r;
+            return ret;
         }
 
 
-    // Returns password of user
-        private string GetUserPassword(string id)
+        // Returns password of user.
+        // Returns null if no userId exists.
+        string GetUserPassword(string userId)
         {
-            //IDbConnection dbConnection;
-            //dbConnection.Dispose();
+            string ret = null;
 
-            string s = null;
-
+            // Make a new connection.
             using (IDbConnection dbConnection = new SqliteConnection(connectionString))
             {
                 dbConnection.Open();
 
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
+                    // Retrieve every (rowid, row) tuple possible.
                     string sqlQuery = "SELECT rowid, * FROM save_states";
                     dbCmd.CommandText = sqlQuery;
 
+                    // Scan every tuple looking for the matching rowid.
                     using (IDataReader reader = dbCmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            //Debug.Log(reader.GetString(1));
-                            if (reader.GetString(1) == id)
+                            if (reader.GetString(1) == userId)
                             {
-                                s = reader.GetString(2);
+                                ret = reader.GetString(2);
+                                // break; ???
                             }
                         }
 
@@ -213,20 +236,13 @@ namespace BH
                     }
                 }
             }
-
-            if (s == null)
-            {
-                Debug.Log("USER NOT FOUND");
-            }
-            return s;
+            
+            return ret;
         }
-
-    // Returns save state of user
-        private string GetSaveState(string id)
+        
+        // Returns save state of user
+        string GetSaveState(string id)
         {
-            //IDbConnection dbConnection;
-            //dbConnection.Dispose();
-
             string s = null;
 
             using (IDbConnection dbConnection = new SqliteConnection(connectionString))
@@ -263,10 +279,10 @@ namespace BH
         }
 
         // Adds new data to existing user or creates new one
-        public void AddOrUpdateUser(string id, string pw, string save_state)
+        bool UpdateUser(string id, string pw, string save_state)
         {
             // TODO: Test if this function properly updates existing users
-            if(IsUser(id) && pw == GetUserPassword(id))
+            if (IsUser(id) && pw == GetUserPassword(id))
             {
                 Debug.Log("Updating existing user");
                 using (IDbConnection dbConnection = new SqliteConnection(connectionString))
@@ -282,9 +298,21 @@ namespace BH
                         dbConnection.Close();
                     }
                 }
-                return;
+
+                return true;
             }
-            else 
+            else
+            {
+                return false; // Incorrect credentials.
+            }
+        }
+
+        bool AddUser(string id, string pw, string save_state)
+        {
+            // Not a new user.
+            if (IsUser(id))
+                return false; // Username taken.
+
             using (IDbConnection dbConnection = new SqliteConnection(connectionString))
             {
                 Debug.Log("Creating new user");
@@ -300,6 +328,8 @@ namespace BH
                     dbConnection.Close();
                 }
             }
+
+            return true;
         }
     }
 }

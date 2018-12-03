@@ -30,7 +30,7 @@ namespace BH
             if (!_selectablePrefab)
                 Debug.LogError("Selectable prefab is not initialized.");
 
-            _localData = new Data();
+            LoadData(); // Should show a loading screen to prevent player interaction until this completes (not implemented).
         }
 
         /// <summary>
@@ -155,9 +155,11 @@ namespace BH
             SaveDataLocal();
 
             // Example call to DataManager
-            DataManager.Instance.SaveData("dinorider23", "hunter2", _localData, (err) => {
+            DataManager.Instance.SaveData(_localData, (err) => {
                 if (err != DataManagerStatusCodes.SUCCESS)
                     Debug.LogError("Couldn't save data!");
+                else
+                    Debug.Log("Saved data! N I C E");
             });
         }
 
@@ -174,7 +176,31 @@ namespace BH
         /// </summary>
         public void LoadData()
         {
-            // Load JSON from a file
+            // Should only be called once at the beginning of the gameplay scene.
+            // Should show a loading screen to prevent player interaction until this function completes (not implemented).
+            // Definitely will create inconsistencies if this is called after some dominoes have been placed.
+
+            DataManager.Instance.GetData((data, err) => {
+                if (err == DataManagerStatusCodes.SUCCESS)
+                {
+                    Debug.Log("Retrieved data! N I C E");
+                    List<SerializableSelectable> serializableSelectables = data._serializableSelectables._serializableSelectables;
+                    foreach (SerializableSelectable serializableSelectable in serializableSelectables)
+                    {
+                        Selectable sel = SpawnSelectable();
+                        sel.SetTransform(serializableSelectable._serializableTransform);
+                        sel.ResetVelocities();
+                        sel.SetColor(serializableSelectable._color);
+                    }
+
+                    _localData = data;
+                }
+                else
+                {
+                    Debug.LogError("Couldn't get data! noooo");
+                    _localData = new Data();
+                }
+            });
         }
 
         /// <summary>
