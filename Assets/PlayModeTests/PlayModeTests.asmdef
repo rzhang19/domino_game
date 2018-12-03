@@ -2,7 +2,8 @@
     "name": "PlayModeTests",
     "references": [
         "ScriptsAssembly",
-        "UtilityAssembly"
+        "UtilityAssembly",
+        "TWMUIAssembly"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"

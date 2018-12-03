@@ -1,7 +1,8 @@
 {
     "name": "UtilityAssembly",
     "references": [
-        "ScriptsAssembly"
+        "ScriptsAssembly",
+        "TWMUIAssembly"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"

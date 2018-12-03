@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using BH;
+using TWM.UI;
 
 /// Useful functions for all tests.
 /// Only call after SceneManager.LoadScene() is called!
@@ -59,8 +60,16 @@ public class Utility : MonoBehaviour {
     public static void ClickUIButton(string buttonName)
     {
         GameObject buttonObj = GameObject.Find(buttonName);
-        Button button = buttonObj.GetComponent<Button>();
-        button.onClick.Invoke();
+        UIButton button = buttonObj.GetComponent<UIButton>();
+        if (buttonName == "ButtonSpawn" || buttonName == "ButtonRandomColor")
+        {
+            button.OnToggleOnInvoke();
+        }
+        else
+        {
+            button.OnButtonUpInvoke();
+        }
+        //button.onClick.Invoke();
     }
 
     /// Simulates pressing down the specified key. See InputManager for valid strings/names of keys.
@@ -79,4 +88,28 @@ public class Utility : MonoBehaviour {
         yield return new WaitForEndOfFrame();
     }
 
+    /// Programmatically creates an account with the given username and password.
+    /// Only involves DataManager class; as low level as you can get.
+    public static IEnumerator Register(string username, string password)
+    {
+        DataManager.Instance.RegisterUser(username, password, (err) =>
+        {
+            switch (err)
+            {
+                case DataManagerStatusCodes.SUCCESS:
+                    Debug.Log("Successfully registered new user " + username + "!");
+                    break;
+                case DataManagerStatusCodes.DATABASE_ERROR:
+                    Debug.LogError("Database error occured!");
+                    break;
+                case DataManagerStatusCodes.USERNAME_TAKEN:
+                    Debug.LogError("Username already taken!");
+                    break;
+                default:
+                    Debug.LogError("Unknown error occured!");
+                    break;
+            }
+        });
+        yield return new WaitForEndOfFrame();
+    }
 }

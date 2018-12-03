@@ -39,12 +39,12 @@ namespace BH
         void Awake()
         {
             DontDestroyOnLoad(gameObject); // Want the singleton instance to persist between scenes.
+            //connectionString = @"Data Source="+Application.dataPath+"/DominoesDB.sqlite";
+            connectionString = "URI=file:" + Application.dataPath + "/DominoesDB.sqlite";
         }
 
         void Start()
         {
-            connectionString = "URI=file:" + Application.dataPath + "/DominoesDB.sqlite";
-
             //// ------ Example usage of DataManager ------- //
             //string myUsername = "BobbyJoe2003";
             //string myPassword = "meowmeow";
