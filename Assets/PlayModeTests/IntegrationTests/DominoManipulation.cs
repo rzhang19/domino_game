@@ -118,12 +118,28 @@ public class DominoManipulation
         yield return Utility.RemoveUser(username);
         yield return Utility.Register(username, password);
 
+        // Would do UI login simulation, but stupid Unity doesn't link up login component dependencies.
+        // Next best thing is to use DataManager to sync up with current account and allow layout saves
+        BH.Data newData = null;
+        DataManager.Instance.GetData(username, password, (data, err) =>
+            {
+                switch (err)
+                {
+                    case DataManagerStatusCodes.SUCCESS:
+                        newData = data;
+                        break;
+                    default:
+                        newData = null;
+                        break;
+                }
+        });
+
+        /*
         // First, we'll simulate the UI to log in a user.
 
         // Load login scene
         SceneManager.LoadScene("MainMenu");
         yield return new WaitForFixedUpdate();
-
         // Get login menu
         BH.LoginMenu loginMenu = GameObject.Find("LoginMenu").GetComponent<BH.LoginMenu>();
 
@@ -137,6 +153,7 @@ public class DominoManipulation
         // Now switch back to the Spectator mode to edit dominos
         SceneManager.LoadScene("SpectatorMode");
         yield return new WaitForFixedUpdate();
+        */
 
         SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
@@ -175,6 +192,9 @@ public class DominoManipulation
             Transform expectedTransform = savedTransforms[i];
             Assert.AreEqual(domino.transform, expectedTransform);
         }
+
+        // Cleanup: remove user from DB
+        yield return Utility.RemoveUser(username);
     }
 
     /// User can change the colors of (programmatically) selected dominos by adjusting an RGB slider (UI).

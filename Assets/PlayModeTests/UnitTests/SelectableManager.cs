@@ -98,8 +98,8 @@ public class SelectableManagerClass
             savedTransforms.Add(newDomino.transform);
         }
         
-        // Save current domino transforms
-        dominoManager.SaveDataPersistent();
+        // Save current domino transforms. (Local save, so not linked to login)
+        dominoManager.SaveDataLocal();
 
         // Change domino transforms
         foreach (BH.Selectable domino in dominoRefs)

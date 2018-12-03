@@ -110,7 +110,7 @@ public class SpectatorModeUI {
         Assert.AreNotEqual(domino.transform.rotation, oldTransform.rotation);
 
         // Simulate pressing the Reset button
-        Utility.ClickUIButton("ButtonResetDominos");
+        Utility.ClickUIButton("ButtonReset");
 
         // Check that the domino's old rotation and position were restored
         Assert.AreEqual(domino.transform.rotation, oldTransform.rotation);
