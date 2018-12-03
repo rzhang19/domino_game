@@ -24,7 +24,7 @@ public class DataManagerInteractions {
     /// Called after every test. Clears DB
     [TearDown] 
     public void Cleanup() {
-        RemoveUser(_username);
+        Utility.RemoveUser(_username);
     }
 
     /// Test that we can update a user's domino layout data for a correct username-pw combo
@@ -109,7 +109,7 @@ public class DataManagerInteractions {
     // Create new user, replacing old if any. Throw error if this fails
     IEnumerator AttemptUserCreation(string username, string password) {
         // Get rid of old, if any
-        yield return RemoveUser(_username);
+        yield return Utility.RemoveUser(_username);
 
         DataManager.Instance.RegisterUser(username, password, (err) =>
             {
@@ -126,26 +126,6 @@ public class DataManagerInteractions {
                         break;
                     default:
                         Debug.LogError("Unknown error occured!");
-                        break;
-                }
-            }
-        );
-
-        // Give DB some time
-        yield return new WaitForEndOfFrame();
-    }
-
-    // Remove user
-    IEnumerator RemoveUser(string username) {
-        DataManager.Instance.DeleteUser(username, (err) =>
-            {
-                switch (err)
-                {
-                    case DataManagerStatusCodes.USERNAME_NOT_FOUND:
-                        Debug.Log("No user found. But thats ok");
-                        break;
-                    default:
-                        Debug.Log("Deletion success");
                         break;
                 }
             }

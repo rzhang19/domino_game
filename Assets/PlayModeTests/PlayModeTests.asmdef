@@ -3,7 +3,8 @@
     "references": [
         "ScriptsAssembly",
         "UtilityAssembly",
-        "TWMUIAssembly"
+        "TWMUIAssembly",
+        "LoginMenuAssembly"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"

@@ -106,16 +106,42 @@ public class DominoManipulation
         Assert.AreEqual(dominoManager.GetActiveSelectables()[0], unselectedDomino);
     }
 
-    /// User should click a button to save all dominos' current transforms (i.e. position, rotation, etc).
+    /// A signed-in user should click a button to save all dominos' current transforms (i.e. position, rotation, etc).
     /// These transforms are restored when the domino layout (programmatically) resets.
     [UnityTest]
-    public IEnumerator _Saves_Dominos_UI()
+    public IEnumerator _Saves_Dominos_UI_After_Login_UI()
     {
+        yield return new WaitForFixedUpdate();
+
+        // Programmatically create an account to log into
+        string username = "test", password = "123";
+        yield return Utility.RemoveUser(username);
+        yield return Utility.Register(username, password);
+
+        // First, we'll simulate the UI to log in a user.
+
+        // Load login scene
+        SceneManager.LoadScene("MainMenu");
+        yield return new WaitForFixedUpdate();
+
+        // Get login menu
+        BH.LoginMenu loginMenu = GameObject.Find("LoginMenu").GetComponent<BH.LoginMenu>();
+
+        // Simulate UI to log in
+        loginMenu.SetUsername(username);
+        loginMenu.SetPassword(password);
+
+        // Login!
+        loginMenu.SignIn();
+        
+        // Now switch back to the Spectator mode to edit dominos
+        SceneManager.LoadScene("SpectatorMode");
         yield return new WaitForFixedUpdate();
 
         SelectableManager dominoManager = GameObject.Find("SelectableManager").GetComponent<SelectableManager>();
         Assert.AreEqual(dominoManager.GetActiveSelectables().Count, 0);
 
+        // Prepare to map dominos to their transforms
         System.Collections.Generic.List<BH.Selectable> dominoRefs = new System.Collections.Generic.List<BH.Selectable>();
         System.Collections.Generic.List<Transform> savedTransforms = new System.Collections.Generic.List<Transform>();
 

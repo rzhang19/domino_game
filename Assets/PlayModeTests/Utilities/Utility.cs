@@ -112,4 +112,24 @@ public class Utility : MonoBehaviour {
         });
         yield return new WaitForEndOfFrame();
     }
+
+    // Remove user silently, mainly to reinitialize DB
+    public static IEnumerator RemoveUser(string username) {
+        DataManager.Instance.DeleteUser(username, (err) =>
+            {
+                switch (err)
+                {
+                    case DataManagerStatusCodes.USERNAME_NOT_FOUND:
+                        Debug.Log("No user found. But thats ok");
+                        break;
+                    default:
+                        Debug.Log("Deletion success");
+                        break;
+                }
+            }
+        );
+
+        // Give DB some time
+        yield return new WaitForEndOfFrame();
+    }
 }
