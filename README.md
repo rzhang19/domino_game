@@ -14,7 +14,7 @@ Important folders & subfolders:
         - Scripts: our core C# game scripts
             - We arbitrarily created subfolders here for organization
         - MainMenu: holds scripts for displaying the main menu (which pops up when the game starts).
-        - Scenes: Unity game scenes. Our game just uses the SpectatorMode scene
+        - Scenes: Unity game scenes. Our game uses the MainMenu scene for login/start menu, and SpectatorMode scene for domino manipulation.
     - Editor: stores the auto-doc Doxygen tool
     - PlayModeTests: our C# test scripts
     - Plugins: SQLite for database integration
