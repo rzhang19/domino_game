@@ -29,8 +29,8 @@ namespace BH
         // Used for SQLite plugin (for database location)
         private string connectionString;
 
-        public string _currentUsername = "";
-        public string _currentPassword = "";
+        string _currentUsername = "";
+        string _currentPassword = "";
 
         void Awake()
         {
@@ -91,8 +91,11 @@ namespace BH
                 }
             }
         }
-
-        // Asynchronous function to retrieve data from the database.
+        
+        /// <summary>Asynchronous function to retrieve data from the database.</summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="callback">The callback that takes the data as an argument.</param>
         public void GetData(string username, string password, DataReturnStatusDelegate callback)
         {
             // Check credentials.
@@ -121,14 +124,19 @@ namespace BH
                 callback(data, DataManagerStatusCodes.DATABASE_ERROR);
             }
         }
-
-        // Wrapper for ease-of-use.
+        
+        /// <summary>Wrapper for GetData that uses the currently loaded user.</summary>
+        /// <param name="callback">The callback that takes the data as an argument.</param>
         public void GetData(DataReturnStatusDelegate callback)
         {
             GetData(_currentUsername, _currentPassword, callback);
         }
-
-        // Asynchronous function to save data from the database.
+        
+        /// <summary>Asynchronous function to save data to the database.</summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="data">The data to be saved.</param>
+        /// <param name="callback">The callback that takes an error code as an argument.</param>
         public void SaveData(string username, string password, Data data, ReturnStatusDelegate callback)
         {
             // Check if username/password entry exists in database.
@@ -144,7 +152,8 @@ namespace BH
             callback(DataManagerStatusCodes.SUCCESS);
         }
 
-        // Wrapper for ease-of-use.
+        /// <summary>Wrapper for GetData that uses the currently loaded user.</summary>
+        /// <param name="callback">The callback that takes the data as an argument.</param>
         public void SaveData(Data data, ReturnStatusDelegate callback)
         {
             SaveData(_currentUsername, _currentPassword, data, callback);
