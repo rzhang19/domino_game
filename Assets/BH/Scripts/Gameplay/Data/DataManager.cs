@@ -7,6 +7,7 @@ using System.Data;
 using Mono.Data.Sqlite;
 
 // NOTE: Database is in the Assets folder
+// Source: https://medium.com/@rizasif92/sqlite-and-unity-how-to-do-it-right-31991712190
 
 namespace BH
 {
@@ -31,7 +32,11 @@ namespace BH
         protected DataManager() { }
         
         // Used for SQLite plugin (for database location)
-        private string connectionString;
+        private string _connectionString;
+        const string TABLE_NAME = "SaveStates";
+        const string KEY_USER = "user_id";
+        const string KEY_PW = "user_pw";
+        const string KEY_SAVE = "save_state";
 
         string _currentUsername = "";
         string _currentPassword = "";
@@ -40,11 +45,25 @@ namespace BH
         {
             DontDestroyOnLoad(gameObject); // Want the singleton instance to persist between scenes.
             //connectionString = @"Data Source="+Application.dataPath+"/DominoesDB.sqlite";
-            connectionString = "URI=file:" + Application.dataPath + "/DominoesDB.sqlite";
+            if (Application.isEditor)
+                _connectionString = "URI=file:" + Application.dataPath + "/DominoesDB.sqlite";
+            else
+                _connectionString = "URI=file:" + Application.persistentDataPath + "/DominoesDB.sqlite";
+
         }
 
         void Start()
         {
+            IDbConnection dbcon = new SqliteConnection(_connectionString);
+            dbcon.Open();
+            IDbCommand dbcmd = dbcon.CreateCommand();
+            dbcmd.CommandText = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ( " +
+                KEY_USER + " TEXT, " +
+                KEY_PW + " TEXT, " +
+                KEY_SAVE + " TEXT )";
+            dbcmd.ExecuteNonQuery();
+		    dbcon.Close();
+
             //// ------ Example usage of DataManager ------- //
             //string myUsername = "BobbyJoe2003";
             //string myPassword = "meowmeow";
@@ -84,14 +103,14 @@ namespace BH
                 return;
             }
 
-            using (IDbConnection dbConnection = new SqliteConnection(connectionString))
+            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
             {
                 dbConnection.Open();
 
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
                     //DELETE FROM "save_states" WHERE user_id = id
-                    string sqlQuery = "DELETE FROM \"save_states\" WHERE user_id = '" + id + "'";
+                    string sqlQuery = "DELETE FROM " + TABLE_NAME + " WHERE " + KEY_USER + "  = '" + id + "'";
                     Debug.Log(sqlQuery);
                     dbCmd.CommandText = sqlQuery;
                     dbCmd.ExecuteScalar();
@@ -196,13 +215,13 @@ namespace BH
         {
             bool ret = false;
 
-            using (IDbConnection dbConnection = new SqliteConnection(connectionString))
+            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
             {
                 dbConnection.Open();
 
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
-                    string sqlQuery = "SELECT rowid, * FROM save_states";
+                    string sqlQuery = "SELECT rowid, * FROM " + TABLE_NAME;
                     dbCmd.CommandText = sqlQuery;
 
                     using (IDataReader reader = dbCmd.ExecuteReader())
@@ -230,14 +249,14 @@ namespace BH
             string ret = null;
 
             // Make a new connection.
-            using (IDbConnection dbConnection = new SqliteConnection(connectionString))
+            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
             {
                 dbConnection.Open();
 
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
                     // Retrieve every (rowid, row) tuple possible.
-                    string sqlQuery = "SELECT rowid, * FROM save_states";
+                    string sqlQuery = "SELECT rowid, * FROM " + TABLE_NAME;
                     dbCmd.CommandText = sqlQuery;
 
                     // Scan every tuple looking for the matching rowid.
@@ -266,13 +285,13 @@ namespace BH
         {
             string s = null;
 
-            using (IDbConnection dbConnection = new SqliteConnection(connectionString))
+            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
             {
                 dbConnection.Open();
 
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
-                    string sqlQuery = "SELECT rowid, * FROM save_states";
+                    string sqlQuery = "SELECT rowid, * FROM " + TABLE_NAME;
                     dbCmd.CommandText = sqlQuery;
 
                     using (IDataReader reader = dbCmd.ExecuteReader())
@@ -306,13 +325,13 @@ namespace BH
             if (IsUser(id) && pw == GetUserPassword(id))
             {
                 Debug.Log("Updating existing user");
-                using (IDbConnection dbConnection = new SqliteConnection(connectionString))
+                using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
                 {
                     dbConnection.Open();
 
                     using (IDbCommand dbCmd = dbConnection.CreateCommand())
                     {
-                        string sqlQuery = "UPDATE \"save_states\" SET \"save_state\" = '" + save_state + "' WHERE \"user_id\" = '" + id + "'";
+                        string sqlQuery = "UPDATE " + TABLE_NAME + " SET " + KEY_SAVE + " = '" + save_state + "' WHERE " + KEY_USER + " = '" + id + "'";
                         Debug.Log(sqlQuery);
                         dbCmd.CommandText = sqlQuery;
                         dbCmd.ExecuteScalar();
@@ -334,7 +353,7 @@ namespace BH
             if (IsUser(id))
                 return false; // Username taken.
 
-            using (IDbConnection dbConnection = new SqliteConnection(connectionString))
+            using (IDbConnection dbConnection = new SqliteConnection(_connectionString))
             {
                 Debug.Log("Creating new user");
                 dbConnection.Open();
@@ -342,7 +361,7 @@ namespace BH
                 using (IDbCommand dbCmd = dbConnection.CreateCommand())
                 {
                     //INSERT INTO "save_states"("user_id", "user_pw", "save_state") VALUES('manas', 'kumar', 'SAVEME');
-                    string sqlQuery = "INSERT INTO \"save_states\"(\"user_id\",\"user_pw\",\"save_state\") VALUES('" + id + "','" + pw + "','" + save_state + "')";
+                    string sqlQuery = "INSERT INTO " + TABLE_NAME + "(" + KEY_USER + ", " + KEY_PW + ", " + KEY_SAVE + ") VALUES('" + id + "','" + pw + "','" + save_state + "')";
                     Debug.Log(sqlQuery);
                     dbCmd.CommandText = sqlQuery;
                     dbCmd.ExecuteScalar();
