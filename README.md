@@ -2,7 +2,9 @@
 
 ### CS 130 Project for F'18 with Professor Kim.
 
-Team: Robin Zhang, Sinan Cetin, Gladys Ng, Manas Kumar, Brandon Hua
+**Demo video**: https://youtu.be/MM9wGFLAf9E
+
+**Team**: Robin Zhang, Sinan Cetin, Gladys Ng, Manas Kumar, Brandon Hua
 
 Built with Unity 2018.2.14f1 (64-bit).
 
